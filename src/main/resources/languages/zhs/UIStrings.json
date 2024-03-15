@@ -1,0 +1,105 @@
+{
+  "ConnectInLocal": {
+    "TEXT": [
+      "通过局域网连接"
+    ]
+  },
+  "ConnectInSteam": {
+    "TEXT": [
+      "通过Steam连接"
+    ]
+  },
+  "SteamFriendButton": {
+    "TEXT": [
+      "等待 [",
+      "] 进入...",
+      "取消连接"
+    ]
+  },
+  "BackButton": {
+    "TEXT": [
+      "返回"
+    ]
+  },
+  "TailNumSelect": {
+    "TEXT": [
+      "开局尾巴个数:"
+    ]
+  },
+  "ReadyButton": {
+    "TEXT": [
+      "准备",
+      "取消准备"
+    ]
+  },
+  "InvincibleRate": {
+    "TEXT": [
+      "坚不可摧层数",
+      "无",
+      "生命上限/2",
+      "生命上限/3",
+      "生命上限/4",
+      "固定值50",
+      "固定值100",
+      "固定值150",
+      "固定值200"
+    ]
+  },
+  "AddConstConfig": {
+    "TEXT": [
+      "同一张牌回合内\n打出几次开始加费:"
+    ]
+  },
+  "BlockGainConfig": {
+    "TEXT": [
+      "格挡增益倍率:"
+    ]
+  },
+  "LoseGoldConfig": {
+    "TEXT": [
+      "死亡后掉落金币比例:"
+    ]
+  },
+  "StartDeckConfig": {
+    "TEXT": [
+      "初始卡组:",
+      "原版卡组",
+      "现开套牌",
+      "15轮选牌",
+      "金卡各一张",
+      "50张随机牌",
+      "所有角色初始卡组混合"
+    ]
+  },
+  "StartGoldConfig": {
+    "TEXT": [
+      "初始金币:"
+    ]
+  },
+  "CardPoolOption": {
+    "TEXT": [
+      "卡池:",
+      "默认",
+      "全角色混合"
+    ]
+  },
+  "MapRowNumConfig": {
+    "TEXT": [
+      "地图层数:"
+    ]
+  },
+  "WarlordEmblem:UtilizeAction": {
+    "TEXT": [
+      "选择丢弃一张手牌并获得其耗能等量的能量"
+    ]
+  },
+  "WarlordEmblem:RelicFilter": {
+    "TEXT": [
+      "加入附加遗物（需要重启游戏）",
+      "加入戒指遗物（需要重启游戏）",
+      "加入斗篷遗物（需要重启游戏）",
+      "符文巨剑数据显示在人物旁边",
+      "死亡骑士获得某些原版专属遗物(beta)"
+    ]
+  }
+}

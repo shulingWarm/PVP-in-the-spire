@@ -1,0 +1,105 @@
+{
+  "ConnectInLocal": {
+    "TEXT": [
+      "Local Connection"
+    ]
+  },
+  "ConnectInSteam": {
+    "TEXT": [
+      "Connect via Steam"
+    ]
+  },
+  "SteamFriendButton": {
+    "TEXT": [
+      "Wait [",
+      "] entry...",
+      "cancel connection"
+    ]
+  },
+  "BackButton": {
+    "TEXT": [
+      "Back"
+    ]
+  },
+  "TailNumSelect": {
+    "TEXT": [
+      "Lizard Tail num at begin:"
+    ]
+  },
+  "ReadyButton": {
+    "TEXT": [
+      "Get Ready",
+      "Cancel"
+    ]
+  },
+  "InvincibleRate": {
+    "TEXT": [
+      "Amount of Invincible",
+      "None",
+      "[Max Health]/2",
+      "[Max Health]/3",
+      "[Max Health]/4",
+      "50",
+      "100",
+      "150",
+      "200"
+    ]
+  },
+  "AddConstConfig": {
+    "TEXT": [
+      "The cost increases after the number of\n times a card has been played in a turn:"
+    ]
+  },
+  "BlockGainConfig": {
+    "TEXT": [
+      "Block gainer rate:"
+    ]
+  },
+  "LoseGoldConfig": {
+    "TEXT": [
+      "Percentage of coins dropped after death:"
+    ]
+  },
+  "StartDeckConfig": {
+    "TEXT": [
+      "Start deck:",
+      "Default deck",
+      "Sealed deck",
+      "Draft deck",
+      "1 of every rare card",
+      "50 random cards",
+      "Mix of all characters' initial card sets"
+    ]
+  },
+  "StartGoldConfig": {
+    "TEXT": [
+      "Start gold:"
+    ]
+  },
+  "CardPoolOption": {
+    "TEXT": [
+      "Card pool:",
+      "Default",
+      "All character mix"
+    ]
+  },
+  "MapRowNumConfig": {
+    "TEXT": [
+      "Map row num:"
+    ]
+  },
+  "WarlordEmblem:UtilizeAction": {
+    "TEXT": [
+      "选择丢弃一张手牌并获得其耗能等量的能量"
+    ]
+  },
+  "WarlordEmblem:RelicFilter": {
+    "TEXT": [
+      "加入附加遗物（需要重启游戏）",
+      "加入戒指遗物（需要重启游戏）",
+      "加入斗篷遗物（需要重启游戏）",
+      "符文巨剑数据显示在人物旁边",
+      "死亡骑士获得某些原版专属遗物(beta)"
+    ]
+  }
+}

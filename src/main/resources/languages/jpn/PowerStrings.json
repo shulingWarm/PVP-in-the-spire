@@ -1,0 +1,65 @@
+{
+  "timeEatPowerFake": {
+    "NAME": "タイムワープ",
+    "DESCRIPTIONS": [
+      "相手が #b",
+      " 枚のカードをプレイするたび、ターンを強制終了し、 #y筋力 #b",
+      " を得る。"
+    ]
+  },
+  "timeEatPowerReal": {
+    "NAME": "タイムワープ",
+    "DESCRIPTIONS": [
+      "あなたが #b",
+      " 枚のカードをプレイするたび、ターンを強制終了し、 #y筋力 #b",
+      " を得る。"
+    ]
+  },
+  "burnTransformPower": {
+  "NAME": "火炎波",
+  "DESCRIPTIONS": [
+    "あと #b",
+    " ターンの間、状態異常を #y廃棄 したとき、それらを相手の捨て札に送る。"
+  ]
+},
+  "computeTransformPower": {
+  "NAME": "計略波",
+  "DESCRIPTIONS": [
+    "状態異常、呪い、もしくは未強化のスターター・コモンカードを捨てたとき、それらを相手の捨て札に送る。"
+  ]
+},
+  "virusTransformPower": {
+  "NAME": "磁気波",
+  "DESCRIPTIONS": [
+    "#yパワー をプレイするたび、山札からランダムな #b",
+    " 枚の状態異常が相手の捨て札に送られる。"
+  ]
+},
+  "fateTransformPower": {
+    "NAME": "運命波",
+    "DESCRIPTIONS": [
+      "占術によって状態異常を捨てたとき、それらを相手の捨て札に送る。"
+    ]
+  },
+  "dropEnergy": {
+  "NAME": "マイナスエナジー",
+  "DESCRIPTIONS": [
+    "あと #b",
+    " ターンの間、ターン開始時、 [E] を失う。"
+  ]
+},  "godPunishment": {
+  "NAME": "ネメシスの力",
+  "DESCRIPTIONS": [
+    "#b",
+    " ターンに1回、無形1を得る。これはあと #b",
+    " ターンの間続く。"
+  ]
+},
+  "godPunishment2": {
+  "NAME": "ネメシスの力",
+  "DESCRIPTIONS": [
+    "2ターン毎に、ターン終了時無形でない場合、無形1を得る。得られるのは #b",
+    " 回まで。"
+  ]
+}
+}

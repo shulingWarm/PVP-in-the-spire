@@ -1,0 +1,11 @@
+{
+  "modid": "PvPInTheSpire",
+  "name": "PvP In The Spire",
+  "author_list": ["佐守"],
+  "credits": "PvP In The Spire",
+  "description": "杀戮尖塔联机对战",
+  "version": "0.3.14",
+  "sts_version": "01-27-2020",
+  "mts_version": "3.16.0",
+  "dependencies": ["basemod", "stslib"]
+}

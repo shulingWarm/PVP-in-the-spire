@@ -1,0 +1,73 @@
+{
+  "Time_Eat": {
+    "NAME": "时间扭曲",
+    "DESCRIPTION": "每当对方打出16张牌，对方的回合会强制结束，并且你获得 !M! 点 力量 "
+  },
+  "curiousness": {
+    "NAME": "好奇",
+    "DESCRIPTION": "每当对方打出1张能力牌，你获得 !M! 点 力量。"
+  },
+  "hexCard": {
+    "NAME": "邪咒",
+    "DESCRIPTION": "在接下来的 !M! 回合内，对方每使用一张非攻击牌，将1张 *晕眩 随机放入对方的牌组中。 NL 消耗 "
+  },
+  "strongMan": {
+    "NAME": "猛男",
+    "DESCRIPTION":"每当对方打出1张技能牌，你获得 !M! 点 力量。"
+  },
+  "burnTransform": {
+    "NAME": "燃烧转移",
+    "DESCRIPTION":"在本回合内，被消耗的 状态牌 会转移到敌方的弃牌堆中。",
+    "UPGRADE_DESCRIPTION":"在本回合内，被消耗的 状态牌 会转移到敌方的弃牌堆中。"
+  },
+  "computeTransform": {
+    "NAME": "计算转移",
+    "DESCRIPTION": "被丢弃的 状态牌 和未升级的白卡会转移到敌方的弃牌堆中。"
+  },
+  "virusTransform": {
+    "NAME": "病毒转移",
+    "DESCRIPTION": "当你打出能力牌时，你可以将抽牌堆中的前 !M! 张 状态牌 转移到敌方的弃牌堆中。",
+    "UPGRADE_DESCRIPTION":"当你打出能力牌时，你可以将抽牌堆中的前 !M! 张 状态牌 转移到敌方的弃牌堆中。 NL 固有 "
+  },
+  "fateTransform": {
+    "NAME": "命运转移",
+    "DESCRIPTION": "你通过 预见 弃置的状态牌会转移到敌方的弃牌堆中。"
+  },
+  "doubleSword": {
+    "NAME": "双刃剑",
+    "DESCRIPTION": "在自己和对方的的手牌中同时加入 !M! 张 *伤口 NL 造成 !D! 点伤害"
+  },
+  "painSword": {
+    "NAME": "疼痛之刃",
+    "DESCRIPTION": "当你造成未被格挡的伤害时，将一张 *伤口 塞入对方的弃牌堆。持续 !M! 回合。",
+    "UPGRADE_DESCRIPTION":"当你造成未被格挡的伤害时，将一张 *伤口 塞入对方的弃牌堆。持续 !M! 回合。 NL 保留 "
+  },
+  "electronicInterference": {
+    "NAME": "电磁干扰",
+    "DESCRIPTION":  "令敌方在回合开始时失去 [B] NL 持续X回合。",
+    "UPGRADE_DESCRIPTION":"令敌方在回合开始时失去 [B] NL 持续X+1回合。"
+  },
+  "godPunishment": {
+    "NAME": "天罚形态",
+    "DESCRIPTION":  "每2轮的回合结束时，若没有无实体，则获得一层无实体。最多获得 !M! 次。"
+  },
+  "PsychicSnooping": {
+    "NAME": "过河拆桥",
+    "DESCRIPTION":  " 消耗 NL 从对方抽牌堆前5张牌中选一张，将其 消耗 。"
+  },
+  "StealCard": {
+    "NAME": "顺手牵羊",
+    "DESCRIPTION":  " 消耗 NL 从对方抽牌堆前5张牌中选一张，将其 消耗 ,在你手中加入这张牌",
+    "UPGRADE_DESCRIPTION":  " 消耗 NL 从对方抽牌堆前5张牌中选一张，将其 消耗 ,在你手中加入这张牌, 这张牌本回合耗能为0"
+  },
+  "ChangeOffering": {
+    "NAME": "祭品",
+    "DESCRIPTION": "失去 !D! (10%最大生命) 点生命。 NL 获得 [R] [R] 。 NL 抽 !M! 张牌。 NL 消耗 。",
+    "UPGRADE_DESCRIPTION": "失去 !D! (10%最大生命) 点生命。 NL 获得 [R] [R] 。 NL 抽 !M! 张牌。 NL 消耗 。"
+  },
+  "WarlordEmblem:AntiMagicShield": {
+    "NAME": "反魔法护盾",
+    "DESCRIPTION":  "获得 !M! 层 人工制品 。 ",
+    "UPGRADE_DESCRIPTION":"获得 !M! 层 人工制品 。清除所有负面效果。"
+  }
+}

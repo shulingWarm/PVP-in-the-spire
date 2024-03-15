@@ -1,0 +1,64 @@
+{
+  "Time_Eat": {
+    "NAME": "タイムワープ",
+    "DESCRIPTION": "相手が16枚のカードをプレイするたび、ターンを強制終了し、 筋力 !M! を得る。"
+  },
+  "curiousness": {
+    "NAME": "悪魔のスキル",
+    "DESCRIPTION": "相手が *スキル を1枚プレイするたび、 筋力 !M! を得る。"
+  },
+  "hexCard": {
+    "NAME": "呪詛",
+    "DESCRIPTION": "次の !M! ターンの間、相手が *アタック 以外のカードをプレイするたび、 *めまい を1枚相手の捨て札に加える。 NL 廃棄"
+  },
+  "burnTransform": {
+    "NAME": "火炎波",
+    "DESCRIPTION":"このターン、 状態異常 を 廃棄 したとき、それらを相手の捨て札に送る。",
+    "UPGRADE_DESCRIPTION":"このターン、 状態異常 を 廃棄 したとき、それらを相手の捨て札に送る。 NL *めまい を2枚手札に加える。"
+  },
+  "computeTransform": {
+    "NAME": "計略波",
+    "DESCRIPTION": "状態異常 、 呪い 、もしくは未強化のスターター・コモンカードを捨てたとき、それらを相手の捨て札に送る。"
+  },
+  "virusTransform": {
+    "NAME": "磁気波",
+    "DESCRIPTION": "*パワー をプレイするたび、山札からランダムな !M! 枚の 状態異常 を相手の捨て札に送る。",
+    "UPGRADE_DESCRIPTION":"天賦 NL *パワー をプレイするたび、山札からランダムな !M! 枚の 状態異常 を相手の捨て札に送る。"
+  },
+  "fateTransform": {
+    "NAME": "運命波",
+    "DESCRIPTION": "占術 によって 状態異常 を捨てたとき、それらを相手の捨て札に送る。"
+  },
+  "doubleSword": {
+    "NAME": "ダブルソード",
+    "DESCRIPTION": "!D! ダメージ与える。 NL  *負傷 を !M! 枚両者の手札に加える。"
+  },
+  "painSword": {
+    "NAME": "苦痛の一刺し",
+    "DESCRIPTION": "このターン、 *アタック でダメージを与えるたび、 *負傷 を1枚相手の捨て札に加える。",
+    "UPGRADE_DESCRIPTION":"保留 NL このターン、 *アタック でダメージを与えるたび、 *負傷 を1枚相手の捨て札に加える。"
+  },
+  "electronicInterference": {
+    "NAME": "電子妨害",
+    "DESCRIPTION":  "次のXターンの間、ターン開始時、相手は [E] を失う。 NL 廃棄",
+    "UPGRADE_DESCRIPTION":"次のX+1ターンの間、ターン開始時、相手は [E] を失う。 NL 廃棄"
+  },
+  "PsychicSnooping": {
+    "NAME": "除去",
+    "DESCRIPTION":  "相手の山札の上の5枚のカードから1枚を選び、それを 廃棄 する。 NL 廃棄"
+  },
+  "StealCard": {
+    "NAME": "奪取",
+    "DESCRIPTION":  "相手の山札の上の5枚のカードから1枚を選び、それを 廃棄 して、手札に複製を加える。 NL 廃棄",
+    "UPGRADE_DESCRIPTION":  "相手の山札の、上の5枚のカードから1枚を選び、それを 廃棄 して、手札に複製を加える。 NL このターン、そのコストは0。 NL 廃棄"
+  },
+  "ChangeOffering": {
+    "NAME": "供物",
+    "DESCRIPTION": "HP !D! (最大hpの10%)を失う。 NL [R] [R] を得る。 NL カードを !M! 枚引く。 NL 廃棄",
+    "UPGRADE_DESCRIPTION": "HP !D! (最大hpの10%)を失う。 NL [R] [R] を得る。 NL カードを !M! 枚引く。 NL 廃棄"
+  },
+  "godPunishment": {
+    "NAME": "ネメシスの力",
+    "DESCRIPTION":  "2ターン毎に、ターン終了時 無形 でない場合、 無形 1を得る。 NL 得られるのは !M! 回まで。"
+  }
+}

@@ -1,0 +1,91 @@
+{
+  "ConnectInLocal": {
+    "TEXT": [
+      "ローカル接続"
+    ]
+  },
+  "ConnectInSteam": {
+    "TEXT": [
+      "Steam経由接続"
+    ]
+  },
+  "SteamFriendButton": {
+    "TEXT": [
+      "[",
+      "]の入室を待っています…",
+      "キャンセル"
+    ]
+  },
+  "BackButton": {
+    "TEXT": [
+      "戻る"
+    ]
+  },
+  "TailNumSelect": {
+    "TEXT": [
+      "スタート時の \n トカゲのしっぽの数:"
+    ]
+  },
+  "ReadyButton": {
+    "TEXT": [
+      "準備完了",
+      "キャンセル"
+    ]
+  },
+  "InvincibleRate": {
+    "TEXT": [
+      "無敵の値",
+      "なし",
+      "最大HPの1/2",
+      "最大HPの1/3",
+      "最大HPの1/4",
+      "50",
+      "100",
+      "150",
+      "200"
+    ]
+  },
+  "AddConstConfig": {
+    "TEXT": [
+      "同ターン内でコストが \n 増加する使用回数:"
+    ]
+  },
+  "BlockGainConfig": {
+    "TEXT": [
+      "ブロック追加倍率:"
+    ]
+  },
+  "LoseGoldConfig": {
+    "TEXT": [
+      "死亡後のゴールド \n ドロップ追加倍率:"
+    ]
+  },
+  "StartDeckConfig": {
+    "TEXT": [
+      "初期デッキ:",
+      "デフォルト",
+      "シールドデッキ",
+      "ドラフトデッキ",
+      "全レアカード",
+      "50枚のランダムなカード",
+      "全キャラの初期デッキのミックス"
+    ]
+  },
+  "CardPoolOption": {
+    "TEXT": [
+      "カードプール:",
+      "デフォルト",
+      "全ての色のカード"
+    ]
+  },
+  "MapRowNumConfig": {
+    "TEXT": [
+      "階数:"
+    ]
+  },
+  "StartGoldConfig": {
+    "TEXT": [
+      "開始時のゴールド:"
+    ]
+  }
+}

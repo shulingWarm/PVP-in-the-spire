@@ -1,0 +1,93 @@
+{
+  "timeEatPowerFake": {
+    "NAME": "Time Warp",
+    "DESCRIPTIONS": [
+      "When the enemy play #b",
+      " cards，force end his turn and you gain #b",
+      " #yStrength 。"
+    ]
+  },
+  "timeEatPowerReal": {
+    "NAME": "Time Warp",
+    "DESCRIPTIONS": [
+      "When you play #b",
+      " cards，force end your turn and the enemy gain #b",
+      " #yStrength 。"
+    ]
+  },
+  "burnTransformPower": {
+  "NAME": "Burn Transform",
+  "DESCRIPTIONS": [
+    "Your #yExhaust status cards will transfer to enemy's discard pile. Keep #b",
+    "turns."
+  ]
+},
+  "computeTransformPower": {
+  "NAME": "Compute Transform",
+  "DESCRIPTIONS": [
+    "The discarded status card will transfer to enemy's discard pile."
+  ]
+},
+  "virusTransformPower": {
+  "NAME": "Virus Transform",
+  "DESCRIPTIONS": [
+    "When you play a #yPower card, transfer the first #b",
+    "status cards to enemy's discard pile."
+  ]
+},
+  "fateTransformPower": {
+    "NAME": "Fate Transform",
+    "DESCRIPTIONS": [
+      "The discarded cards by Scry will transfer to enemy's discard pile."
+    ]
+  },
+  "dropEnergy": {
+  "NAME": "Lose Energy",
+  "DESCRIPTIONS": [
+    "At start of turn, lose [B]. Keep",
+    " turns."
+  ]
+},  "godPunishment": {
+  "NAME": "Nemesis Form",
+  "DESCRIPTIONS": [
+    "Every #b",
+    "turn, gain 1 #yIntangible ,#b ",
+    "turns left。"
+  ]
+},
+  "godPunishment2": {
+  "NAME": "Nemesis Form",
+  "DESCRIPTIONS": [
+    "In every 2 end of turn, obtain 1 #yIntangible if you have no #yIntangible. #b ",
+    "times left."
+  ]
+},
+  "WarlordEmblem:BloodMaskPower": {
+  "NAME": "鲜血印记",
+  "DESCRIPTIONS": [
+    "当这名敌人死亡时，你回复 #b",
+    " 生命。"
+  ]
+},
+  "WarlordEmblem:RuneIndexPower": {
+  "NAME": "符文索引",
+  "DESCRIPTIONS": [
+    "你的回合开始时，将抽牌堆中的 #b",
+    " 张随机 “符文”牌加入手牌并获得 #b",
+    " 点 #y符文能量 。"
+  ]
+},
+  "WarlordEmblem:WrathOfSindragosaPower": {
+  "NAME": "辛达苟萨之怒",
+  "DESCRIPTIONS": [
+    "本回合，每打出一张：",
+    " #r攻击牌 给予所有敌人 #y",
+    " 层虚弱,",
+    " #g技能牌 对所有敌人造成 #y",
+    " 点伤害，",
+    " #b能力牌 所有敌人失去 #y",
+    " 点力量。",
+    " NL "
+  ]
+}
+}
