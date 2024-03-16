@@ -35,6 +35,17 @@ public class RelicPanel extends BasePanel {
         super(Settings.WIDTH*0.935f, Settings.HEIGHT*0.1f,Settings.WIDTH*0.2f,Settings.HEIGHT*0.8f);
     }
 
+    //寻找relic
+    public AbstractRelic getRelic(String relicId)
+    {
+        for (AbstractRelic eachRelic : relicList)
+        {
+            if(eachRelic.relicId.equals(relicId))
+                return eachRelic;
+        }
+        return null;
+    }
+
     //这个渲染不再渲染滚动条
     public void render(SpriteBatch sb)
     {
@@ -96,14 +107,17 @@ public class RelicPanel extends BasePanel {
             {
                 //读取遗物的名称
                 String relicName = streamHandle.readUTF();
+                AbstractRelic tempRelic;
                 //判断是不是用过的尾巴
                 if(relicName.equals(usedTailName))
                 {
-                    targetPanel.addNewPage(new RelicPage(getUsedTailInstance()));
+                    tempRelic = getUsedTailInstance();
                 }
                 else {
-                    targetPanel.addNewPage(new RelicPage(RelicLibrary.getRelic(relicName).makeCopy()));
+                    tempRelic = RelicLibrary.getRelic(relicName).makeCopy();
                 }
+                targetPanel.addNewPage(new RelicPage(tempRelic));
+                targetPanel.relicList.add(tempRelic);
             }
         }
         catch (IOException e)

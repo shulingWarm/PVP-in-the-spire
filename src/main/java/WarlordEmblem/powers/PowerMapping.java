@@ -7,17 +7,10 @@ import java.util.HashMap;
 import com.megacrit.cardcrawl.powers.*;
 import com.megacrit.cardcrawl.powers.watcher.EnergyDownPower;
 import com.megacrit.cardcrawl.powers.watcher.MantraPower;
+import WarlordEmblem.PVPApi.PowerCreate;
 
 //所有power的映射
 public class PowerMapping {
-
-    public static class PowerCreate
-    {
-        public AbstractPower make(AbstractCreature owner,int amount,boolean isSourceMonster)
-        {
-            return null;
-        }
-    }
 
     public static class Vulnerable extends PowerCreate
     {

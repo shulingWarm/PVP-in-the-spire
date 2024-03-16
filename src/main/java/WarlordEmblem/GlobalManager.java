@@ -2,6 +2,7 @@ package WarlordEmblem;
 
 import UI.ConfigPage;
 import WarlordEmblem.Dungeon.FakeEnding;
+import WarlordEmblem.PVPApi.BaseEvent;
 import WarlordEmblem.Screens.midExit.MidExitScreen;
 import WarlordEmblem.network.SteamConnector;
 import WarlordEmblem.patches.CardShowPatch.UseCardSend;
@@ -20,6 +21,7 @@ import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
 import com.megacrit.cardcrawl.screens.charSelect.CharacterSelectScreen;
 
 import java.awt.*;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -40,6 +42,8 @@ public class GlobalManager {
     public static HashSet<String> enabledMods = new HashSet<>();
     //初始金币的数量
     public static int startGold = 500;
+    //用户自定义的事件
+    public static HashMap<String, BaseEvent> eventMap = new HashMap<>();
 
     public static void characterPatchInit()
     {

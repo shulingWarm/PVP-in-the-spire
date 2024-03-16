@@ -70,6 +70,7 @@ import com.megacrit.cardcrawl.stances.CalmStance;
 import com.megacrit.cardcrawl.stances.DivinityStance;
 import com.megacrit.cardcrawl.stances.NeutralStance;
 import WarlordEmblem.patches.CharacterSelectScreenPatches;
+import WarlordEmblem.Other.Pair;
 
 //两个端口之间的action传输操作
 public class ActionNetworkPatches {
@@ -817,6 +818,9 @@ public class ActionNetworkPatches {
                     return classType.getConstructor(AbstractCreature.class,int.class);
                 case 1:
                     return classType.getConstructor(AbstractCreature.class);
+                case 2:
+                    return classType.getConstructor(AbstractCreature.class,
+                            AbstractCreature.class,int.class);
             }
         }
         catch (NoSuchMethodException e)
@@ -826,7 +830,51 @@ public class ActionNetworkPatches {
         return null;
     }
 
+    //返回构造函数的类型和对应的构造函数
+    public static Pair<Integer,Constructor<?>> getPowerConstructor(Class<?> classType)
+    {
+        for(int i=0;i<3;++i)
+        {
+            Constructor<?> tempConstructor = getPowerConstructor(classType,i);
+            //判断是否有实际内容
+            if(tempConstructor!=null)
+                return new Pair<Integer,Constructor<?>>(i,tempConstructor);
+        }
+        return new Pair<Integer,Constructor<?>>(-1,null);
+    }
+
+    //根据构造函数和构造函数的类型执行构造
+    public static AbstractPower constructPowerByType(
+        int type,
+        Constructor<?> constructor,
+        AbstractCreature source,
+        AbstractCreature target,
+        int amount
+    )
+    {
+        try
+        {
+            switch (type)
+            {
+                case (0):
+                    return (AbstractPower) constructor.newInstance(target,amount);
+                case (1):
+                    return (AbstractPower) constructor.newInstance(amount);
+                case (2):
+                    return (AbstractPower) constructor.newInstance(target,source,amount);
+            }
+        }
+        catch (IllegalAccessException |
+               InstantiationException |
+               InvocationTargetException e)
+        {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public static AbstractPower buildPowerByReflect(String className,
+        AbstractCreature source,
         AbstractCreature target, int amount)
     {
         //寻找这个class
@@ -842,26 +890,11 @@ public class ActionNetworkPatches {
         }
         //最后构造出的power
         AbstractPower ansPower = null;
-        try
+        Pair<Integer,Constructor<?>> constructor = getPowerConstructor(classType);
+        if(constructor.second != null)
         {
-            //分别测试两种power构造器，如果都不行的话就放弃它了
-            Constructor<?> constructor;
-            constructor = getPowerConstructor(classType,0);
-            if(constructor!=null)
-            {
-                ansPower = (AbstractPower) constructor.newInstance(target,amount);
-            }
-            else {
-                constructor = getPowerConstructor(classType,1);
-                if(constructor != null)
-                {
-                    ansPower = (AbstractPower) constructor.newInstance(target);
-                }
-            }
-        }
-        catch (IllegalAccessException | InvocationTargetException | InstantiationException e)
-        {
-            return null;
+            ansPower = constructPowerByType(constructor.first,constructor.second,
+                    source,target,amount);
         }
         return ansPower;
     }
@@ -894,7 +927,7 @@ public class ActionNetworkPatches {
             return;
         }
         //构造buff
-        AbstractPower power = buildPowerByReflect(className,target,amount);
+        AbstractPower power = buildPowerByReflect(className,source,target,amount);
         if(target==null)
         {
             return;

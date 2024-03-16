@@ -2,6 +2,8 @@ package WarlordEmblem.actions;
 
 import UI.PotionPanel;
 import UI.RelicPanel;
+import WarlordEmblem.GlobalManager;
+import WarlordEmblem.PVPApi.BaseEvent;
 import WarlordEmblem.Screens.midExit.MidExitScreen;
 import WarlordEmblem.SocketServer;
 import WarlordEmblem.character.ControlMoster;
@@ -17,10 +19,34 @@ import com.megacrit.cardcrawl.actions.common.DamageAction;
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
 
 import javax.swing.*;
+import java.io.DataInputStream;
 import java.io.IOException;
+import java.util.HashMap;
 
 //两个玩家对战时的通信协议
 public class FightProtocol extends AbstractActionProtocol {
+
+    //对用户自定义事件的解码
+    public static void handleCustomEvent(DataInputStream stream)
+    {
+        //获取映射表
+        HashMap<String, BaseEvent> eventMap = GlobalManager.eventMap;
+        //读取事件id
+        try
+        {
+            String eventId = stream.readUTF();
+            //判断是否存在这个event
+            if(eventMap.containsKey(eventId))
+            {
+                BaseEvent event = eventMap.get(eventId);
+                event.decode(stream);
+            }
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+    }
 
     public static final int INVALID_TAG = 0;
     //各种数据
@@ -110,6 +136,8 @@ public class FightProtocol extends AbstractActionProtocol {
     public static final int DRAWING_CARD_UPDATE = 10042;
     //强制消耗对方某张牌的命令
     public static final int FORCE_EXHAUST_CARD = 10043;
+    //用户自定义事件，以后大部分事件都会在这里面实现
+    public static final int CUSTOM_EVENT = 10044;
     //用于区分不同类型的目标
     public static final int MONSTER = 1;
     public static final int PLAYER = 0;
@@ -189,6 +217,10 @@ public class FightProtocol extends AbstractActionProtocol {
                 //移除power的操作
                 case REMOVE_POWER:
                     ActionNetworkPatches.removePowerDecode(server.inputHandle);
+                    break;
+                //用户自定义的信息
+                case CUSTOM_EVENT:
+                    handleCustomEvent(server.inputHandle);
                     break;
                 //强制发送power的信息，没有被编码的power通过这个方式发送
                 case FORCE_SEND_POWER:
