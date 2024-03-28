@@ -2,6 +2,9 @@ package WarlordEmblem;
 
 
 
+import WarlordEmblem.Events.AddMonsterEvent;
+import WarlordEmblem.Events.MonsterIntentChangeEvent;
+import WarlordEmblem.PVPApi.Communication;
 import WarlordEmblem.card.*;
 import WarlordEmblem.relics.BlockGainer;
 import basemod.ModLabeledToggleButton;
@@ -109,29 +112,6 @@ public class WarlordEmblem implements
 
         System.out.println("load config!!!!!\n\n\n\n\n\n");
 
-//        //等待连接
-//        AutomaticSocketServer server = new AutomaticSocketServer(5555);
-//        //向输入流里面写一个数据
-//        try
-//        {
-//            //如果是客户端就写数字
-//            if(server.isServer())
-//            {
-//                //接收获得的数字
-//                int receiveNum = server.inputHandle.readInt();
-//                System.out.println(receiveNum);
-//            }
-//            else
-//            {
-//                //发送相应的数字
-//                server.streamHandle.writeInt(233);
-//            }
-//        }
-//        catch (IOException e)
-//        {
-//            e.printStackTrace();
-//        }
-
         try {
             SpireConfig config = new SpireConfig("WarlordEmblem", "WarlordEmblemSaveData", WarlordEmblemDefaults);
             config.load();
@@ -207,7 +187,6 @@ public class WarlordEmblem implements
             BaseMod.addCard(card);
             UnlockTracker.unlockCard(card.cardID);
         }
-
     }
 
     @Override
@@ -260,6 +239,10 @@ public class WarlordEmblem implements
         BaseMod.loadCustomStringsFile(RelicStrings.class, path + "RelicStrings.json");
         //用户界面相关的语言包
         BaseMod.loadCustomStringsFile(UIStrings.class, path + "UIStrings.json");
+
+        //注册事件
+        Communication.registerEvent(new AddMonsterEvent());
+        Communication.registerEvent(new MonsterIntentChangeEvent());
     }
 
 

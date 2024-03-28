@@ -16,7 +16,7 @@ import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
 import com.megacrit.cardcrawl.helpers.ModHelper;
 
 //用于显示人物立绘的页面
-public class CharacterBox extends AbstractPage {
+public class CharacterBox extends CreatureBox {
 
     public TextureAtlas atlas;
     public Skeleton skeleton;
@@ -135,5 +135,16 @@ public class CharacterBox extends AbstractPage {
         AbstractCreature.sr.draw(CardCrawlGame.psb, this.skeleton);
         CardCrawlGame.psb.end();
         sb.begin();
+    }
+
+    //获取要渲染的角色的位置
+    @Override
+    public float[] getLocation() {
+        return new float[]{this.player.drawX,this.player.drawY};
+    }
+
+    @Override
+    public AbstractCreature getCreature() {
+        return player;
     }
 }

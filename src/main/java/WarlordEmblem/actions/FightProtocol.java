@@ -41,6 +41,9 @@ public class FightProtocol extends AbstractActionProtocol {
                 BaseEvent event = eventMap.get(eventId);
                 event.decode(stream);
             }
+            else {
+                System.out.printf("cannot found %s\n",eventId);
+            }
         }
         catch (IOException e)
         {

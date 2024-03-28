@@ -7,9 +7,11 @@ import UI.Events.UpdateCharacter;
 import UI.configOptions.*;
 import WarlordEmblem.AutomaticSocketServer;
 import WarlordEmblem.GlobalManager;
+import WarlordEmblem.Room.FriendManager;
 import WarlordEmblem.SocketServer;
 import WarlordEmblem.actions.ConfigProtocol;
 import WarlordEmblem.character.CharacterInfo;
+import WarlordEmblem.character.FriendMonster;
 import WarlordEmblem.patches.RenderPatch;
 import WarlordEmblem.patches.connection.InputIpBox;
 import WarlordEmblem.patches.connection.IpInputProcessor;
@@ -148,6 +150,8 @@ public class ConfigPage extends AbstractPage implements UpdateCharacter, ConfigC
             //判断是否有mod需要使用
             this.checkGlobalMods();
             MeunScreenFadeout.connectOk = true;
+            //初始化友军管理器
+            FriendManager.initGlobalManager();
             //这次是真的可以了，准备进入游戏
             RenderPatch.delayBox = new DelayBox();
         }

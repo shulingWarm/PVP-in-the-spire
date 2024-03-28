@@ -1,9 +1,11 @@
 package WarlordEmblem.character;
 
 //导入kaka
+import UI.MonsterBox;
 import UI.PotionPanel;
 import UI.RelicPanel;
 import WarlordEmblem.AutomaticSocketServer;
+import WarlordEmblem.Room.FriendManager;
 import WarlordEmblem.Screens.PVPVictory;
 import WarlordEmblem.Stance.CalmStanceEnemy;
 import WarlordEmblem.Stance.DivinityStanceEnemy;
@@ -198,37 +200,6 @@ public class ControlMoster extends AbstractMonster {
         }
     }
 
-
-    //把敌人初始化成机器人
-    void initAsDefeat()
-    {
-        this.loadAnimation("images/characters/defect/idle/skeleton.atlas", "images/characters/defect/idle/skeleton.json", 1.0F);
-        this.setHp(150);
-        masterMaxOrbs = 3;
-        //我方猎人生命是140
-        playerHealth = 160;
-    }
-
-    //把敌人初始化成猎人
-    void initAsSlient()
-    {
-        this.loadAnimation("images/characters/theSilent/idle/skeleton.atlas", "images/characters/theSilent/idle/skeleton.json", 1.0F);
-        this.setHp(140);
-        masterMaxOrbs = 0;
-        //我方战士生命是150
-        playerHealth = 160;
-    }
-
-    //把敌人初始化成战士
-    void initAsIron()
-    {
-        this.loadAnimation("images/characters/ironclad/idle/skeleton.atlas", "images/characters/ironclad/idle/skeleton.json", 1.0F);
-        this.setHp(160);
-        masterMaxOrbs = 0;
-        //我方猎人140
-        playerHealth = 150;
-    }
-
     //把敌人初始化成观者
     void initAsWatcher()
     {
@@ -273,24 +244,6 @@ public class ControlMoster extends AbstractMonster {
         this.fairyPotionNum = SocketServer.fairyPotionNum;
         //设置形象
         initAnimation(SocketServer.oppositeCharacter);
-//        switch (SocketServer.monsterChar)
-//        {
-//            case WATCHER:
-//                this.watcherFlag = true;
-//                this.loadAnimation("images/characters/watcher/idle/skeleton.atlas", "images/characters/watcher/idle/skeleton.json", 1.0F);
-//                //初始化姿态数据
-//                this.initEyeState();
-//                break;
-//            case DEFECT:
-//                this.loadAnimation("images/characters/defect/idle/skeleton.atlas", "images/characters/defect/idle/skeleton.json", 1.0F);
-//                break;
-//            case IRONCLAD:
-//                this.loadAnimation("images/characters/ironclad/idle/skeleton.atlas", "images/characters/ironclad/idle/skeleton.json", 1.0F);
-//                break;
-//            case THE_SILENT:
-//                this.loadAnimation("images/characters/theSilent/idle/skeleton.atlas", "images/characters/theSilent/idle/skeleton.json", 1.0F);
-//                break;
-//        }
         //添加球位数量
         if(SocketServer.beginOrbNum>0)
         {
@@ -315,34 +268,17 @@ public class ControlMoster extends AbstractMonster {
         System.out.print("constructor!!!\n\n\n");
         this.firstMove = true;
         this.saidPower = false;
-        this.ritualAmount = 0;
         //初始化充能球的列表
         orbs = new ArrayList<>();
 
         this.dialogX = -50.0F * Settings.scale;
         this.dialogY = 50.0F * Settings.scale;
-        if (AbstractDungeon.ascensionLevel >= 2) {
-            this.ritualAmount = 40;
-        } else {
-            this.ritualAmount = 30;
-        }
 
         this.damage.add(new DamageInfo(this, 40));
         this.talky = talk;
         if (Settings.FAST_MODE) {
             this.talky = false;
         }
-
-        //如果是先手，就把对面初始化成机器人
-//        AutomaticSocketServer tempServer = AutomaticSocketServer.getServer();
-//        if(tempServer.isServer())
-//        {
-//            initAsWatcher();
-//        }
-//        else {
-//            //自己是后手的时候，说明对面的先手是猎人
-//            initAsWatcher();
-//        }
         //初始化姿态变量，但刚开始并没有什么意义 只是为了防止空指针报错
         stance = new NeutralStance();
         initAsWatcher();
@@ -352,23 +288,10 @@ public class ControlMoster extends AbstractMonster {
         e.setTimeScale(0.6F);
         this.type = AbstractMonster.EnemyType.NORMAL;
 
-        //初始化通信进程
-        //server = new SocketServer(5555);
-        //判断玩家是否有尼利的宝典
-//        if(!AbstractDungeon.player.hasRelic(UserNiliCodex.ID))
-//        {
-//            //没有的话就给他一个
-//            (new UserNiliCodex()).instantObtain();
-//        }
-
-//        if(AbstractDungeon.player.maxHealth<playerHealth)
-//        {
-//            AbstractDungeon.player.increaseMaxHp((playerHealth - AbstractDungeon.player.maxHealth),false);
-//        }
-
         //在构造的时候初始化那个静态变量，让它等于自己
         instance = this;
     }
+
 
     //针对敌人本体的setSlot,它和对玩家的操作是不一样的
     public void setSlot(AbstractOrb orb,int slotNum,int maxOrbs)
@@ -647,6 +570,8 @@ public class ControlMoster extends AbstractMonster {
         potionPanel.render(sb);
         //渲染敌人的能量框
         this.renderEnergyPanel(sb);
+        //处理友军渲染
+        FriendManager.instance.render(sb);
     }
 
     //对充能球的动画更新
@@ -736,7 +661,9 @@ public class ControlMoster extends AbstractMonster {
         potionPanel.update();
         this.updatePlayerEnergyPanel();
         //玩家的血条更新，如果玩家明明已经0血了，就触发一下它的伤害 但不需要传播
-        if(AbstractDungeon.player.currentHealth <= 0)
+        if(AbstractDungeon.player.currentHealth <= 0 &&
+            !(AbstractDungeon.player.isDying ||
+                AbstractDungeon.player.isDead))
         {
             //不必发送伤害信息
             ActionNetworkPatches.stopSendAttack = true;
@@ -748,6 +675,8 @@ public class ControlMoster extends AbstractMonster {
             AbstractDungeon.player.damage(new DamageInfo(AbstractDungeon.player,1));
             ActionNetworkPatches.stopSendAttack = false;
         }
+        //对友军信息的更新
+        FriendManager.instance.update();
     }
 
     //怪物受到伤害时的事件 这里对死亡事件做了特殊的处理

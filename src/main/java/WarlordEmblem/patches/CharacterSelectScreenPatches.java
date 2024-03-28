@@ -6,6 +6,7 @@ import WarlordEmblem.Dungeon.FakeEnding;
 import WarlordEmblem.GlobalManager;
 import WarlordEmblem.Screens.FakeSettingScreen;
 import WarlordEmblem.Screens.midExit.MidExitScreen;
+import WarlordEmblem.actions.AddFriendMonsterAction;
 import WarlordEmblem.actions.FightProtocol;
 import WarlordEmblem.actions.HealthSyncAction;
 import WarlordEmblem.card.*;
@@ -58,6 +59,7 @@ import com.megacrit.cardcrawl.localization.UIStrings;
 import com.megacrit.cardcrawl.map.DungeonMap;
 import com.megacrit.cardcrawl.monsters.AbstractMonster;
 import com.megacrit.cardcrawl.monsters.MonsterGroup;
+import com.megacrit.cardcrawl.monsters.exordium.Cultist;
 import com.megacrit.cardcrawl.orbs.AbstractOrb;
 import com.megacrit.cardcrawl.potions.AbstractPotion;
 import com.megacrit.cardcrawl.potions.SmokeBomb;
@@ -700,12 +702,16 @@ public class CharacterSelectScreenPatches
                     AbstractDungeon.actionManager.addToBottom(new LoseEnergyAction(1));
                     initSolidPower();
                 }
-//                //给一张灭除之刃，加速测试逻辑
-//                Expunger testCard = new Expunger();
-//                testCard.setX(3);
-//                AbstractDungeon.actionManager.addToBottom(
-//                        new MakeTempCardInHandAction(testCard,1)
-//                );
+                //第二回合添加一个友军，用于测试
+                if(EndTurnOnBegin.idTurn == 2)
+                {
+                    //添加一个友军
+                    AbstractDungeon.actionManager.addToBottom(
+                        new AddFriendMonsterAction(
+                            new Cultist((float)Settings.WIDTH/2,
+                                (float)Settings.HEIGHT/2)
+                    ));
+                }
 //                //给一张顺手牵羊
 //                PsychicSnooping stealing = new PsychicSnooping();
 //                stealing.upgrade();
@@ -851,6 +857,8 @@ public class CharacterSelectScreenPatches
             {
                 try
                 {
+                    //临时测试清理掉涅奥房间的奖励，防止小屋子的内容再出现
+                    AbstractDungeon.getCurrRoom().rewards.clear();
                     //强行修改它的私有成员，禁用掉涅奥的祝福
                     Field tempField = NeowEvent.class.getDeclaredField("screenNum");
                     tempField.setAccessible(true);

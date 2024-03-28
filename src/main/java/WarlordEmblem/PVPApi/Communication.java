@@ -35,6 +35,7 @@ public class Communication {
             stream.writeInt(FightProtocol.CUSTOM_EVENT);
             //写入事件id
             stream.writeUTF(event.eventId);
+            System.out.println(event.eventId);
             //调用事件信息进行编码
             event.encode(stream);
             //发送消息
@@ -51,6 +52,10 @@ public class Communication {
     {
         //power的映射表
         HashMap<String,PowerCreate> creatorMapping = PowerMapping.creatorMapper;
+        if(creatorMapping.isEmpty())
+        {
+            PowerMapping.initCreatorMapper();
+        }
         //判断是否已经存在
         if(creatorMapping.containsKey(powerId))
             return false;

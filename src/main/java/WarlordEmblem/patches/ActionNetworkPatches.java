@@ -785,14 +785,14 @@ public class ActionNetworkPatches {
     )
     {
         //通过反映射确定power的类名
-        //String className = power.getClass().getName();
+        String className = power.getClass().getName();
         //发送强制power的标头
         try
         {
             streamHandle.writeInt(FightProtocol.FORCE_SEND_POWER);
             //发送power的类名
-            //streamHandle.writeUTF(className);
-            streamHandle.writeUTF(power.ID);
+            streamHandle.writeUTF(className);
+            //streamHandle.writeUTF(power.ID);
             //发送power的施加者
             creatureEncode(streamHandle,source,true);
             creatureEncode(streamHandle,target,true);
@@ -859,7 +859,7 @@ public class ActionNetworkPatches {
                 case (0):
                     return (AbstractPower) constructor.newInstance(target,amount);
                 case (1):
-                    return (AbstractPower) constructor.newInstance(amount);
+                    return (AbstractPower) constructor.newInstance(target);
                 case (2):
                     return (AbstractPower) constructor.newInstance(target,source,amount);
             }
