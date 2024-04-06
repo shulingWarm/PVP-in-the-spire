@@ -2,13 +2,19 @@ package WarlordEmblem.Room;
 
 import WarlordEmblem.character.FriendMonster;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.megacrit.cardcrawl.actions.animations.VFXAction;
+import com.megacrit.cardcrawl.actions.common.SuicideAction;
+import com.megacrit.cardcrawl.actions.utility.HideHealthBarAction;
 import com.megacrit.cardcrawl.core.AbstractCreature;
 import com.megacrit.cardcrawl.core.Settings;
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
 import com.megacrit.cardcrawl.monsters.AbstractMonster;
+import com.megacrit.cardcrawl.rooms.MonsterRoom;
+import com.megacrit.cardcrawl.vfx.combat.InflameEffect;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 //友军管理器，不过这还是通过打patch实现的
 public class FriendManager {
@@ -37,11 +43,26 @@ public class FriendManager {
     //用于处理当敌方爪牙状态发生变化时，告知对方同步状态
     public HashMap<AbstractMonster,Integer> monster2IdMap = new HashMap<>();
 
+    //对方上次加入过的monster
+    //这个是为了保证两边每一局加入的友军是一样的
+    public String oppositeFriendName = "";
 
     public FriendManager()
     {
 
     }
+
+    //战斗开始时的初始化
+    public void battleBeginInit()
+    {
+        this.oppositeFriendName = "";
+        //清空我方友军和敌方友军
+        id2MonsterMap.clear();
+        monster2IdMap.clear();
+        //清空友军列表
+        monsterList.clear();
+    }
+
 
     //适配新的monster的位置
     public float[] getNewMonsterXY()
@@ -59,7 +80,6 @@ public class FriendManager {
                 if(!eachMonster.judgeValid())
                 {
                     //暂时不应该走这个分支，目前还不考虑从中间插入敌人的情况
-                    System.out.println("Should not happen");
                     return eachMonster.getLocation();
                 }
             }
@@ -90,6 +110,13 @@ public class FriendManager {
         return -1;
     }
 
+    //判断一个creature是否属于敌方友军
+    public boolean judgeOppositeFriend(AbstractCreature creature)
+    {
+        return creature instanceof AbstractMonster &&
+                monster2IdMap.containsKey((AbstractMonster) creature);
+    }
+
     //记录对面的monster和它的id
     public void registerOppositeMonster(AbstractMonster monster,
         int id)
@@ -107,9 +134,28 @@ public class FriendManager {
         return null;
     }
 
+    //玩家死亡时，清理爪牙，这里指的是清理monster列表里的内容
+    public void makeMinionSuicide()
+    {
+        //遍历每个爪牙
+        for (Map.Entry<AbstractMonster, Integer> entry : this.monster2IdMap.entrySet()) {
+            AbstractMonster m = entry.getKey();
+            if(m.isDead || m.isDying)
+                continue;
+            AbstractDungeon.actionManager.addToTop(new HideHealthBarAction(m));
+            AbstractDungeon.actionManager.addToTop(new SuicideAction(m));
+            AbstractDungeon.actionManager.addToTop(new VFXAction(m, new InflameEffect(m), 0.2F));
+        }
+        //清理我方敌人槽位
+        monster2IdMap.clear();
+    }
+
     //由ControlMonster的实体来调用，这个逻辑后面再优化
     public void render(SpriteBatch sb)
     {
+        //需要确保当前的状态是战斗
+        if(!(AbstractDungeon.getCurrRoom() instanceof MonsterRoom))
+            return;
         //遍历每个monster来执行渲染
         for(FriendMonster eachMonster : monsterList)
         {
@@ -120,6 +166,8 @@ public class FriendManager {
     // 对画面逻辑的更新操作
     public void update()
     {
+        if(!(AbstractDungeon.getCurrRoom() instanceof MonsterRoom))
+            return;
         for(FriendMonster eachMonster : monsterList)
         {
             eachMonster.update();

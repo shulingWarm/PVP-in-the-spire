@@ -14,19 +14,28 @@ public class MonsterIntentChangeEvent extends BaseEvent {
 
     public int idMonster;
     public AbstractMonster.Intent newIntent;
+    //记录基础伤害值和伤害次数
+    public int baseDamage;
+    public int damageTimes;
 
     public MonsterIntentChangeEvent(int idMonster,
+        int baseDamage,
+        int damageTimes,
         AbstractMonster.Intent newIntent)
     {
         this.idMonster = idMonster;
         this.newIntent = newIntent;
         //设置事件的id
         this.eventId = "IntentChange";
+        //记录伤害值
+        this.baseDamage = baseDamage;
+        this.damageTimes = damageTimes;
     }
 
     public MonsterIntentChangeEvent()
     {
-        this(0, AbstractMonster.Intent.DEBUG);
+        this(0, 0,0,
+            AbstractMonster.Intent.DEBUG);
     }
 
     //对事件的编码
@@ -39,6 +48,9 @@ public class MonsterIntentChangeEvent extends BaseEvent {
             //写入monster的id
             streamHandle.writeInt(idMonster);
             streamHandle.writeUTF(this.newIntent.name());
+            //记录伤害数值
+            streamHandle.writeInt(baseDamage);
+            streamHandle.writeInt(damageTimes);
         }
         catch (IOException e)
         {
@@ -55,10 +67,15 @@ public class MonsterIntentChangeEvent extends BaseEvent {
             //读取更改意图的monster
             int idMonster = streamHandle.readInt();
             //读取敌人的新意图
-            String intent = streamHandle.readUTF();
+            String intentStr = streamHandle.readUTF();
             //从FriendManager里面解码monster
             FriendMonster tempMonster =
                 FriendManager.instance.getMonsterById(idMonster);
+            //获取具体的意图
+            AbstractMonster.Intent intent = AbstractMonster.Intent.valueOf(intentStr);
+            //读取基础伤害和伤害次数
+            int tempBase = streamHandle.readInt();
+            int tempTimes = streamHandle.readInt();
             if(tempMonster != null && tempMonster.judgeValid())
             {
                 //获取monster的实体
@@ -66,10 +83,8 @@ public class MonsterIntentChangeEvent extends BaseEvent {
                 if(monster != null)
                 {
                     //写入意图
-                    monster.setMove((byte)1,
-                        AbstractMonster.Intent.valueOf(intent));
+                    monster.setMove((byte)1,intent,tempBase,tempTimes,tempTimes>1);
                     monster.createIntent();
-                    System.out.printf("write intent %s\n",intent);
                 }
             }
         }

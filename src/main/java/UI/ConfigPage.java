@@ -209,6 +209,8 @@ public class ConfigPage extends AbstractPage implements UpdateCharacter, ConfigC
         optionList.add(new CardPoolOption(optionWidth));
         //设置地图资源层数
         optionList.add(new MapRowNumConfig(optionWidth));
+        //注册添加小怪的选项
+        optionList.add(new FriendMonsterConfig(optionWidth));
         //遍历每个需要被添加的page
         for(int idPage=0;idPage<optionList.size();++idPage)
         {

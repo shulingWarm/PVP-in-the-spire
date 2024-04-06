@@ -17,7 +17,7 @@ public class GeneratorEmpty<T> extends Generator<T> {
         }
         catch (NoSuchMethodException e)
         {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
     }
 

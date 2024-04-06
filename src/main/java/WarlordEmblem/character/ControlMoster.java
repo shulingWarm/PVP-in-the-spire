@@ -5,16 +5,18 @@ import UI.MonsterBox;
 import UI.PotionPanel;
 import UI.RelicPanel;
 import WarlordEmblem.AutomaticSocketServer;
+import WarlordEmblem.GlobalManager;
 import WarlordEmblem.Room.FriendManager;
 import WarlordEmblem.Screens.PVPVictory;
 import WarlordEmblem.Stance.CalmStanceEnemy;
 import WarlordEmblem.Stance.DivinityStanceEnemy;
 import WarlordEmblem.Stance.WrathStanceEnemy;
-import WarlordEmblem.actions.ActionProtocol;
-import WarlordEmblem.actions.FightProtocol;
-import WarlordEmblem.actions.KaKaProtocol;
+import WarlordEmblem.actions.*;
 import WarlordEmblem.actions.OrbAction.ChannelActionEnemy;
 import WarlordEmblem.actions.OrbAction.EvokeActionEnemy;
+import WarlordEmblem.helpers.ClassNameHelper;
+import WarlordEmblem.helpers.LocationHelper;
+import WarlordEmblem.helpers.RandMonsterHelper;
 import WarlordEmblem.orbs.OrbExternalFunction;
 import WarlordEmblem.patches.ActionNetworkPatches;
 import WarlordEmblem.patches.CardShowPatch.CardBox;
@@ -56,6 +58,7 @@ import com.megacrit.cardcrawl.helpers.FontHelper;
 import com.megacrit.cardcrawl.helpers.MathHelper;
 import com.megacrit.cardcrawl.localization.MonsterStrings;
 import com.megacrit.cardcrawl.monsters.AbstractMonster;
+import com.megacrit.cardcrawl.monsters.exordium.Cultist;
 import com.megacrit.cardcrawl.orbs.*;
 import com.megacrit.cardcrawl.powers.AbstractPower;
 import com.megacrit.cardcrawl.powers.FocusPower;
@@ -79,7 +82,6 @@ import com.megacrit.cardcrawl.vfx.combat.StrikeEffect;
 import org.lwjgl.Sys;
 
 //死循环的action
-import WarlordEmblem.actions.PauseAction;
 //用来等待的action
 import com.megacrit.cardcrawl.actions.utility.WaitAction;
 
@@ -104,11 +106,6 @@ public class ControlMoster extends AbstractMonster {
     public static final String[] DIALOG;
     private boolean firstMove;
     private boolean saidPower;
-    private static final int RITUAL_AMT = 10;
-    private static final int A_2_RITUAL_AMT = 12;
-    private int ritualAmount;
-    private static final byte DARK_STRIKE = 1;
-    private static final byte INCANTATION = 3;
     private boolean talky;
 
     //这个敌人的实例，它目前最多会有一个实例，所以这样做也可以
@@ -163,6 +160,8 @@ public class ControlMoster extends AbstractMonster {
     public static float energyFontScale = 1.f;
     //是否渲染球位
     public boolean renderOrb = false;
+    //判断是否已经添加过友军了
+    public boolean addedFriendFlag = false;
 
     //初始化姿态特效
     //这都是从watcher的初始化里面学的
@@ -265,7 +264,10 @@ public class ControlMoster extends AbstractMonster {
 
     public ControlMoster(float x, float y, boolean talk) {
         super(SocketServer.oppositeName, "Cultist", 150, -4.0F, -16.0F, 220.0F, 290.0F, (String)null, x, y);
-        System.out.print("constructor!!!\n\n\n");
+        //强制让敌人与玩家保持对称
+        AbstractPlayer player = AbstractDungeon.player;
+        this.drawX = LocationHelper.xInvert(player.drawX);
+        this.drawY = LocationHelper.yInvert(player.drawY);
         this.firstMove = true;
         this.saidPower = false;
         //初始化充能球的列表
@@ -570,8 +572,6 @@ public class ControlMoster extends AbstractMonster {
         potionPanel.render(sb);
         //渲染敌人的能量框
         this.renderEnergyPanel(sb);
-        //处理友军渲染
-        FriendManager.instance.render(sb);
     }
 
     //对充能球的动画更新
@@ -675,8 +675,6 @@ public class ControlMoster extends AbstractMonster {
             AbstractDungeon.player.damage(new DamageInfo(AbstractDungeon.player,1));
             ActionNetworkPatches.stopSendAttack = false;
         }
-        //对友军信息的更新
-        FriendManager.instance.update();
     }
 
     //怪物受到伤害时的事件 这里对死亡事件做了特殊的处理
@@ -851,6 +849,8 @@ public class ControlMoster extends AbstractMonster {
                     goldNum
             ));
         }
+        //清理爪牙
+        FriendManager.instance.makeMinionSuicide();
         this.die();
         if (AbstractDungeon.getMonsters().areMonstersBasicallyDead()) {
             AbstractDungeon.actionManager.cleanCardQueue();
@@ -908,6 +908,28 @@ public class ControlMoster extends AbstractMonster {
             //添加循环等待对方信号的操作
             AbstractDungeon.actionManager.addToBottom(new PauseAction(AbstractDungeon.actionManager,
                     server,protocol));
+            //添加一个敌人，并且只添加一次
+            if(GlobalManager.friendMonsterFlag && !addedFriendFlag)
+            {
+                //判断有没有可添加的monster
+                String refMonsterName = FriendManager.instance.oppositeFriendName;
+                AbstractMonster tempMonster = null;
+                if(!refMonsterName.isEmpty())
+                {
+                    tempMonster = ClassNameHelper.createMonster(refMonsterName);
+                }
+                //判断是否已经有有效的monster了
+                if(tempMonster == null)
+                {
+                    //取出一个随机的monster
+                    tempMonster = RandMonsterHelper.getRandMonster();
+                }
+                AbstractDungeon.actionManager.addToBottom(
+                    new AddFriendMonsterAction(tempMonster)
+                );
+                //记录已经添加过友军了
+                addedFriendFlag = true;
+            }
         }
     }
 

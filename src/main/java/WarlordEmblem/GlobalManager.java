@@ -2,6 +2,7 @@ package WarlordEmblem;
 
 import UI.ConfigPage;
 import WarlordEmblem.Dungeon.FakeEnding;
+import WarlordEmblem.EffectTransport.EffectManager;
 import WarlordEmblem.PVPApi.BaseEvent;
 import WarlordEmblem.Screens.midExit.MidExitScreen;
 import WarlordEmblem.network.SteamConnector;
@@ -21,6 +22,7 @@ import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
 import com.megacrit.cardcrawl.screens.charSelect.CharacterSelectScreen;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
@@ -35,7 +37,7 @@ public class GlobalManager {
     //初始的坚不可摧比例
     public static int invincibleRate = 2;
     //版本号
-    public static final String VERSION = "v0.3.17";
+    public static final String VERSION = "v0.3.18";
     //是否启用customMOD,例如现开套牌
     public static boolean useModFlag = false;
     //最后决定使用的mod
@@ -44,6 +46,11 @@ public class GlobalManager {
     public static int startGold = 500;
     //用户自定义的事件
     public static HashMap<String, BaseEvent> eventMap = new HashMap<>();
+    public static ArrayList<BaseEvent> eventList = new ArrayList<>();
+    //是否在战斗中开启友军小怪
+    public static boolean friendMonsterFlag = false;
+    //特效管理器
+    public static EffectManager effectManager = new EffectManager();
 
     public static void characterPatchInit()
     {
@@ -91,6 +98,8 @@ public class GlobalManager {
         startGold = 500;
         //初始化获取资源的层数为5
         FakeEnding.ROW_NUM = 5;
+        //友军默认是不开的
+        friendMonsterFlag = false;
     }
 
     //选择人物时点击启程的操作，点击的时候会确定游戏即将开始

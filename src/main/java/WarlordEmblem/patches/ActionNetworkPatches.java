@@ -1,6 +1,9 @@
 package WarlordEmblem.patches;
 
 import WarlordEmblem.AutomaticSocketServer;
+import WarlordEmblem.Events.MonsterDamageEvent;
+import WarlordEmblem.PVPApi.Communication;
+import WarlordEmblem.Room.FriendManager;
 import WarlordEmblem.SocketServer;
 import WarlordEmblem.Stance.CalmStanceEnemy;
 import WarlordEmblem.Stance.DivinityStanceEnemy;
@@ -84,18 +87,10 @@ public class ActionNetworkPatches {
     {
         try
         {
-            //读取伤害的类型
-            int sourceType = streamHandle.readInt();
             //如果是玩家就记录成玩家
-            AbstractCreature source;
-            if(sourceType == FightProtocol.PLAYER)
-            {
-                source = AbstractDungeon.player;
-            }
-            else {
-                //由于默认只有一个敌人，就直接把目标指定为第一个敌人
-                source = AbstractDungeon.getCurrRoom().monsters.monsters.get(0);
-            }
+            //2024-3-28 这里现在只处理玩家之间的伤害，玩家与monster之间的伤害
+            //不在这里处理
+            AbstractCreature source = creatureDecode(streamHandle,false);
             //读取伤害的种类
             String typeName = streamHandle.readUTF();
             //读取base数值和output数值
@@ -122,13 +117,7 @@ public class ActionNetworkPatches {
         try
         {
             //如果目标是玩家，就改成目标是敌人，因为要换成对方视角
-            if(info.owner instanceof AbstractPlayer)
-            {
-                streamHandle.writeInt(FightProtocol.MONSTER);
-            }
-            else {
-                streamHandle.writeInt(FightProtocol.PLAYER);
-            }
+            creatureEncode(streamHandle,info.owner,true);
             //name字段似乎始终没人用，就省略了
             //传入type类型，用字符串传
             streamHandle.writeUTF(info.type.name());
@@ -155,12 +144,24 @@ public class ActionNetworkPatches {
         }
         try
         {
-            if(isPlayer)
+            //判断creature是不是友军
+            if(FriendManager.instance.judgeOppositeFriend(creature))
             {
-                streanHandle.writeInt(FightProtocol.PLAYER);
+                //这表示需要处理友军的编码解码逻辑
+                streanHandle.writeInt(1);
+                streanHandle.writeInt(
+                    FriendManager.instance.getIdByMonster((AbstractMonster) creature));
             }
             else {
-                streanHandle.writeInt(FightProtocol.MONSTER);
+                //这表示和友军没关系
+                streanHandle.writeInt(0);
+                if(isPlayer)
+                {
+                    streanHandle.writeInt(FightProtocol.PLAYER);
+                }
+                else {
+                    streanHandle.writeInt(FightProtocol.MONSTER);
+                }
             }
         } catch (IOException e)
         {
@@ -173,21 +174,32 @@ public class ActionNetworkPatches {
     {
         try
         {
-            //读取数据
-            boolean playerFlag = streanHandle.readInt() == FightProtocol.PLAYER;
-            //如果此时战斗已经结束了，就不用再解析了
-            if(disableCombatTrigger)
-                return null;
-            //如果需要反向处理
-            if(invert)
-                playerFlag = !playerFlag;
-            if(playerFlag)
+            //先读取是不是不是对方的友军
+            int friendMonsterFlag = streanHandle.readInt();
+            if(friendMonsterFlag == 1)
             {
-                return AbstractDungeon.player;
+                //读取monster的id
+                int idMonster = streanHandle.readInt();
+                return FriendManager.instance.getMonsterById(
+                    idMonster).creatureBox.getCreature();
             }
             else {
-                //返回第一个敌人
-                return AbstractDungeon.getCurrRoom().monsters.monsters.get(0);
+                //读取数据
+                boolean playerFlag = streanHandle.readInt() == FightProtocol.PLAYER;
+                //如果此时战斗已经结束了，就不用再解析了
+                if(disableCombatTrigger)
+                    return null;
+                //如果需要反向处理
+                if(invert)
+                    playerFlag = !playerFlag;
+                if(playerFlag)
+                {
+                    return AbstractDungeon.player;
+                }
+                else {
+                    //这种情况下只处理controlMonster
+                    return ControlMoster.instance;
+                }
             }
         } catch (IOException | NullPointerException e)
         {
@@ -207,6 +219,7 @@ public class ActionNetworkPatches {
             return;
         //目标服务器
         AutomaticSocketServer server = AutomaticSocketServer.getServer();
+        System.out.printf("Sending normal damage %s\n",target.name);
         //发送基本的伤害编码信息
         try
         {
@@ -232,7 +245,11 @@ public class ActionNetworkPatches {
         //读取处理的目标
         AbstractCreature target = creatureDecode(streamHandle,false);
         if(info==null || target == null)
+        {
+            System.out.println("Receive damage failed");
             return;
+        }
+        System.out.println("Receive normal damage");
         //调用对目标的伤害
         //此时停止触发伤害信息
         stopSendAttack = true;
@@ -250,8 +267,21 @@ public class ActionNetworkPatches {
         public static void fix(AbstractPlayer __instance,
            DamageInfo info)
         {
-            //调用发送伤害信息，到底用不用发送，那里会判定
-            onAttackSend(info,__instance);
+            //如果是禁用伤害触发的情况下，直接跳过这个地方就可以
+            if(stopSendAttack)
+            {
+                return;
+            }
+            //判断造成伤害的是不是敌方友军
+            if(FriendManager.instance.judgeOppositeFriend(info.owner))
+            {
+                //发送敌方友军对自己的伤害
+                Communication.sendEvent(new MonsterDamageEvent(info));
+            }
+            else {
+                //调用发送伤害信息，到底用不用发送，那里会判定
+                onAttackSend(info,__instance);
+            }
         }
     }
 
@@ -985,9 +1015,7 @@ public class ActionNetworkPatches {
             //阻断触发的情况也什么都不做
             if(!SocketServer.USE_NETWORK || stopTrigger)
                 return;
-            //对damageAction做编码 但只有处于自己的回合的时候才需要这样做
-            //如果作用的目标是自己都需要发给对面
-            //if(FightProtocol.endReadFlag)
+
             {
                 //另外需要观察一下这种buff有没有映射过，没有映射过就别发了
                 PowerMapping.initCreatorMapper();
@@ -1148,47 +1176,47 @@ public class ActionNetworkPatches {
 
     //特效传导的action
     //只传导部分特效
-    @SpirePatch(clz = VFXAction.class, method = SpirePatch.CONSTRUCTOR,
-            paramtypez = {AbstractCreature.class, AbstractGameEffect.class,float.class})
-    public static class VFXEffectSend
-    {
-        //在构造特效的时候准备一个发送特效的操作
-        @SpirePostfixPatch
-        public static void fix(VFXAction __instance,AbstractCreature source, AbstractGameEffect effect, float duration)
-        {
-            if(!SocketServer.USE_NETWORK)
-                return;
-            //if(FightProtocol.endReadFlag)
-            {
-                //添加一个发送信息的action
-                AbstractDungeon.actionManager.addToTop(
-                        new SendEffectAction(effect,duration)
-                );
-            }
-        }
-    }
+//    @SpirePatch(clz = VFXAction.class, method = SpirePatch.CONSTRUCTOR,
+//            paramtypez = {AbstractCreature.class, AbstractGameEffect.class,float.class})
+//    public static class VFXEffectSend
+//    {
+//        //在构造特效的时候准备一个发送特效的操作
+//        @SpirePostfixPatch
+//        public static void fix(VFXAction __instance,AbstractCreature source, AbstractGameEffect effect, float duration)
+//        {
+//            if(!SocketServer.USE_NETWORK)
+//                return;
+//            //if(FightProtocol.endReadFlag)
+//            {
+//                //添加一个发送信息的action
+//                AbstractDungeon.actionManager.addToTop(
+//                        new SendEffectAction(effect,duration)
+//                );
+//            }
+//        }
+//    }
 
     //对特效信息做编码的另一种形式
-    @SpirePatch(clz = VFXAction.class, method = SpirePatch.CONSTRUCTOR,
-            paramtypez = {AbstractCreature.class, AbstractGameEffect.class,float.class,boolean.class})
-    public static class VFXEffectSend2
-    {
-        //在构造特效的时候准备一个发送特效的操作
-        @SpirePostfixPatch
-        public static void fix(VFXAction __instance,AbstractCreature source,
-           AbstractGameEffect effect, float duration,boolean topLevel)
-        {
-            if(!SocketServer.USE_NETWORK)
-                return;
-            //if(FightProtocol.endReadFlag)
-            {
-                //添加一个发送信息的action
-                AbstractDungeon.actionManager.addToTop(
-                        new SendEffectAction(effect,duration)
-                );
-            }
-        }
-    }
+//    @SpirePatch(clz = VFXAction.class, method = SpirePatch.CONSTRUCTOR,
+//            paramtypez = {AbstractCreature.class, AbstractGameEffect.class,float.class,boolean.class})
+//    public static class VFXEffectSend2
+//    {
+//        //在构造特效的时候准备一个发送特效的操作
+//        @SpirePostfixPatch
+//        public static void fix(VFXAction __instance,AbstractCreature source,
+//           AbstractGameEffect effect, float duration,boolean topLevel)
+//        {
+//            if(!SocketServer.USE_NETWORK)
+//                return;
+//            //if(FightProtocol.endReadFlag)
+//            {
+//                //添加一个发送信息的action
+//                AbstractDungeon.actionManager.addToTop(
+//                        new SendEffectAction(effect,duration)
+//                );
+//            }
+//        }
+//    }
 
     //激发球时触发的操作
     @SpirePatch(clz = AbstractPlayer.class, method = "evokeOrb")

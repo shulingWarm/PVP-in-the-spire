@@ -21,6 +21,7 @@ import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
 import javax.swing.*;
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 //两个玩家对战时的通信协议
@@ -29,20 +30,21 @@ public class FightProtocol extends AbstractActionProtocol {
     //对用户自定义事件的解码
     public static void handleCustomEvent(DataInputStream stream)
     {
-        //获取映射表
-        HashMap<String, BaseEvent> eventMap = GlobalManager.eventMap;
+        //所有事件的列表
+        ArrayList<BaseEvent> eventList = GlobalManager.eventList;
         //读取事件id
         try
         {
-            String eventId = stream.readUTF();
+            int eventId = stream.readInt();
             //判断是否存在这个event
-            if(eventMap.containsKey(eventId))
+            if(eventId < eventList.size())
             {
-                BaseEvent event = eventMap.get(eventId);
+                BaseEvent event = eventList.get(eventId);
+                System.out.printf("Trigger custom event: %s\n",event.eventId);
                 event.decode(stream);
             }
             else {
-                System.out.printf("cannot found %s\n",eventId);
+                System.out.printf("Invalid event index %d\n",eventId);
             }
         }
         catch (IOException e)
@@ -174,7 +176,8 @@ public class FightProtocol extends AbstractActionProtocol {
             }
             //临时读取一个数据
             int tempData = server.inputHandle.readInt();
-            //System.out.printf("receive %d\n",tempData);
+//            if(tempData != DELAY_TEST)
+//                System.out.printf("receive %d\n",tempData);
             switch (tempData)
             {
                 case INVALID_TAG:
@@ -239,9 +242,6 @@ public class FightProtocol extends AbstractActionProtocol {
                 case CHANNEL_ORB:
                     //调用解码操作，但不一样的是，这里它会自己把action添加进去
                     ActionNetworkPatches.channelOrbDecode(server.inputHandle);
-                    break;
-                case EFFECT_INFO:
-                    ActionNetworkPatches.decodeEffect(server.inputHandle);
                     break;
                 case EVOKE_INFO:
                     ControlMoster.instance.evokeOrb();
@@ -346,6 +346,9 @@ public class FightProtocol extends AbstractActionProtocol {
                 //对药水的解码操作
                 case POTION_LIST:
                     PotionPanel.potionDecode(server.inputHandle);
+                    break;
+                case EFFECT_INFO:
+                    ActionNetworkPatches.decodeEffect(server.inputHandle);
                     break;
                 //强制消耗某一张牌
                 case FORCE_EXHAUST_CARD:

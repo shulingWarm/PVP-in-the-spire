@@ -2,7 +2,9 @@ package WarlordEmblem.character;
 
 import UI.CreatureBox;
 import UI.MonsterBox;
+import WarlordEmblem.patches.ActionNetworkPatches;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.megacrit.cardcrawl.cards.DamageInfo;
 import com.megacrit.cardcrawl.core.AbstractCreature;
 import com.megacrit.cardcrawl.monsters.AbstractMonster;
 
@@ -19,6 +21,20 @@ public class FriendMonster {
         creatureBox = new MonsterBox(monster);
     }
 
+    //对monster内容的伤害
+    public void damage(DamageInfo info)
+    {
+        //获取monster实体
+        AbstractMonster monster = this.getMonster();
+        //如果没有得到正确的实体，就直接跳过了
+        if(monster == null)
+            return;
+        //执行伤害 不需要传输这个伤害
+        ActionNetworkPatches.stopSendAttack = true;
+        monster.damage(info);
+        ActionNetworkPatches.stopSendAttack = false;
+    }
+
     //获取里面的monster实体
     public AbstractMonster getMonster()
     {
@@ -33,7 +49,7 @@ public class FriendMonster {
     //判断是否已经死亡或无效，目前只考虑不死亡的情况
     public boolean judgeValid()
     {
-        return true;
+        return !this.creatureBox.getCreature().isDeadOrEscaped();
     }
 
     //获取它的位置

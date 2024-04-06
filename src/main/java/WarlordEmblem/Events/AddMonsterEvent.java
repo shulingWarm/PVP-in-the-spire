@@ -10,6 +10,7 @@ import com.megacrit.cardcrawl.core.Settings;
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
 import com.megacrit.cardcrawl.helpers.MonsterHelper;
 import com.megacrit.cardcrawl.monsters.AbstractMonster;
+import com.megacrit.cardcrawl.monsters.MonsterQueueItem;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -97,6 +98,8 @@ public class AddMonsterEvent extends BaseEvent {
             //判断是否为有效的monster
             if(tempMonster!=null)
             {
+                //记录对方的敌人名称
+                FriendManager.instance.oppositeFriendName = tempName;
                 tempMonster.drawX = drawX;
                 tempMonster.drawY = drawY;
                 //修改临时的怪物的血量
@@ -106,10 +109,10 @@ public class AddMonsterEvent extends BaseEvent {
                 FriendManager.instance.registerOppositeMonster(
                     tempMonster,tempIdMonster
                 );
-                //添加一个敌人
-                AbstractDungeon.actionManager.addToBottom(
-                    new SpawnMonsterAction(tempMonster,true)
-                );
+                SpawnMonsterAction action = new SpawnMonsterAction(tempMonster,true,
+                    0);
+                action.update();
+                tempMonster.createIntent();
             }
         }
         catch (IOException e)

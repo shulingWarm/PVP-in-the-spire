@@ -2,10 +2,13 @@ package WarlordEmblem;
 
 
 
-import WarlordEmblem.Events.AddMonsterEvent;
-import WarlordEmblem.Events.MonsterIntentChangeEvent;
+import WarlordEmblem.EffectTransport.EffectManager;
+import WarlordEmblem.EffectTransport.EmptyTransporter;
+import WarlordEmblem.EffectTransport.XYTransporter;
+import WarlordEmblem.Events.*;
 import WarlordEmblem.PVPApi.Communication;
 import WarlordEmblem.card.*;
+import WarlordEmblem.helpers.RandMonsterHelper;
 import WarlordEmblem.relics.BlockGainer;
 import basemod.ModLabeledToggleButton;
 import basemod.ModPanel;
@@ -243,6 +246,17 @@ public class WarlordEmblem implements
         //注册事件
         Communication.registerEvent(new AddMonsterEvent());
         Communication.registerEvent(new MonsterIntentChangeEvent());
+        Communication.registerEvent(new MonsterDamageEvent());
+        Communication.registerEvent(new DamageOnMonsterEvent());
+        Communication.registerEvent(new VFXEffectEvent());
+
+        //初始化随机怪物的事件
+        RandMonsterHelper.initMonsterList();
+
+        EffectManager effectManager = GlobalManager.effectManager;
+        //注册通用特效
+        effectManager.registerNewTransporter(new XYTransporter());
+        effectManager.registerNewTransporter(new EmptyTransporter());
     }
 
 

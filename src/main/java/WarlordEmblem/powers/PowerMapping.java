@@ -1,5 +1,6 @@
 package WarlordEmblem.powers;
 
+import com.gikk.twirk.types.usernotice.subtype.Ritual;
 import com.megacrit.cardcrawl.cards.blue.LockOn;
 import com.megacrit.cardcrawl.characters.AbstractPlayer;
 import com.megacrit.cardcrawl.core.AbstractCreature;
@@ -332,6 +333,24 @@ public class PowerMapping {
         }
     }
 
+    //对仪式的映射
+    public static class RitualMapping extends PowerCreate
+    {
+        @Override
+        public AbstractPower make(AbstractCreature owner,int amount,boolean isSourceMonster) {
+            return new FakeRitual(owner,amount);
+        }
+    }
+
+    //脆弱
+    public static class FrailMapping extends PowerCreate
+    {
+        @Override
+        public AbstractPower make(AbstractCreature owner,int amount,boolean isSourceMonster) {
+            return new FrailPower(owner,amount,true);
+        }
+    }
+
     //从ID到power生成方法的映射
     public static HashMap<String,PowerCreate> creatorMapper;
 
@@ -413,6 +432,10 @@ public class PowerMapping {
         creatorMapper.put(GodPunishmentPower.POWER_ID,new GodPunishmentPowerMapping());
         //机器学习
         creatorMapper.put(DrawPower.POWER_ID,new DrawPowerMapping());
+        //仪式
+        creatorMapper.put(RitualPower.POWER_ID,new RitualMapping());
+        //脆弱
+        creatorMapper.put(FrailPower.POWER_ID,new FrailMapping());
     }
 
     //根据id生成具体的power对象

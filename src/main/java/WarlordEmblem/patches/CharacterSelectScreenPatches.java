@@ -4,6 +4,7 @@ import UI.PotionPanel;
 import UI.RelicPanel;
 import WarlordEmblem.Dungeon.FakeEnding;
 import WarlordEmblem.GlobalManager;
+import WarlordEmblem.Room.FriendManager;
 import WarlordEmblem.Screens.FakeSettingScreen;
 import WarlordEmblem.Screens.midExit.MidExitScreen;
 import WarlordEmblem.actions.AddFriendMonsterAction;
@@ -335,6 +336,7 @@ public class CharacterSelectScreenPatches
                 ActionNetworkPatches.disableCombatTrigger = false;
                 //添加一次经历过的战斗的次数
                 SocketServer.battleNum++;
+
                 testScreen = null;
                 //发送自己的遗物列表
                 RelicPanel.sendMyRelic();
@@ -371,6 +373,10 @@ public class CharacterSelectScreenPatches
             {
                 return;
             }
+            //刚刚进入房间的时候，执行清除我方小怪
+            //正式代码中不需要有这一句，这里仅仅是为了做节目效果
+            FriendManager.instance.battleBeginInit();
+
             System.out.println("player entry!!!");
             //如果是第一场战斗，根据谁先进来的决定谁是先手
             if(SocketServer.battleNum==0)
@@ -703,22 +709,15 @@ public class CharacterSelectScreenPatches
                     initSolidPower();
                 }
                 //第二回合添加一个友军，用于测试
-                if(EndTurnOnBegin.idTurn == 2)
-                {
-                    //添加一个友军
-                    AbstractDungeon.actionManager.addToBottom(
-                        new AddFriendMonsterAction(
-                            new Cultist((float)Settings.WIDTH/2,
-                                (float)Settings.HEIGHT/2)
-                    ));
-                }
-//                //给一张顺手牵羊
-//                PsychicSnooping stealing = new PsychicSnooping();
-//                stealing.upgrade();
-//                stealing.upgrade();
-//                AbstractDungeon.actionManager.addToBottom(
-//                        new MakeTempCardInHandAction(stealing,1)
-//                );
+//                if(EndTurnOnBegin.idTurn == 2)
+//                {
+//                    AbstractMonster tempMonster = new Cultist((float)Settings.WIDTH/2,
+//                            (float)Settings.HEIGHT/2);
+//                    //添加一个友军
+//                    AbstractDungeon.actionManager.addToBottom(
+//                        new AddFriendMonsterAction(
+//                            tempMonster));
+//                }
             }
             return SpireReturn.Continue();
         }

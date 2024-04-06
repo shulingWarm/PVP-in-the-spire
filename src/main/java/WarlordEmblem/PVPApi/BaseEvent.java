@@ -8,6 +8,8 @@ public class BaseEvent {
 
     //事件的标志
     public String eventId;
+    //事件在列表里面的id
+    public int listId;
 
     //对事件的编码
     public void encode(DataOutputStream streamHandle)
