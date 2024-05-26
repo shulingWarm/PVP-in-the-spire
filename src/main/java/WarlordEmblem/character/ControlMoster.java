@@ -684,6 +684,8 @@ public class ControlMoster extends AbstractMonster {
         {
             return;
         }
+        //处理当前状态下的愤怒姿态
+        info.output = (int)this.stance.atDamageReceive(info.output,info.type);
         if (info.output > 0 &&
                 (this.hasPower("Intangible") ||
                 this.hasPower("IntangiblePlayer"))
@@ -874,9 +876,13 @@ public class ControlMoster extends AbstractMonster {
         {
             //淡出音乐
             CardCrawlGame.music.fadeAll();
-            PVPVictory.enterVictory();
+            //准备执行胜利画面
+            GlobalManager.prepareWin = true;
+            this.onBossVictoryLogic();
+            //清除所有奖励
+            AbstractDungeon.getCurrRoom().rewards.clear();
             //结束延时显示
-            RenderPatch.delayBox = null;
+            //RenderPatch.delayBox = null;
         }
         //如果要继续渲染的话，显示对方死亡的图片
         if(this.renderPlayer!=null)

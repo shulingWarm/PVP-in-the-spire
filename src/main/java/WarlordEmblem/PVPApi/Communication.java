@@ -65,9 +65,10 @@ public class Communication {
     {
         //power的映射表
         HashMap<String,PowerCreate> creatorMapping = PowerMapping.creatorMapper;
-        if(creatorMapping.isEmpty())
+        if(creatorMapping == null || creatorMapping.isEmpty())
         {
             PowerMapping.initCreatorMapper();
+            creatorMapping = PowerMapping.creatorMapper;
         }
         //判断是否已经存在
         if(creatorMapping.containsKey(powerId))

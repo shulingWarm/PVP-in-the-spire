@@ -18,6 +18,8 @@ public class ConfigProtocol {
     public static final int CHANGE_CONFIG = 20002;
     //选择准备的信息
     public static final int READY_INFO = 20003;
+    //接收所有的信息
+    public static final int ALL_CONFIG_INFO = 20004;
 
     //更新角色时的回调函数
     public static UpdateCharacter characterCallback = null;
@@ -76,6 +78,10 @@ public class ConfigProtocol {
                 //准备状态的更新
                 case READY_INFO:
                     configChangeCallback.updateReadyStage(server.inputHandle);
+                    break;
+                //所有的config数据
+                case ALL_CONFIG_INFO:
+                    configChangeCallback.receiveAllConfig(server.inputHandle);
                     break;
             }
         }

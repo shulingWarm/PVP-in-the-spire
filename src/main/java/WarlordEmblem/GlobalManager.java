@@ -1,16 +1,15 @@
 package WarlordEmblem;
 
 import UI.ConfigPage;
+import UI.InputBox;
+import UI.TextureManager;
 import WarlordEmblem.Dungeon.FakeEnding;
 import WarlordEmblem.EffectTransport.EffectManager;
 import WarlordEmblem.PVPApi.BaseEvent;
 import WarlordEmblem.Screens.midExit.MidExitScreen;
 import WarlordEmblem.network.SteamConnector;
+import WarlordEmblem.patches.*;
 import WarlordEmblem.patches.CardShowPatch.UseCardSend;
-import WarlordEmblem.patches.CharacterSelectScreenPatches;
-import WarlordEmblem.patches.EventPatch;
-import WarlordEmblem.patches.NeowRewardPatch;
-import WarlordEmblem.patches.RenderPatch;
 import WarlordEmblem.patches.connection.MeunScreenFadeout;
 import WarlordEmblem.patches.steamConnect.SteamManager;
 import WarlordEmblem.relics.BlockGainer;
@@ -37,7 +36,7 @@ public class GlobalManager {
     //初始的坚不可摧比例
     public static int invincibleRate = 2;
     //版本号
-    public static final String VERSION = "v0.3.18";
+    public static final String VERSION = "v0.3.21";
     //是否启用customMOD,例如现开套牌
     public static boolean useModFlag = false;
     //最后决定使用的mod
@@ -51,6 +50,10 @@ public class GlobalManager {
     public static boolean friendMonsterFlag = false;
     //特效管理器
     public static EffectManager effectManager = new EffectManager();
+    //是否准备胜利
+    public static boolean prepareWin = false;
+    //当前被激活的输入框，这属于UI控制
+    public static InputBox activateBox = null;
 
     public static void characterPatchInit()
     {
@@ -59,6 +62,8 @@ public class GlobalManager {
 
     public static void initGlobal()
     {
+        //取消胜利准备
+        prepareWin = false;
         ++idGame;
         //一些局部区域全局变量的初始化
         characterPatchInit();
@@ -100,6 +105,10 @@ public class GlobalManager {
         FakeEnding.ROW_NUM = 5;
         //友军默认是不开的
         friendMonsterFlag = false;
+        //初始化准备时需要载入的纹理
+        TextureManager.initTexture();
+        //把进阶设置成0
+        AbstractDungeon.ascensionLevel = 0;
     }
 
     //选择人物时点击启程的操作，点击的时候会确定游戏即将开始
@@ -112,7 +121,9 @@ public class GlobalManager {
         public static void fix()
         {
             System.out.println("confirm clicked!!!");
-            GlobalManager.initGlobal();
+            //如果当前不是房间模式才会使用到这个地方的初始化
+            if(!PanelScreenPatch.lobbyFlag)
+                GlobalManager.initGlobal();
         }
     }
 

@@ -1,42 +1,54 @@
-package UI;
+package UI.Lobby;
 
+import UI.*;
 import UI.Button.ReadyButton;
 import UI.Button.ReadyButtonCallback;
+import UI.Button.WithUpdate.BaseUpdateButton;
+import UI.Events.ClickCallback;
 import UI.Events.ConfigChangeEvent;
+import UI.Events.MemberChangeEvent;
 import UI.Events.UpdateCharacter;
 import UI.configOptions.*;
 import WarlordEmblem.AutomaticSocketServer;
+import WarlordEmblem.GameManager;
 import WarlordEmblem.GlobalManager;
 import WarlordEmblem.Room.FriendManager;
 import WarlordEmblem.SocketServer;
 import WarlordEmblem.actions.ConfigProtocol;
 import WarlordEmblem.character.CharacterInfo;
-import WarlordEmblem.character.FriendMonster;
+import WarlordEmblem.helpers.FontLibrary;
+import WarlordEmblem.network.Lobby.LobbyManager;
+import WarlordEmblem.network.SteamConnector;
 import WarlordEmblem.patches.RenderPatch;
 import WarlordEmblem.patches.connection.InputIpBox;
-import WarlordEmblem.patches.connection.IpInputProcessor;
 import WarlordEmblem.patches.connection.MeunScreenFadeout;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.codedisaster.steamworks.SteamID;
+import com.codedisaster.steamworks.SteamMatchmaking;
 import com.megacrit.cardcrawl.characters.AbstractPlayer;
-import com.megacrit.cardcrawl.characters.TheSilent;
 import com.megacrit.cardcrawl.core.CardCrawlGame;
 import com.megacrit.cardcrawl.core.Settings;
-import com.megacrit.cardcrawl.daily.mods.SealedDeck;
-import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
 import com.megacrit.cardcrawl.helpers.ImageMaster;
 import com.megacrit.cardcrawl.helpers.ModHelper;
 import com.megacrit.cardcrawl.helpers.input.InputHelper;
 
-import javax.swing.plaf.synth.SynthTextAreaUI;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import java.nio.file.CopyOption;
 import java.util.ArrayList;
 
-//游戏内容自定义的界面
-public class ConfigPage extends AbstractPage implements UpdateCharacter, ConfigChangeEvent, ReadyButtonCallback {
+//lobby的设置界面
+public class LobbyConfig extends AbstractPage
+        implements UpdateCharacter,
+        ConfigChangeEvent,
+        ReadyButtonCallback,
+        ClickCallback,
+        MemberChangeEvent //处理房间人员变化的回调
+{
+
+    //类实体，这是做实验用的，正常游戏不用这个
+    public static LobbyConfig instance;
 
     //显示各种配置选项的面板
     BasePanel configPanel;
@@ -47,7 +59,7 @@ public class ConfigPage extends AbstractPage implements UpdateCharacter, ConfigC
 
     //x位置的偏移量
     //这个表示的是两边的角色显示时对应的位置
-    public static final float X_PADDING = 0.2f;
+    public static final float X_PADDING = 0.15f;
     public static final float Y_PADDING = 0.5f;
     //准备按钮显示的x的位置
     public static final float READY_Y_PADDING = 0.4f;
@@ -78,14 +90,39 @@ public class ConfigPage extends AbstractPage implements UpdateCharacter, ConfigC
     //所有需要被添加的config列表
     public ArrayList<AbstractConfigOption> optionList = new ArrayList<>();
 
+    //向左右选人的按钮
+    public BaseUpdateButton leftButton;
+    public BaseUpdateButton rightButton;
+
+    //游戏角色的列表
+    public ArrayList<AbstractPlayer.PlayerClass> classArrayList;
+    //当前正在选择的角色列表
+    public int currentCharacter = 0;
+
+    //当前是否为发送hello阶段的标志 这里直接就用int来代表了
+    //-1 是房间里只有自己时的状态
+    //0 是房间里刚刚进来人，双方互相发送hello信息，这样才能确认通信正常
+    //1 是双方都已经发送好了角色信息，可以开始处理配置信息了
+    public int networkStage = 0;
+    //房主的标志
+    public boolean ownerFlag = false;
+    //发送hello信息的计数，每过一段时间再发送一次
+    public int sendHelloFrame = 100;
+
     @Override
     public void updateCharacter(AbstractPlayer.PlayerClass playerClass,String versionInfo) {
         System.out.println("construct char box");
+        //判断已有的信息里面是否重复
+        if(SocketServer.oppositeCharacter != null&&
+            SocketServer.oppositeCharacter.getPlayerClass() == playerClass)
+        {
+            return;
+        }
         //记录敌方的角色信息
         SocketServer.oppositeCharacter = new CharacterInfo(playerClass);
         //初始化对方角色的box
         oppositeBox = new CharacterBox(Settings.WIDTH*(1-X_PADDING),
-            Settings.HEIGHT*Y_PADDING,SocketServer.oppositeCharacter);
+                Settings.HEIGHT*Y_PADDING,SocketServer.oppositeCharacter);
         oppositeBox.flipHorizontal = true;
         //初始化对方的版本信息
         oppositeVersionText.text = versionInfo;
@@ -97,10 +134,10 @@ public class ConfigPage extends AbstractPage implements UpdateCharacter, ConfigC
         }
     }
 
-    //接收所有config信息
-    @Override
-    public void receiveAllConfig(DataInputStream streamHandle) {
-        System.out.println("Config page should not get all config info");
+    //获取目前角色的class
+    AbstractPlayer.PlayerClass getCurrentPlayerClass()
+    {
+        return classArrayList.get(currentCharacter);
     }
 
     public void receiveConfigChange(DataInputStream streamHandle)
@@ -111,6 +148,29 @@ public class ConfigPage extends AbstractPage implements UpdateCharacter, ConfigC
             int idOption = streamHandle.readInt();
             //交给目标option来处理后续内容
             optionList.get(idOption).receiveConfigChange(streamHandle);
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    //接收所有配置信息
+    @Override
+    public void receiveAllConfig(DataInputStream streamHandle) {
+        try{
+            //option的个数
+            int optionNum = streamHandle.readInt();
+            //如果超过自己的option数量，就把它弄成较小的那个
+            if(optionNum > optionList.size())
+                optionNum = optionList.size();
+            //遍历每个option
+            for(int idOption = 0;idOption<optionNum;++idOption)
+            {
+                //当前的option
+                AbstractConfigOption currentOption = optionList.get(idOption);
+                currentOption.receiveConfigChange(streamHandle);
+            }
         }
         catch (IOException e)
         {
@@ -160,6 +220,10 @@ public class ConfigPage extends AbstractPage implements UpdateCharacter, ConfigC
             FriendManager.initGlobalManager();
             //这次是真的可以了，准备进入游戏
             RenderPatch.delayBox = new DelayBox();
+            //指定自己选中的角色
+            CardCrawlGame.chosenCharacter = this.getCurrentPlayerClass();
+            //准备进入游戏
+            GameManager.prepareEnterGame();
         }
     }
 
@@ -176,7 +240,7 @@ public class ConfigPage extends AbstractPage implements UpdateCharacter, ConfigC
 
     //给对方发送自己的形象
     public void sendMyCharacter(DataOutputStream streamHandle,
-            AbstractPlayer.PlayerClass playerClass)
+                                AbstractPlayer.PlayerClass playerClass)
     {
         try
         {
@@ -187,6 +251,29 @@ public class ConfigPage extends AbstractPage implements UpdateCharacter, ConfigC
             streamHandle.writeUTF(myVersionText.text);
             //发送自己的名字
             streamHandle.writeUTF(SocketServer.myName);
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    //发送自己的配置信息
+    //遍历的过程中也就改成可以发消息了
+    public void sendMyConfig(DataOutputStream stream)
+    {
+        try
+        {
+            //添加数据头
+            stream.writeInt(ConfigProtocol.ALL_CONFIG_INFO);
+            //添加当前的选择项的个数
+            stream.writeInt(this.optionList.size());
+            //遍历option里面的每一项
+            for(AbstractConfigOption eachOption : optionList)
+            {
+                //获取当前的选择项
+                stream.writeInt(eachOption.getCurrentSelect());
+            }
         }
         catch (IOException e)
         {
@@ -226,11 +313,74 @@ public class ConfigPage extends AbstractPage implements UpdateCharacter, ConfigC
             currOption.setOptionId(idPage);
             //添加到panel里面
             configPanel.addNewPage(currOption);
+            //这里临时先禁止发送信息
+            currOption.sendConfigChangeFlag = false;
         }
     }
 
-    public ConfigPage()
+    //更新当前显示的角色
+    public void updateChosenCharacter()
     {
+        this.characterBox.updateCharacter(
+            new CharacterInfo(getCurrentPlayerClass())
+        );
+        if(this.networkStage == 1)
+        {
+            AutomaticSocketServer server = AutomaticSocketServer.getServer();
+            //通知对方更新角色信息
+            sendMyCharacter(server.streamHandle,this.getCurrentPlayerClass());
+            server.send();
+        }
+    }
+
+    //点击事件
+    @Override
+    public void clickEvent(BaseUpdateButton button) {
+        //判断是不是点击向左
+        if(button == leftButton)
+        {
+            this.currentCharacter = (this.currentCharacter - 1 +
+                this.classArrayList.size())%this.classArrayList.size();
+        }
+        else {
+            this.currentCharacter = (this.currentCharacter + 1)%this.classArrayList.size();
+        }
+        //更新当前显示的角色
+        updateChosenCharacter();
+    }
+
+    //处理房间人员变化的回调
+    @Override
+    public void onMemberChanged(SteamID personId, SteamMatchmaking.ChatMemberStateChange memberStage) {
+        //判断现在的状态是不是-1
+        if(this.networkStage == -1 &&
+            memberStage == SteamMatchmaking.ChatMemberStateChange.Entered)
+        {
+            //更新pvp的连接状态
+            LobbyManager.initP2PConnection(personId);
+            //把当前的状态更新成零，后面开始准备初始化pvp了
+            this.networkStage = 0;
+        }
+    }
+
+    //初始化所有角色的列表
+    public void initPlayerClassList()
+    {
+        //初始化目标的array list
+        this.classArrayList = new ArrayList<>();
+        //遍历所有的character
+        for(AbstractPlayer eachPlayer : CardCrawlGame.characterManager.getAllCharacters())
+        {
+            //在列表里面添加对应的操作
+            this.classArrayList.add(eachPlayer.chosenClass);
+        }
+    }
+
+
+    public LobbyConfig()
+    {
+        //初始化所有角色的列表
+        initPlayerClassList();
         configPanel = new BasePanel(
                 Settings.WIDTH*0.3F,Settings.HEIGHT*0.1f,
                 Settings.WIDTH*0.4F,Settings.HEIGHT*0.8f
@@ -244,7 +394,27 @@ public class ConfigPage extends AbstractPage implements UpdateCharacter, ConfigC
 //        characterBox = new CharacterBox(Settings.WIDTH*X_PADDING,
 //            Settings.HEIGHT*Y_PADDING, CardCrawlGame.chosenCharacter);
         characterBox = new CharacterBox(Settings.WIDTH*X_PADDING,
-                Settings.HEIGHT*Y_PADDING, new CharacterInfo(CardCrawlGame.chosenCharacter));
+                Settings.HEIGHT*Y_PADDING, new CharacterInfo(this.classArrayList.get(0)));
+        //初始化左右的按钮
+        this.leftButton = new BaseUpdateButton(Settings.WIDTH*0.04f,
+                Settings.HEIGHT*0.73f,
+                Settings.WIDTH * 0.07f,
+                Settings.HEIGHT * 0.07f,
+                "",
+                FontLibrary.getBaseFont(),
+                ImageMaster.CF_LEFT_ARROW,
+                this
+        );
+        this.rightButton = new BaseUpdateButton(
+                Settings.WIDTH * 0.18f,
+                Settings.HEIGHT*0.73f,
+                Settings.WIDTH * 0.07f,
+                Settings.HEIGHT * 0.07f,
+                "",
+                FontLibrary.getBaseFont(),
+                ImageMaster.CF_RIGHT_ARROW,
+                this
+        );
         //判断是否已经有可用的对方角色形象
         if(oppositeCharacter!=null)
         {
@@ -259,11 +429,11 @@ public class ConfigPage extends AbstractPage implements UpdateCharacter, ConfigC
         this.oppositeReadyLabel.y = Settings.HEIGHT*READY_Y_PADDING;
         this.oppositeReadyLabel.texture = TextureManager.READY_TEXTURE;
         //初始化我方的准备按钮
-        this.readyButton = new ReadyButton(Settings.WIDTH*X_PADDING,
+        this.readyButton = new ReadyButton(Settings.WIDTH*0.1f,
                 Settings.HEIGHT*READY_Y_PADDING,READY_BUTTON_WIDTH,READY_BUTTON_HEIGHT,
                 InputIpBox.generateFont(20));
         //我方的版本号
-        this.myVersionText = new VersionText(Settings.WIDTH*X_PADDING,
+        this.myVersionText = new VersionText(Settings.WIDTH*0.13f,
                 Settings.HEIGHT*VERSION_PADDING,
                 InputIpBox.generateFont(20));
         //对方的版本号
@@ -273,17 +443,75 @@ public class ConfigPage extends AbstractPage implements UpdateCharacter, ConfigC
         //默认不显示对方的版本号
         this.oppositeVersionText.text = null;
         this.readyButton.readyButtonCallback = this;
-        SocketServer server = AutomaticSocketServer.getServer();
-        sendMyCharacter(server.streamHandle,CardCrawlGame.chosenCharacter);
-        server.send();
         initConfigOption();
         InputHelper.initialize();
     }
+
+    //初始化网络状态
+    public void initNetworkStage(boolean isOwner)
+    {
+        //如果是房主的话，一开始是不发送hello信息的
+        if(isOwner)
+            this.networkStage = -1;
+        else
+            this.networkStage = 0;
+        //记录是否为房主
+        this.ownerFlag = isOwner;
+        //在steam的回调函数里注册人员变化时的操作
+        LobbyManager.callback.memberChangeEvent = this;
+    }
+
+    //网络状态更新
+    public void networkUpdate()
+    {
+        //判断现在是不是等待打招呼的状态
+        if(networkStage == 0 && SteamConnector.sendSteamHello())
+        {
+            //将网络状态置为下一个状态，也就是监听状态
+            this.networkStage = 1;
+            //把自己的信息置为配置页面的回调
+            ConfigProtocol.configChangeCallback = this;
+            ConfigProtocol.characterCallback = this;
+            //发送我方角色
+            AutomaticSocketServer server = AutomaticSocketServer.getServer();
+            sendMyCharacter(server.streamHandle,getCurrentPlayerClass());
+            server.send();
+            //判断自己是不是房主，如果是房主的话就同步给对方自己的所有配置信息
+            if(this.ownerFlag)
+            {
+                this.sendMyConfig(server.streamHandle);
+                server.send();
+            }
+        }
+        //判断网络状态是不是监听状态
+        else if(this.networkStage == 1)
+        {
+            //调用config阶段的监听工作
+            ConfigProtocol.readData(AutomaticSocketServer.getServer());
+            //判断是不是到了一个重复发送hello的周期
+            if(sendHelloFrame == 0)
+            {
+                sendHelloFrame = 100;
+                //发送一次hello信息，防止始终没有初始化连接成功
+                SteamConnector.onlySendHello();
+            }
+            else
+            {
+                --sendHelloFrame;
+            }
+        }
+    }
+
 
     @Override
     public void update() {
         //调用渲染列表的更新
         configPanel.update();
+        //更新左右按钮
+        this.leftButton.update();
+        this.rightButton.update();
+        //更新网络信息
+        this.networkUpdate();
     }
 
     //渲染配置选项
@@ -311,7 +539,8 @@ public class ConfigPage extends AbstractPage implements UpdateCharacter, ConfigC
         //渲染我方版本号和对方版本号
         myVersionText.render(sb);
         oppositeVersionText.render(sb);
-        //每个渲染周期都要解析一下配置信息
-        ConfigProtocol.readData(AutomaticSocketServer.getServer());
+        //渲染左右按钮
+        this.leftButton.render(sb);
+        this.rightButton.render(sb);
     }
 }

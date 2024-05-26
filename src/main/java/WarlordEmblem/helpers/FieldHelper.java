@@ -41,4 +41,30 @@ public class FieldHelper {
         return null;
     }
 
+    //设置某个私有成员的值
+    public static <RetType> void setPrivateFieldValue(Object obj, String fieldName, RetType newValue)
+    {
+        // 获取对象的Class对象
+        Class<?> clazz = obj.getClass();
+
+        // 循环向上搜索直到找到包含该字段的类
+        while (clazz != null) {
+            try {
+                // 尝试获取指定名字的私有成员变量
+                Field field = clazz.getDeclaredField(fieldName);
+
+                // 设置此字段可访问，以便能获取私有变量
+                field.setAccessible(true);
+
+                //设置它的目标值
+                field.set(obj,newValue);
+
+                return;
+            } catch (NoSuchFieldException | IllegalAccessException e) {
+                // 如果当前类找不到，则尝试其父类
+                clazz = clazz.getSuperclass();
+            }
+        }
+    }
+
 }

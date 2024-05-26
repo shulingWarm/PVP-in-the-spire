@@ -55,6 +55,12 @@ public class BasePanel extends AbstractPage implements ScrollBarListener {
 
     }
 
+    //清空列表
+    public void clearPanel()
+    {
+        this.pageList.clear();
+    }
+
     //在panel里面添加新的项目
     public void addNewPage(AbstractPage page)
     {

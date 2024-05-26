@@ -64,6 +64,7 @@ public class SteamConnector {
     //根据上次发送的打招呼信息的时间间隔来发送，并且检测是否收到了打招呼的信息
     public static boolean sendSteamHello()
     {
+        System.out.println("sending steam hello!!!");
         AutomaticSocketServer server = AutomaticSocketServer.globalServer;
         assert (server instanceof SteamSocketServer);
         //获取当前的时间

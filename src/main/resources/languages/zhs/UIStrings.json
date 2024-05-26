@@ -95,6 +95,18 @@
       "开"
     ]
   },
+  "LobbyScreen": {
+    "TEXT": [
+      "返回"
+    ]
+  },
+  "MenuScreen": {
+    "TEXT": [
+      "联机大厅(正在施工)",
+      "开始PVP",
+      "(请先放弃上一局)"
+    ]
+  },
   "WarlordEmblem:UtilizeAction": {
     "TEXT": [
       "选择丢弃一张手牌并获得其耗能等量的能量"

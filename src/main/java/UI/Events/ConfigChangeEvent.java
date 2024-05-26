@@ -12,4 +12,7 @@ public interface ConfigChangeEvent {
     //更新准备状态的接口
     public void updateReadyStage(DataInputStream streamHandle);
 
+    //接收所有信息的接口
+    public void receiveAllConfig(DataInputStream streamHandle);
+
 }

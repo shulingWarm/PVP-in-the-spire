@@ -28,12 +28,6 @@ public class TailNumSelect extends AbstractConfigOption implements DropdownMenuL
     //显示文本的接口
     TextLabel textLabel;
 
-    //选择数量的下拉菜单
-    DropdownMenu dropdownMenu;
-
-    //是否发送更新
-    public boolean sendConfigChangeFlag = true;
-
     public TailNumSelect(float width)
     {
         //初始化目前的位置

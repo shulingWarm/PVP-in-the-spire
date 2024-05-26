@@ -12,11 +12,11 @@ public class PVPVictory {
     public static void enterVictory()
     {
         CardCrawlGame.music.fadeOutBGM();
-        MapRoomNode node = new MapRoomNode(3, 5);
+        MapRoomNode node = new MapRoomNode(7, 5);
         node.room = new TrueVictoryRoom();
         AbstractDungeon.nextRoom = node;
         AbstractDungeon.closeCurrentScreen();
-        AbstractDungeon.nextRoomTransitionStart();
+        //AbstractDungeon.nextRoomTransitionStart();
     }
 
 }

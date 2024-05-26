@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.megacrit.cardcrawl.helpers.ImageMaster;
+import com.megacrit.cardcrawl.screens.options.DropdownMenu;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -33,8 +34,14 @@ public class AbstractConfigOption extends AbstractPage{
     //option的标号，用于辅助通信过程
     public int optionId = 0;
 
+    //是否发送更新
+    public boolean sendConfigChangeFlag = true;
+
     //目前是否可以交互
     public boolean enableFlag = true;
+
+    //选择数量的下拉菜单
+    DropdownMenu dropdownMenu;
 
     public static BitmapFont getOptionFont()
     {
@@ -44,6 +51,13 @@ public class AbstractConfigOption extends AbstractPage{
         }
         return optionFont;
     }
+
+    //获取当前的选择项
+    public int getCurrentSelect()
+    {
+        return this.dropdownMenu.getSelectedIndex();
+    }
+
 
     public AbstractConfigOption()
     {

@@ -73,6 +73,15 @@ public class CharacterBox extends CreatureBox {
         }
     }
 
+    //更新当前显示的角色
+    public void updateCharacter(CharacterInfo newCharacter)
+    {
+        //记录角色的player
+        this.player = newCharacter.player;
+        this.player.drawX = this.x;
+        this.player.drawY = this.y;
+    }
+
     public CharacterBox(float x, float y, AbstractPlayer.PlayerClass selectedCharacter)
     {
         this.x = x;

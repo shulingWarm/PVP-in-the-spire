@@ -1186,30 +1186,30 @@ public class CharacterSelectScreenPatches
     }
 
     //卡面伤害数值的计算补丁，计算完之后判断一下对面有没有暴怒，有暴怒的时候伤害*2
-    @SpirePatch(clz = AbstractCard.class, method = "calculateCardDamage")
-    public static class CardDamageCalculateForStance
-    {
-        @SpirePostfixPatch
-        public static void fix(AbstractCard __instance, AbstractMonster mo)
-        {
-            //需要保证类型是可控制的敌人，不是的话就不用管
-            if(mo instanceof ControlMoster)
-            {
-                ControlMoster tempMonster = (ControlMoster) mo;
-                //先记录临时的数值
-                int tempDamage = __instance.damage;
-                //判断有没有暴怒姿态
-                __instance.damage = (int)tempMonster.stance.atDamageReceive(
-                        __instance.damage, DamageInfo.DamageType.NORMAL
-                );
-                //如果伤害变化了，需要标记一下伤害变化了
-                if(tempDamage != __instance.damage)
-                {
-                    __instance.isDamageModified = true;
-                }
-            }
-        }
-    }
+//    @SpirePatch(clz = AbstractCard.class, method = "calculateCardDamage")
+//    public static class CardDamageCalculateForStance
+//    {
+//        @SpirePostfixPatch
+//        public static void fix(AbstractCard __instance, AbstractMonster mo)
+//        {
+//            //需要保证类型是可控制的敌人，不是的话就不用管
+//            if(mo instanceof ControlMoster)
+//            {
+//                ControlMoster tempMonster = (ControlMoster) mo;
+//                //先记录临时的数值
+//                int tempDamage = __instance.damage;
+//                //判断有没有暴怒姿态
+//                __instance.damage = (int)tempMonster.stance.atDamageReceive(
+//                        __instance.damage, DamageInfo.DamageType.NORMAL
+//                );
+//                //如果伤害变化了，需要标记一下伤害变化了
+//                if(tempDamage != __instance.damage)
+//                {
+//                    __instance.isDamageModified = true;
+//                }
+//            }
+//        }
+//    }
 
     //禁用触发无实体，主要是为了解决发条靴的bug,当触发发条靴的时候禁用无实体
     @SpirePatch(clz = AbstractCreature.class,method = "hasPower")
@@ -1310,23 +1310,23 @@ public class CharacterSelectScreenPatches
     }
 
     //打出伤害信息时的处理补丁，应用power之后再检查一下对方是不是有暴怒
-    @SpirePatch(clz = DamageInfo.class, method = "applyPowers")
-    public static class DamageInfoCalculateForStance
-    {
-        @SpirePostfixPatch
-        public static void fix(DamageInfo __instance,
-           AbstractCreature owner, AbstractCreature target)
-        {
-            //如果目标是可控制的敌人，就应用一下姿态
-            if(target instanceof ControlMoster)
-            {
-                ControlMoster tempMonster = (ControlMoster) target;
-                __instance.output = (int)tempMonster.stance.atDamageReceive(
-                        __instance.output, DamageInfo.DamageType.NORMAL
-                );
-            }
-        }
-    }
+//    @SpirePatch(clz = DamageInfo.class, method = "applyPowers")
+//    public static class DamageInfoCalculateForStance
+//    {
+//        @SpirePostfixPatch
+//        public static void fix(DamageInfo __instance,
+//           AbstractCreature owner, AbstractCreature target)
+//        {
+//            //如果目标是可控制的敌人，就应用一下姿态
+//            if(target instanceof ControlMoster)
+//            {
+//                ControlMoster tempMonster = (ControlMoster) target;
+//                __instance.output = (int)tempMonster.stance.atDamageReceive(
+//                        __instance.output, DamageInfo.DamageType.NORMAL
+//                );
+//            }
+//        }
+//    }
 
     //修改获取怪物队列的函数
     //如果是心脏的话，也把它换成kaka

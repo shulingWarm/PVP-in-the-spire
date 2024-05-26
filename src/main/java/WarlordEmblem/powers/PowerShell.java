@@ -30,6 +30,8 @@ public class PowerShell extends AbstractPower {
         //更新它区域的图标
         this.region48 = content.region48;
         this.region128=content.region128;
+        //记录power是否能变成负数
+        this.canGoNegative = content.canGoNegative;
         //更新它的显示
         this.updateDescription();
     }

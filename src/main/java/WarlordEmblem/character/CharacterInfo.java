@@ -54,6 +54,12 @@ public class CharacterInfo {
         }
     }
 
+    //用于判断是否可以路过角色更新
+    public AbstractPlayer.PlayerClass getPlayerClass()
+    {
+        return this.player.chosenClass;
+    }
+
     //更新角色的实例
     public void updatePlayer(AbstractPlayer srcPlayer)
     {

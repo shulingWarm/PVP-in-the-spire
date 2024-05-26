@@ -95,6 +95,18 @@
       "ON"
     ]
   },
+  "LobbyScreen": {
+    "TEXT": [
+      "Back"
+    ]
+  },
+  "MenuScreen": {
+    "TEXT": [
+      "Online Lobby(Under development)",
+      "Begin PVP",
+      "(Please abandon it)"
+    ]
+  },
   "WarlordEmblem:UtilizeAction": {
     "TEXT": [
       "选择丢弃一张手牌并获得其耗能等量的能量"
