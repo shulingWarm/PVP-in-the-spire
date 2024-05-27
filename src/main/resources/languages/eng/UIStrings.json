@@ -97,14 +97,33 @@
   },
   "LobbyScreen": {
     "TEXT": [
-      "Back"
+      "Back",
+      "Create",
+      "Waiting for join",
+      "Failed to join",
+      "ok"
+    ]
+  },
+  "WaitPage": {
+    "TEXT": [
+      "Cancel"
     ]
   },
   "MenuScreen": {
     "TEXT": [
-      "Online Lobby(Under development)",
+      "Online Lobby(Testing)",
       "Begin PVP",
       "(Please abandon it)"
+    ]
+  },
+  "CreateLobbyPage": {
+    "TEXT": [
+      "Lobby name",
+      "Password",
+      "Create",
+      "Cancel",
+      " 's lobby",
+      "Creating..."
     ]
   },
   "WarlordEmblem:UtilizeAction": {

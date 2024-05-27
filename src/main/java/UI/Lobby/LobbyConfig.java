@@ -4,10 +4,7 @@ import UI.*;
 import UI.Button.ReadyButton;
 import UI.Button.ReadyButtonCallback;
 import UI.Button.WithUpdate.BaseUpdateButton;
-import UI.Events.ClickCallback;
-import UI.Events.ConfigChangeEvent;
-import UI.Events.MemberChangeEvent;
-import UI.Events.UpdateCharacter;
+import UI.Events.*;
 import UI.configOptions.*;
 import WarlordEmblem.AutomaticSocketServer;
 import WarlordEmblem.GameManager;
@@ -19,9 +16,11 @@ import WarlordEmblem.character.CharacterInfo;
 import WarlordEmblem.helpers.FontLibrary;
 import WarlordEmblem.network.Lobby.LobbyManager;
 import WarlordEmblem.network.SteamConnector;
+import WarlordEmblem.patches.PanelScreenPatch;
 import WarlordEmblem.patches.RenderPatch;
 import WarlordEmblem.patches.connection.InputIpBox;
 import WarlordEmblem.patches.connection.MeunScreenFadeout;
+import WarlordEmblem.patches.steamConnect.SteamManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.codedisaster.steamworks.SteamID;
@@ -32,6 +31,7 @@ import com.megacrit.cardcrawl.core.Settings;
 import com.megacrit.cardcrawl.helpers.ImageMaster;
 import com.megacrit.cardcrawl.helpers.ModHelper;
 import com.megacrit.cardcrawl.helpers.input.InputHelper;
+import com.megacrit.cardcrawl.localization.UIStrings;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -50,6 +50,9 @@ public class LobbyConfig extends AbstractPage
     //类实体，这是做实验用的，正常游戏不用这个
     public static LobbyConfig instance;
 
+    public static final UIStrings uiStrings =
+            CardCrawlGame.languagePack.getUIString("LobbyScreen");
+
     //显示各种配置选项的面板
     BasePanel configPanel;
     //配置选项的背景板
@@ -64,6 +67,7 @@ public class LobbyConfig extends AbstractPage
     //准备按钮显示的x的位置
     public static final float READY_Y_PADDING = 0.4f;
     public static final float VERSION_PADDING = 0.35f;
+    public static final float NAME_PADDING = 0.8f;
     //准备按钮的宽度
     public static final float READY_BUTTON_WIDTH = Settings.WIDTH * 0.1f;
     //准备按钮的高度
@@ -76,6 +80,11 @@ public class LobbyConfig extends AbstractPage
     //用于渲染对方角色的page
     public CharacterBox oppositeBox = null;
 
+    //返回按钮
+    public BaseUpdateButton backButton;
+    //关闭页面时的回调函数
+    public ClosePageEvent closePageEvent = null;
+
     //对方的准备标志
     public PlainBox oppositeReadyLabel;
     //对方是否已经准备完成
@@ -86,6 +95,8 @@ public class LobbyConfig extends AbstractPage
 
     public VersionText myVersionText;
     public VersionText oppositeVersionText;
+    //对方的名字
+    public VersionText oppositeName;
 
     //所有需要被添加的config列表
     public ArrayList<AbstractConfigOption> optionList = new ArrayList<>();
@@ -124,6 +135,8 @@ public class LobbyConfig extends AbstractPage
         oppositeBox = new CharacterBox(Settings.WIDTH*(1-X_PADDING),
                 Settings.HEIGHT*Y_PADDING,SocketServer.oppositeCharacter);
         oppositeBox.flipHorizontal = true;
+        //显示对方的名字
+        this.oppositeName.text = SocketServer.oppositeName;
         //初始化对方的版本信息
         oppositeVersionText.text = versionInfo;
         //判断两边的版本是否一致
@@ -222,6 +235,11 @@ public class LobbyConfig extends AbstractPage
             RenderPatch.delayBox = new DelayBox();
             //指定自己选中的角色
             CardCrawlGame.chosenCharacter = this.getCurrentPlayerClass();
+            //判断自己是不是房主，如果是房主的话，就把房间标记成消失
+            if(this.ownerFlag)
+            {
+                LobbyManager.destroyRoom(LobbyManager.currentLobby.lobbyId);
+            }
             //准备进入游戏
             GameManager.prepareEnterGame();
         }
@@ -250,7 +268,7 @@ public class LobbyConfig extends AbstractPage
             //发送自己的版本号
             streamHandle.writeUTF(myVersionText.text);
             //发送自己的名字
-            streamHandle.writeUTF(SocketServer.myName);
+            streamHandle.writeUTF(SteamManager.getMyName());
         }
         catch (IOException e)
         {
@@ -273,6 +291,8 @@ public class LobbyConfig extends AbstractPage
             {
                 //获取当前的选择项
                 stream.writeInt(eachOption.getCurrentSelect());
+                //把当前选项设置为可更新
+                eachOption.sendConfigChangeFlag = true;
             }
         }
         catch (IOException e)
@@ -341,12 +361,24 @@ public class LobbyConfig extends AbstractPage
         {
             this.currentCharacter = (this.currentCharacter - 1 +
                 this.classArrayList.size())%this.classArrayList.size();
+            //更新当前显示的角色
+            updateChosenCharacter();
         }
-        else {
+        else if (button == rightButton) {
             this.currentCharacter = (this.currentCharacter + 1)%this.classArrayList.size();
+            //更新当前显示的角色
+            updateChosenCharacter();
         }
-        //更新当前显示的角色
-        updateChosenCharacter();
+        else if(button == this.backButton && this.closePageEvent != null)
+        {
+            //调用离开房间
+            LobbyManager.leaveRoom();
+            //取消p2p连接
+            AutomaticSocketServer.globalServer = null;
+            //调用关闭页面
+            this.closePageEvent.closePageEvent(this);
+        }
+
     }
 
     //处理房间人员变化的回调
@@ -356,10 +388,24 @@ public class LobbyConfig extends AbstractPage
         if(this.networkStage == -1 &&
             memberStage == SteamMatchmaking.ChatMemberStateChange.Entered)
         {
+            System.out.println("member enter!!");
             //更新pvp的连接状态
             LobbyManager.initP2PConnection(personId);
             //把当前的状态更新成零，后面开始准备初始化pvp了
             this.networkStage = 0;
+        }
+        //如果是有玩家退出了，就移交房主
+        else if(memberStage != SteamMatchmaking.ChatMemberStateChange.Entered)
+        {
+            //回退到刚加入房间的状态
+            this.initNetworkStage(true,this.closePageEvent);
+            //关闭准备按钮
+            readyButton.disabled = true;
+            //设置为没有准备
+            readyButton.readyFlag = false;
+            readyButton.updateButtonText();
+            //设置对方为没有准备
+            oppositeReadyFlag = false;
         }
     }
 
@@ -432,6 +478,8 @@ public class LobbyConfig extends AbstractPage
         this.readyButton = new ReadyButton(Settings.WIDTH*0.1f,
                 Settings.HEIGHT*READY_Y_PADDING,READY_BUTTON_WIDTH,READY_BUTTON_HEIGHT,
                 InputIpBox.generateFont(20));
+        //在最开始的时候把它设置为不可点击
+        this.readyButton.disabled = true;
         //我方的版本号
         this.myVersionText = new VersionText(Settings.WIDTH*0.13f,
                 Settings.HEIGHT*VERSION_PADDING,
@@ -440,21 +488,55 @@ public class LobbyConfig extends AbstractPage
         this.oppositeVersionText = new VersionText(Settings.WIDTH*(1-X_PADDING),
                 Settings.HEIGHT*VERSION_PADDING,
                 InputIpBox.generateFont(20));
+        //对方的名字
+        this.oppositeName = new VersionText(Settings.WIDTH*(1-X_PADDING),
+                Settings.HEIGHT*NAME_PADDING,
+                InputIpBox.generateFont(20));
+        //初始化返回按钮
+        this.backButton = new BaseUpdateButton(
+                0,
+                Settings.HEIGHT * 0.2f,
+                Settings.WIDTH * 0.1f,
+                Settings.HEIGHT * 0.06f,
+                uiStrings.TEXT[0],
+                FontLibrary.getBaseFont(),
+                TextureManager.BACK_BUTTON,
+                this
+        );
         //默认不显示对方的版本号
         this.oppositeVersionText.text = null;
+        this.oppositeName.text = null;
         this.readyButton.readyButtonCallback = this;
         initConfigOption();
         InputHelper.initialize();
     }
 
     //初始化网络状态
-    public void initNetworkStage(boolean isOwner)
+    public void initNetworkStage(boolean isOwner,
+         ClosePageEvent closeCallback
+    )
     {
         //如果是房主的话，一开始是不发送hello信息的
         if(isOwner)
             this.networkStage = -1;
         else
+        {
             this.networkStage = 0;
+        }
+        //记录关闭页面的回调函数
+        this.closePageEvent = closeCallback;
+        //取消对方的角色框
+        oppositeCharacter = null;
+        SocketServer.oppositeCharacter = null;
+        oppositeBox = null;
+        oppositeVersionText.text = null;
+        oppositeName.text = null;
+        //取消对方的准备状态
+        oppositeReadyFlag = false;
+        //把自己的准备按钮也设置为不可点击
+        this.readyButton.readyFlag = false;
+        this.readyButton.updateButtonText();
+        this.readyButton.disabled = true;
         //记录是否为房主
         this.ownerFlag = isOwner;
         //在steam的回调函数里注册人员变化时的操作
@@ -469,9 +551,12 @@ public class LobbyConfig extends AbstractPage
         {
             //将网络状态置为下一个状态，也就是监听状态
             this.networkStage = 1;
+            //打开准备按钮
+            this.readyButton.disabled = false;
             //把自己的信息置为配置页面的回调
             ConfigProtocol.configChangeCallback = this;
             ConfigProtocol.characterCallback = this;
+            System.out.println("sending my character");
             //发送我方角色
             AutomaticSocketServer server = AutomaticSocketServer.getServer();
             sendMyCharacter(server.streamHandle,getCurrentPlayerClass());
@@ -512,6 +597,8 @@ public class LobbyConfig extends AbstractPage
         this.rightButton.update();
         //更新网络信息
         this.networkUpdate();
+        //更新返回按钮
+        this.backButton.update();
     }
 
     //渲染配置选项
@@ -539,8 +626,11 @@ public class LobbyConfig extends AbstractPage
         //渲染我方版本号和对方版本号
         myVersionText.render(sb);
         oppositeVersionText.render(sb);
+        //渲染对方的名字
+        oppositeName.render(sb);
         //渲染左右按钮
         this.leftButton.render(sb);
         this.rightButton.render(sb);
+        this.backButton.render(sb);
     }
 }

@@ -73,7 +73,7 @@ public class LobbyScreen extends AbstractPage
             (float) Settings.HEIGHT*0.3f,
             (float)Settings.WIDTH*0.1f,
             (float)Settings.HEIGHT*0.06f,
-            "创建房间",
+            uiStrings.TEXT[1],
             FontLibrary.getBaseFont(),
             ImageMaster.PROFILE_SLOT,
             this
@@ -123,16 +123,16 @@ public class LobbyScreen extends AbstractPage
         //把覆盖页面改成配置页面
         this.overlapPage = LobbyConfig.instance;
         //初始化页面的网络状态
-        LobbyConfig.instance.initNetworkStage(true);
+        LobbyConfig.instance.initNetworkStage(true,this);
     }
 
     //准备进入目标房间
     public void requestEnterRoom()
     {
         //打开进入房间的等待界面
-        WaitPage.instance.init("等待进入房间",this);
+        WaitPage.getInstance().init(uiStrings.TEXT[2],this);
         //将悬浮页面指定为等待页面
-        this.overlapPage = WaitPage.instance;
+        this.overlapPage = WaitPage.getInstance();
         //指定回调函数 加入房间成功时也会调用这个回调
         LobbyManager.callback.requestEvent = this;
         //添加steam操作，准备添加房间
@@ -191,7 +191,7 @@ public class LobbyScreen extends AbstractPage
     public void enterLobbyFailEvent()
     {
         //把等待页面改成进入失败
-        WaitPage.instance.init("进入房间失败",this,"确定");
+        WaitPage.getInstance().init(uiStrings.TEXT[3],this,uiStrings.TEXT[4]);
         //取消正在进入的房间
         this.goingLobby = null;
     }
@@ -205,7 +205,7 @@ public class LobbyScreen extends AbstractPage
             return;
         }
         //回调到这里说明可以成功进入房间了
-        if(this.overlapPage == WaitPage.instance &&
+        if(this.overlapPage == WaitPage.getInstance() &&
                 this.goingLobby != null
         )
         {
@@ -215,7 +215,7 @@ public class LobbyScreen extends AbstractPage
             //初始化界面，进入游戏配置界面
             this.overlapPage = LobbyConfig.instance;
             //初始化房间的网络状态，这里属于是刚刚进入一个新房间，一进去就可以发送打招呼信息
-            LobbyConfig.instance.initNetworkStage(false);
+            LobbyConfig.instance.initNetworkStage(false,this);
             //删除当前正在进入的房间
             this.goingLobby = null;
         }

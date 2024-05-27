@@ -12,8 +12,10 @@ import WarlordEmblem.Screens.WarningText;
 import WarlordEmblem.helpers.FontLibrary;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.megacrit.cardcrawl.core.CardCrawlGame;
 import com.megacrit.cardcrawl.core.Settings;
 import com.megacrit.cardcrawl.helpers.ImageMaster;
+import com.megacrit.cardcrawl.localization.UIStrings;
 
 import java.util.Objects;
 
@@ -57,6 +59,9 @@ public class InputPassword extends AbstractPage
     //按钮的高度
     public static final float BUTTON_HEIGHT = Settings.HEIGHT * 0.08f;
 
+    public static final UIStrings uiStrings =
+            CardCrawlGame.languagePack.getUIString("InputPassword");
+
     public InputPassword(String password)
     {
         this.password = password;
@@ -66,7 +71,7 @@ public class InputPassword extends AbstractPage
                 Settings.HEIGHT * 0.5f,
                 Settings.WIDTH * 0.6f,
                 Settings.HEIGHT * 0.025f,
-                "密码:",
+                uiStrings.TEXT[0],
                 FontLibrary.getFontWithSize(33),
                 false
         );
@@ -76,7 +81,7 @@ public class InputPassword extends AbstractPage
                 Settings.HEIGHT * 0.6f,
                 Settings.WIDTH * 0.5f,
                 Settings.HEIGHT*0.04f,
-                "请输入密码",
+                uiStrings.TEXT[1],
                 FontLibrary.getFontWithSize(44)
         );
         //初始化背景框
@@ -93,7 +98,7 @@ public class InputPassword extends AbstractPage
                 BUTTON_Y,
                 BUTTON_RAID * 2,
                 BUTTON_HEIGHT,
-                "确定",
+                uiStrings.TEXT[2],
                 FontLibrary.getBaseFont(),
                 ImageMaster.PROFILE_SLOT,
                 this
@@ -104,14 +109,14 @@ public class InputPassword extends AbstractPage
                 BUTTON_Y,
                 BUTTON_RAID * 2,
                 BUTTON_HEIGHT,
-                "取消",
+                uiStrings.TEXT[3],
                 FontLibrary.getBaseFont(),
                 ImageMaster.PROFILE_SLOT,
                 this
         );
         //初始化警告信息
         this.warningText = new WarningText(
-                "密码错误",
+                uiStrings.TEXT[4],
                 FontLibrary.getFontWithSize(33),
                 Settings.WIDTH * 0.5f,
                 Settings.HEIGHT * 0.4f,

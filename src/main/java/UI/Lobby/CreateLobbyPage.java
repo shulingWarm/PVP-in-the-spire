@@ -13,8 +13,10 @@ import WarlordEmblem.patches.steamConnect.SteamManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.codedisaster.steamworks.SteamMatchmaking;
+import com.megacrit.cardcrawl.core.CardCrawlGame;
 import com.megacrit.cardcrawl.core.Settings;
 import com.megacrit.cardcrawl.helpers.ImageMaster;
+import com.megacrit.cardcrawl.localization.UIStrings;
 
 //创建房间用的按钮
 public class CreateLobbyPage extends AbstractPage
@@ -40,6 +42,9 @@ public class CreateLobbyPage extends AbstractPage
     //显示在上层的页面
     public AbstractPage overlapPage = null;
 
+    public static final UIStrings uiStrings =
+            CardCrawlGame.languagePack.getUIString("CreateLobbyPage");
+
     public CreateLobbyPage(CreateSuccessEvent successCallback)
     {
         //初始化带有标签的输入框
@@ -48,7 +53,7 @@ public class CreateLobbyPage extends AbstractPage
                 (float) Settings.HEIGHT * 0.65f,
                 (float) Settings.WIDTH * 0.8f,
                 (float) Settings.HEIGHT * 0.04f,
-                "房间名:",
+                uiStrings.TEXT[0],
                 FontLibrary.getFontWithSize(64),
                 true
         );
@@ -58,7 +63,7 @@ public class CreateLobbyPage extends AbstractPage
                 (float) Settings.HEIGHT * 0.45f,
                 (float) Settings.WIDTH * 0.8f,
                 (float) Settings.HEIGHT * 0.04f,
-                "密码:",
+                uiStrings.TEXT[1],
                 FontLibrary.getFontWithSize(64),
                 true
         );
@@ -77,7 +82,7 @@ public class CreateLobbyPage extends AbstractPage
             Settings.HEIGHT * 0.3f,
             Settings.WIDTH*0.2f,
             Settings.HEIGHT*0.1f,
-            "创建",
+            uiStrings.TEXT[2],
             FontLibrary.getBaseFont(),
             ImageMaster.PROFILE_SLOT,
             this
@@ -88,7 +93,7 @@ public class CreateLobbyPage extends AbstractPage
             Settings.HEIGHT * 0.3f,
             Settings.WIDTH*0.2f,
             Settings.HEIGHT*0.1f,
-            "取消",
+            uiStrings.TEXT[3],
             FontLibrary.getBaseFont(),
             ImageMaster.PROFILE_SLOT,
             this
@@ -110,7 +115,7 @@ public class CreateLobbyPage extends AbstractPage
         SteamManager.prepareNetworking();
         //把房间名初始化成玩家的名字
         labelInputBox.inputBox.textField =
-            SteamManager.steamFriends.getPersonaName() + "的房间";
+            SteamManager.steamFriends.getPersonaName() + uiStrings.TEXT[4];
     }
 
     @Override
@@ -151,8 +156,8 @@ public class CreateLobbyPage extends AbstractPage
         }
         else {
             //显示上层渲染
-            WaitPage.instance.init("等待创建房间",this);
-            this.overlapPage = WaitPage.instance;
+            WaitPage.getInstance().init(uiStrings.TEXT[5],this);
+            this.overlapPage = WaitPage.getInstance();
             //如果点击的是创建房间，那么就执行创建房间的逻辑
             LobbyManager.matchmaking.createLobby(SteamMatchmaking.LobbyType.Public,2);
         }

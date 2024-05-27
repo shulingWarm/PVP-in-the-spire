@@ -1,6 +1,7 @@
 package WarlordEmblem.patches;
 
 import UI.Lobby.LobbyConfig;
+import UI.Lobby.LobbyScreen;
 import WarlordEmblem.GlobalManager;
 import WarlordEmblem.helpers.FieldHelper;
 import WarlordEmblem.network.Lobby.LobbyManager;
@@ -86,6 +87,10 @@ public class MainMenuPatch {
                 LobbyConfig.instance = new LobbyConfig();
                 //初始化与房间相关的steam信息
                 LobbyManager.initManager();
+                LobbyScreen.instance = new LobbyScreen();
+            }
+            else{
+                PanelScreenPatch.lobbyFlag = false;
             }
         }
     }

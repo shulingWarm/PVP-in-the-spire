@@ -43,15 +43,7 @@ public class PanelScreenPatch {
         {
             if(lobbyFlag)
             {
-                LobbyScreen lobby = LobbyScreen.instance;
-                if(lobby==null)
-                {
-                    System.out.println("lobby is null");
-                    LobbyScreen.instance = new LobbyScreen();
-                    lobby = LobbyScreen.instance;
-                }
-                else
-                    lobby.update();
+                LobbyScreen.instance.update();
                 //直接禁止渲染
                 return SpireReturn.Return();
             }

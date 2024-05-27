@@ -6,15 +6,26 @@ import UI.Events.ClosePageEvent;
 import WarlordEmblem.helpers.FontLibrary;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.megacrit.cardcrawl.core.CardCrawlGame;
 import com.megacrit.cardcrawl.core.Settings;
 import com.megacrit.cardcrawl.helpers.ImageMaster;
+import com.megacrit.cardcrawl.localization.UIStrings;
 
 //这是一个通用的等待页面
 //这个类只需要一个实例
 public class WaitPage extends AbstractPage implements ClickCallback {
 
     //大部分情况下只使用这个示例就可以了
-    public static WaitPage instance = new WaitPage();
+    private static WaitPage instance = null;
+
+    public static WaitPage getInstance()
+    {
+        if(instance == null)
+        {
+            instance = new WaitPage();
+        }
+        return instance;
+    }
 
     //显示在最中间的背景
     public PlainBox background;
@@ -27,6 +38,9 @@ public class WaitPage extends AbstractPage implements ClickCallback {
 
     //取消等待的按钮
     public BaseUpdateButton cancelButton;
+
+    public static final UIStrings uiStrings =
+            CardCrawlGame.languagePack.getUIString("WaitPage");
 
     public WaitPage()
     {
@@ -53,7 +67,7 @@ public class WaitPage extends AbstractPage implements ClickCallback {
                 Settings.HEIGHT * 0.3f,
                 Settings.WIDTH * 0.2f,
                 Settings.HEIGHT*0.1f,
-                "取消",
+                uiStrings.TEXT[0],
                 FontLibrary.getBaseFont(),
                 ImageMaster.PROFILE_SLOT,
                 this
@@ -76,13 +90,13 @@ public class WaitPage extends AbstractPage implements ClickCallback {
         //记录关闭页面时的回调函数
         this.closePageEvent = closeCallback;
         //更改按钮上的文本
-        this.cancelButton.text = "取消等待";
+        this.cancelButton.text = buttonText;
     }
 
     //对这个类操作真正的初始化
     public void init(String text, ClosePageEvent closeCallback)
     {
-        this.init(text,closeCallback,"取消等待");
+        this.init(text,closeCallback,uiStrings.TEXT[0]);
     }
 
     @Override

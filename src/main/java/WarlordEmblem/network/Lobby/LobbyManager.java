@@ -48,6 +48,19 @@ public class LobbyManager {
         matchmaking.setLobbyData(lobbyId,PASSWORD,lobbyPassword);
     }
 
+    //离开当前的房间
+    public static void leaveRoom()
+    {
+        matchmaking.leaveLobby(currentLobby.lobbyId);
+    }
+
+    //令当前的房间消失
+    public static void destroyRoom(SteamID lobbyId)
+    {
+        //把房间标记成废弃
+        matchmaking.setLobbyData(lobbyId,MOD_TAG,"invalid");
+    }
+
     //初始化目前可以获取到的所有房间
     public static void refreshAccessibleLobby(LobbyListCallback lobbyListCallback)
     {
