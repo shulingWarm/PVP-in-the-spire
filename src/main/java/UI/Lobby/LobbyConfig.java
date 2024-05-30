@@ -122,9 +122,10 @@ public class LobbyConfig extends AbstractPage
 
     @Override
     public void updateCharacter(AbstractPlayer.PlayerClass playerClass,String versionInfo) {
-        System.out.println("construct char box");
+        System.out.printf("update: %s\n",playerClass.name());
         //判断已有的信息里面是否重复
-        if(SocketServer.oppositeCharacter != null&&
+        if(this.characterBox != null &&
+                SocketServer.oppositeCharacter != null&&
             SocketServer.oppositeCharacter.getPlayerClass() == playerClass)
         {
             return;
@@ -256,6 +257,28 @@ public class LobbyConfig extends AbstractPage
         judgeAllReady();
     }
 
+    @Override
+    public void receiveCharacterRequest(DataInputStream streamHandle) {
+        //直接发送我方角色就可以了
+        AutomaticSocketServer server = AutomaticSocketServer.getServer();
+        this.sendMyCharacter(server.streamHandle,this.getCurrentPlayerClass());
+        server.send();
+    }
+
+    //发送获取对方角色的请求
+    public void requestOppositeCharacter(DataOutputStream stream)
+    {
+        //发送请求信息的数据头
+        try
+        {
+            stream.writeInt(ConfigProtocol.REQUEST_CHARACTER);
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
     //给对方发送自己的形象
     public void sendMyCharacter(DataOutputStream streamHandle,
                                 AbstractPlayer.PlayerClass playerClass)
@@ -381,6 +404,28 @@ public class LobbyConfig extends AbstractPage
 
     }
 
+    //取消显示对方的角色信息
+    public void removeOppositeCharacter()
+    {
+        oppositeBox = null;
+        oppositeName.text = null;
+        oppositeVersionText.text = null;
+        //取消socket里面的角色信息
+        SocketServer.oppositeCharacter = null;
+    }
+
+
+    //把准备按钮重置成不可用的状态
+    public void resetReadyButton()
+    {
+        this.readyButton.readyFlag = false;
+        this.readyButton.disabled = true;
+        this.readyButton.updateButtonText();
+        this.oppositeReadyFlag = false;
+        //同时设置成所有按钮可交互
+        this.pressReady(false);
+    }
+
     //处理房间人员变化的回调
     @Override
     public void onMemberChanged(SteamID personId, SteamMatchmaking.ChatMemberStateChange memberStage) {
@@ -400,12 +445,7 @@ public class LobbyConfig extends AbstractPage
             //回退到刚加入房间的状态
             this.initNetworkStage(true,this.closePageEvent);
             //关闭准备按钮
-            readyButton.disabled = true;
-            //设置为没有准备
-            readyButton.readyFlag = false;
-            readyButton.updateButtonText();
-            //设置对方为没有准备
-            oppositeReadyFlag = false;
+            resetReadyButton();
         }
     }
 
@@ -546,26 +586,32 @@ public class LobbyConfig extends AbstractPage
     //网络状态更新
     public void networkUpdate()
     {
+        --sendHelloFrame;
         //判断现在是不是等待打招呼的状态
-        if(networkStage == 0 && SteamConnector.sendSteamHello())
+        if(networkStage == 0 && sendHelloFrame <= 0)
         {
-            //将网络状态置为下一个状态，也就是监听状态
-            this.networkStage = 1;
-            //打开准备按钮
-            this.readyButton.disabled = false;
-            //把自己的信息置为配置页面的回调
-            ConfigProtocol.configChangeCallback = this;
-            ConfigProtocol.characterCallback = this;
-            System.out.println("sending my character");
-            //发送我方角色
-            AutomaticSocketServer server = AutomaticSocketServer.getServer();
-            sendMyCharacter(server.streamHandle,getCurrentPlayerClass());
-            server.send();
-            //判断自己是不是房主，如果是房主的话就同步给对方自己的所有配置信息
-            if(this.ownerFlag)
+            sendHelloFrame = 50;
+            //判断是否需要发送hello
+            if(SteamConnector.sendSteamHello())
             {
-                this.sendMyConfig(server.streamHandle);
+                //将网络状态置为下一个状态，也就是监听状态
+                this.networkStage = 1;
+                //打开准备按钮
+                this.readyButton.disabled = false;
+                //把自己的信息置为配置页面的回调
+                ConfigProtocol.configChangeCallback = this;
+                ConfigProtocol.characterCallback = this;
+                System.out.println("sending my character");
+                //发送我方角色
+                AutomaticSocketServer server = AutomaticSocketServer.getServer();
+                sendMyCharacter(server.streamHandle,getCurrentPlayerClass());
                 server.send();
+                //判断自己是不是房主，如果是房主的话就同步给对方自己的所有配置信息
+                if(this.ownerFlag)
+                {
+                    this.sendMyConfig(server.streamHandle);
+                    server.send();
+                }
             }
         }
         //判断网络状态是不是监听状态
@@ -574,15 +620,18 @@ public class LobbyConfig extends AbstractPage
             //调用config阶段的监听工作
             ConfigProtocol.readData(AutomaticSocketServer.getServer());
             //判断是不是到了一个重复发送hello的周期
-            if(sendHelloFrame == 0)
+            if(sendHelloFrame <= 0)
             {
                 sendHelloFrame = 100;
                 //发送一次hello信息，防止始终没有初始化连接成功
                 SteamConnector.onlySendHello();
-            }
-            else
-            {
-                --sendHelloFrame;
+                //判断自己是不是还不知道对方的信息
+                if(oppositeBox == null)
+                {
+                    AutomaticSocketServer server = AutomaticSocketServer.getServer();
+                    this.requestOppositeCharacter(server.streamHandle);
+                    server.send();
+                }
             }
         }
     }

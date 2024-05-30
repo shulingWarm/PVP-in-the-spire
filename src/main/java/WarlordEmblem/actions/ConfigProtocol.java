@@ -20,6 +20,8 @@ public class ConfigProtocol {
     public static final int READY_INFO = 20003;
     //接收所有的信息
     public static final int ALL_CONFIG_INFO = 20004;
+    //请求对方角色的数据头
+    public static final int REQUEST_CHARACTER = 20005;
 
     //更新角色时的回调函数
     public static UpdateCharacter characterCallback = null;
@@ -82,6 +84,10 @@ public class ConfigProtocol {
                 //所有的config数据
                 case ALL_CONFIG_INFO:
                     configChangeCallback.receiveAllConfig(server.inputHandle);
+                    break;
+                //请求发送角色数据
+                case REQUEST_CHARACTER:
+                    configChangeCallback.receiveCharacterRequest(server.inputHandle);
                     break;
             }
         }

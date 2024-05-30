@@ -27,6 +27,8 @@ public class GameManager {
     {
         //给游戏设置随机种子
         setSeed();
+        //设置全局变量，这样打完这一局的时候就可以直接进入到房间里了
+        GlobalManager.enterLobbyFlag = true;
         //把当前的游戏模式改成CHAR_SELECT
         CardCrawlGame.mode = CardCrawlGame.GameMode.CHAR_SELECT;
         //把选择角色的主界面设置成fadedOut,这代表直接进入游戏

@@ -1,10 +1,15 @@
 package WarlordEmblem.network.Lobby;
 
 import UI.Events.LobbyListCallback;
+import UI.Lobby.LobbyConfig;
 import WarlordEmblem.AutomaticSocketServer;
+import WarlordEmblem.GlobalManager;
 import WarlordEmblem.SteamSocketServer;
+import WarlordEmblem.patches.PanelScreenPatch;
 import com.codedisaster.steamworks.SteamID;
 import com.codedisaster.steamworks.SteamMatchmaking;
+import com.megacrit.cardcrawl.core.CardCrawlGame;
+import com.megacrit.cardcrawl.screens.mainMenu.MenuPanelScreen;
 
 import java.util.ArrayList;
 
@@ -81,6 +86,23 @@ public class LobbyManager {
         currentLobby = lobby;
         //初始化p2p连接
         initP2PConnection();
+    }
+
+    //调用这个函数的时候已经在主界面了，这个时候直接强制回到lobby里面
+    public static void backLobby()
+    {
+        System.out.println("calling back lobby!!");
+        //初始化除了网络之外的全局参数
+        GlobalManager.initGameGlobal();
+        //把config的状态弄成0,准备连接
+        LobbyConfig.instance.networkStage = 0;
+        //取消显示对方的信息
+        LobbyConfig.instance.removeOppositeCharacter();
+        //重置准备按钮
+        LobbyConfig.instance.resetReadyButton();
+        //把当前的页面换成panel,然后还是正常渲染lobby页面
+        CardCrawlGame.mainMenuScreen.panelScreen.open(MenuPanelScreen.PanelScreen.PLAY);
+        PanelScreenPatch.lobbyFlag = true;
     }
 
     //初始化全局的p2p连接

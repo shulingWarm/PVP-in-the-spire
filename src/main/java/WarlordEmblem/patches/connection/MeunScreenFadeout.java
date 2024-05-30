@@ -3,6 +3,7 @@ package WarlordEmblem.patches.connection;
 
 import WarlordEmblem.GlobalManager;
 import WarlordEmblem.SocketServer;
+import WarlordEmblem.network.Lobby.LobbyManager;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -140,6 +141,12 @@ public class MeunScreenFadeout {
         @SpirePostfixPatch
         public static void fix(MainMenuScreen __instance, SpriteBatch sb)
         {
+            //判断是否需要强制回到之前的房间
+            if(GlobalManager.enterLobbyFlag && __instance.screen == MainMenuScreen.CurScreen.MAIN_MENU)
+            {
+                LobbyManager.backLobby();
+                GlobalManager.enterLobbyFlag = false;
+            }
             //如果不使用网络的话就什么都不需要做
             if(!SocketServer.USE_NETWORK)
             {

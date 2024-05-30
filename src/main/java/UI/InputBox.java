@@ -67,7 +67,7 @@ public class InputBox extends AbstractPage implements InputProcessor {
     }
 
     public void update() {
-        if (Gdx.input.isKeyPressed(67) && !textField.equals("") && this.waitTimer <= 0.0F) {
+        if (GlobalManager.activateBox == this && Gdx.input.isKeyPressed(67) && !textField.isEmpty() && this.waitTimer <= 0.0F) {
             textField = textField.substring(0, textField.length() - 1);
             this.waitTimer = 0.09F;
         }

@@ -15,4 +15,7 @@ public interface ConfigChangeEvent {
     //接收所有信息的接口
     public void receiveAllConfig(DataInputStream streamHandle);
 
+    //接收发送角色的请求
+    public void receiveCharacterRequest(DataInputStream streamHandle);
+
 }

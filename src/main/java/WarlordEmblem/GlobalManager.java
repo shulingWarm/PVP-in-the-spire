@@ -36,7 +36,7 @@ public class GlobalManager {
     //初始的坚不可摧比例
     public static int invincibleRate = 2;
     //版本号
-    public static final String VERSION = "v0.4.2";
+    public static final String VERSION = "v0.4.4";
     //是否启用customMOD,例如现开套牌
     public static boolean useModFlag = false;
     //最后决定使用的mod
@@ -54,13 +54,16 @@ public class GlobalManager {
     public static boolean prepareWin = false;
     //当前被激活的输入框，这属于UI控制
     public static InputBox activateBox = null;
+    //在当前在主界面直接进入lobby
+    public static boolean enterLobbyFlag = false;
 
     public static void characterPatchInit()
     {
         CharacterSelectScreenPatches.NeowGetRelic.hasGiveGift=false;
     }
 
-    public static void initGlobal()
+    //仅初始化与游戏相关但与网络无关的参数
+    public static void initGameGlobal()
     {
         //取消胜利准备
         prepareWin = false;
@@ -69,9 +72,6 @@ public class GlobalManager {
         characterPatchInit();
         //初始化网络相关的静态变量
         SocketServer.initGlobal();
-        //初始化steam管理器相关的全局变量
-        SteamManager.initManager();
-        AutomaticSocketServer.initAutomatic();
         MidExitScreen.screenInstance=null;
         //初始化，记录还没有换过boss遗物
         NeowRewardPatch.ChangeCasePatch.bossRelicChanged = false;
@@ -81,15 +81,26 @@ public class GlobalManager {
         MeunScreenFadeout.initFadeout();
         //事件管理器的全局初始化
         EventPatch.ChangeGetEvent.globalInit();
-        //初始化格挡增益遗物的数量
-        BlockGainer.gainedNum=0;
         //上次发送的游戏时间
         SteamConnector.lastHelloTime = 0;
         ConfigPage.oppositeCharacter = null;
         RenderPatch.ForceCloseRewardScreen.forceCloseOnce = false;
+        //初始化准备时需要载入的纹理
+        TextureManager.initTexture();
+        //把进阶设置成0
+        AbstractDungeon.ascensionLevel = 0;
+    }
+
+    public static void initGlobal()
+    {
+        //初始化steam管理器相关的全局变量
+        SteamManager.initManager();
+        AutomaticSocketServer.initAutomatic();
         //初始的尾巴数量
         beginTailNum = 2;
         invincibleRate = 2;
+        //初始化格挡增益遗物的数量
+        BlockGainer.gainedNum=0;
         //初始化每张牌可以被使用的次数
         UseCardSend.CardUseManager.MAX_USE_TIME = 2;
         RenderPatch.delayBox = null;
@@ -105,10 +116,9 @@ public class GlobalManager {
         FakeEnding.ROW_NUM = 5;
         //友军默认是不开的
         friendMonsterFlag = false;
-        //初始化准备时需要载入的纹理
-        TextureManager.initTexture();
-        //把进阶设置成0
-        AbstractDungeon.ascensionLevel = 0;
+
+        //以下是与网络无关的设置
+        initGameGlobal();
     }
 
     //选择人物时点击启程的操作，点击的时候会确定游戏即将开始
