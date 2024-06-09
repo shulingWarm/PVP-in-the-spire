@@ -69,8 +69,10 @@ public class CardUseChange {
                 case Melter.ID:
                     melterChange(__instance);
                     break;
-                case Disarm.ID:
                 case DarkShackles.ID:
+                    __instance.cost = 1;
+                    __instance.costForTurn = 1;
+                case Disarm.ID:
                 case StaticDischarge.ID://静电释放
                     __instance.rarity = AbstractCard.CardRarity.RARE;
                     break;

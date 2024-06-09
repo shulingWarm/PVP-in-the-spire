@@ -13,6 +13,7 @@ import WarlordEmblem.patches.CardShowPatch.UseCardSend;
 import WarlordEmblem.patches.connection.MeunScreenFadeout;
 import WarlordEmblem.patches.steamConnect.SteamManager;
 import WarlordEmblem.relics.BlockGainer;
+import basemod.DevConsole;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.evacipated.cardcrawl.modthespire.lib.SpirePatch;
@@ -67,6 +68,8 @@ public class GlobalManager {
     //仅初始化与游戏相关但与网络无关的参数
     public static void initGameGlobal()
     {
+        //禁用basemod里面的控制台
+        DevConsole.enabled = false;
         //取消胜利准备
         prepareWin = false;
         ++idGame;

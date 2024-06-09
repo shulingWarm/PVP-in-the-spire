@@ -33,6 +33,9 @@ public class GameRoomUI {
     //返回按钮
     public BackButton backButton;
 
+    //用于测试的界面，在这里放一个聊天页面
+
+
     public GameRoomUI()
     {
         //初始化纹理资源

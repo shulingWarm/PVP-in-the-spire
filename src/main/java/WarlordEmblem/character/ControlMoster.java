@@ -854,6 +854,17 @@ public class ControlMoster extends AbstractMonster {
         }
         //清理爪牙
         FriendManager.instance.makeMinionSuicide();
+        //如果已经没有尾巴了，说明它就是已经死了，那么进入胜利画面
+        if(SocketServer.tailNum==0)
+        {
+            //淡出音乐
+            CardCrawlGame.music.fadeAll();
+            //准备执行胜利画面
+            GlobalManager.prepareWin = true;
+            this.onBossVictoryLogic();
+            //结束延时显示
+            //RenderPatch.delayBox = null;
+        }
         this.die();
         if (AbstractDungeon.getMonsters().areMonstersBasicallyDead()) {
             AbstractDungeon.actionManager.cleanCardQueue();
@@ -872,19 +883,6 @@ public class ControlMoster extends AbstractMonster {
         //打开禁用某些战斗的操作
         ActionNetworkPatches.disableCombatTrigger = true;
         ActionNetworkPatches.HealEventSend.disableSend = true;
-        //如果已经没有尾巴了，说明它就是已经死了，那么进入胜利画面
-        if(SocketServer.tailNum==0)
-        {
-            //淡出音乐
-            CardCrawlGame.music.fadeAll();
-            //准备执行胜利画面
-            GlobalManager.prepareWin = true;
-            this.onBossVictoryLogic();
-            //清除所有奖励
-            AbstractDungeon.getCurrRoom().rewards.clear();
-            //结束延时显示
-            //RenderPatch.delayBox = null;
-        }
         //如果要继续渲染的话，显示对方死亡的图片
         if(this.renderPlayer!=null)
         {
