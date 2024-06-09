@@ -60,6 +60,15 @@ public class CharacterInfo {
         return this.player.chosenClass;
     }
 
+    //播放角色选择时的音效
+    public void playPlayerSound()
+    {
+        if(this.player != null)
+        {
+            this.player.doCharSelectScreenSelectEffect();
+        }
+    }
+
     //更新角色的实例
     public void updatePlayer(AbstractPlayer srcPlayer)
     {

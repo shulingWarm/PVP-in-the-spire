@@ -4,12 +4,14 @@ import basemod.ReflectionHacks;
 import com.evacipated.cardcrawl.modthespire.lib.*;
 import com.megacrit.cardcrawl.core.CardCrawlGame;
 import com.megacrit.cardcrawl.core.Settings;
+import com.megacrit.cardcrawl.credits.CreditsScreen;
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
 import com.megacrit.cardcrawl.helpers.ImageMaster;
 import com.megacrit.cardcrawl.localization.RelicStrings;
 import com.megacrit.cardcrawl.localization.UIStrings;
 import com.megacrit.cardcrawl.relics.TinyHouse;
 import com.megacrit.cardcrawl.screens.CombatRewardScreen;
+import com.megacrit.cardcrawl.screens.mainMenu.MainMenuScreen;
 import com.megacrit.cardcrawl.screens.mainMenu.MenuPanelScreen;
 import com.megacrit.cardcrawl.screens.mainMenu.MainMenuPanelButton;
 import com.megacrit.cardcrawl.ui.buttons.CancelButton;
@@ -82,6 +84,21 @@ public class UIPatch {
 //        }
 //
 //    }
+
+    //禁止打开制作组名单，战斗胜利的时候直接回到主界面
+    @SpirePatch(clz = CreditsScreen.class, method = "open")
+    public static class RemoveCreditScreen
+    {
+        @SpirePrefixPatch
+        public static SpireReturn<Void> fix(CreditsScreen __instance,
+                                            boolean playCreditsBgm
+        )
+        {
+            //把screen改成主界面
+            CardCrawlGame.mainMenuScreen.screen = MainMenuScreen.CurScreen.MAIN_MENU;
+            return SpireReturn.Return();
+        }
+    }
 
     //检查小屋子是否调用了reopen
     @SpirePatch(clz = CombatRewardScreen.class, method = "reopen")

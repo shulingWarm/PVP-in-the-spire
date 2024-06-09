@@ -1,5 +1,6 @@
 package WarlordEmblem.patches;
 
+import WarlordEmblem.GlobalManager;
 import WarlordEmblem.SocketServer;
 import com.evacipated.cardcrawl.modthespire.lib.SpirePatch;
 import com.evacipated.cardcrawl.modthespire.lib.SpirePrefixPatch;
@@ -38,7 +39,7 @@ public class RoomPatch {
         @SpirePrefixPatch
         public static SpireReturn<AbstractRelic> fix(AbstractRelic.RelicTier tier)
         {
-            if(isDisable)
+            if(isDisable || GlobalManager.loserRewardFlag != 0)
             {
                 return SpireReturn.Continue();
             }

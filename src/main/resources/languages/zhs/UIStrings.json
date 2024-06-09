@@ -95,6 +95,13 @@
       "开"
     ]
   },
+  "LoserRewardOption": {
+    "TEXT": [
+      "败者奖励:",
+      "小屋子",
+      "BOSS遗物三选一"
+    ]
+  },
   "LobbyScreen": {
     "TEXT": [
       "返回",

@@ -95,6 +95,13 @@
       "ON"
     ]
   },
+  "LoserRewardOption": {
+    "TEXT": [
+      "Loser reward:",
+      "Tiny house",
+      "Ordinary BOSS relic"
+    ]
+  },
   "LobbyScreen": {
     "TEXT": [
       "Back",

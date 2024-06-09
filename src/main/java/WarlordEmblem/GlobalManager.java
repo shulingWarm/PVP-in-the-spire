@@ -36,7 +36,7 @@ public class GlobalManager {
     //初始的坚不可摧比例
     public static int invincibleRate = 2;
     //版本号
-    public static final String VERSION = "v0.4.4";
+    public static final String VERSION = "v0.4.7";
     //是否启用customMOD,例如现开套牌
     public static boolean useModFlag = false;
     //最后决定使用的mod
@@ -48,6 +48,8 @@ public class GlobalManager {
     public static ArrayList<BaseEvent> eventList = new ArrayList<>();
     //是否在战斗中开启友军小怪
     public static boolean friendMonsterFlag = false;
+    //败者奖励等级
+    public static int loserRewardFlag = 0;
     //特效管理器
     public static EffectManager effectManager = new EffectManager();
     //是否准备胜利
@@ -89,6 +91,8 @@ public class GlobalManager {
         TextureManager.initTexture();
         //把进阶设置成0
         AbstractDungeon.ascensionLevel = 0;
+        //初始化格挡增益遗物的数量
+        BlockGainer.gainedNum=0;
     }
 
     public static void initGlobal()
@@ -99,8 +103,6 @@ public class GlobalManager {
         //初始的尾巴数量
         beginTailNum = 2;
         invincibleRate = 2;
-        //初始化格挡增益遗物的数量
-        BlockGainer.gainedNum=0;
         //初始化每张牌可以被使用的次数
         UseCardSend.CardUseManager.MAX_USE_TIME = 2;
         RenderPatch.delayBox = null;
@@ -116,6 +118,8 @@ public class GlobalManager {
         FakeEnding.ROW_NUM = 5;
         //友军默认是不开的
         friendMonsterFlag = false;
+        //败者奖励，默认是小屋子
+        loserRewardFlag = 0;
 
         //以下是与网络无关的设置
         initGameGlobal();

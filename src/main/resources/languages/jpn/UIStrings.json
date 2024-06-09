@@ -90,6 +90,13 @@
       "オン"
     ]
   },
+  "LoserRewardOption": {
+    "TEXT": [
+      "敗者報酬:",
+      "小さな家",
+      "一般BOSS遺物"
+    ]
+  },
   "StartGoldConfig": {
     "TEXT": [
       "開始時のゴールド:"

@@ -222,6 +222,8 @@ public class ConfigPage extends AbstractPage implements UpdateCharacter, ConfigC
         optionList.add(new MapRowNumConfig(optionWidth));
         //注册添加小怪的选项
         optionList.add(new FriendMonsterConfig(optionWidth));
+        //败者奖励的选项
+        optionList.add(new LoserRewardOption(optionWidth));
         //遍历每个需要被添加的page
         for(int idPage=0;idPage<optionList.size();++idPage)
         {

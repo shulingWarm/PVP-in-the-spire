@@ -5,10 +5,8 @@ import UI.Lobby.LobbyScreen;
 import WarlordEmblem.GlobalManager;
 import WarlordEmblem.helpers.FieldHelper;
 import WarlordEmblem.network.Lobby.LobbyManager;
-import com.evacipated.cardcrawl.modthespire.lib.SpireEnum;
-import com.evacipated.cardcrawl.modthespire.lib.SpirePatch;
-import com.evacipated.cardcrawl.modthespire.lib.SpirePostfixPatch;
-import com.evacipated.cardcrawl.modthespire.lib.SpireReturn;
+import com.evacipated.cardcrawl.modthespire.lib.*;
+import com.megacrit.cardcrawl.characters.CharacterManager;
 import com.megacrit.cardcrawl.core.CardCrawlGame;
 import com.megacrit.cardcrawl.localization.UIStrings;
 import com.megacrit.cardcrawl.screens.mainMenu.MainMenuScreen;
@@ -65,6 +63,19 @@ public class MainMenuPatch {
                         uiStrings.TEXT[1]);
             }
         }
+    }
+
+    //移除主界面里面的放弃上一局游戏
+    //直接让它找不到上一局游戏
+    @SpirePatch(clz = CharacterManager.class, method = "anySaveFileExists")
+    public static class RemoveAbandonPatch
+    {
+        @SpirePrefixPatch
+        public static SpireReturn<Boolean> fix(CharacterManager __instance)
+        {
+            return SpireReturn.Return(false);
+        }
+
     }
 
     @SpirePatch(clz = MenuButton.class, method = "buttonEffect")

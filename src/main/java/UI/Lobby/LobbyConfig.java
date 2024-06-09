@@ -132,6 +132,8 @@ public class LobbyConfig extends AbstractPage
         }
         //记录敌方的角色信息
         SocketServer.oppositeCharacter = new CharacterInfo(playerClass);
+        //播放选择角色时的音效
+        SocketServer.oppositeCharacter.playPlayerSound();
         //初始化对方角色的box
         oppositeBox = new CharacterBox(Settings.WIDTH*(1-X_PADDING),
                 Settings.HEIGHT*Y_PADDING,SocketServer.oppositeCharacter);
@@ -347,6 +349,8 @@ public class LobbyConfig extends AbstractPage
         optionList.add(new MapRowNumConfig(optionWidth));
         //注册添加小怪的选项
         optionList.add(new FriendMonsterConfig(optionWidth));
+        //添加败者奖励配置
+        optionList.add((new LoserRewardOption(optionWidth)));
         //遍历每个需要被添加的page
         for(int idPage=0;idPage<optionList.size();++idPage)
         {
@@ -364,9 +368,11 @@ public class LobbyConfig extends AbstractPage
     //更新当前显示的角色
     public void updateChosenCharacter()
     {
-        this.characterBox.updateCharacter(
-            new CharacterInfo(getCurrentPlayerClass())
-        );
+        //新建character info
+        CharacterInfo tempInfo = new CharacterInfo(getCurrentPlayerClass());
+        //播放选择角色时的音效
+        tempInfo.playPlayerSound();
+        this.characterBox.updateCharacter(tempInfo);
         if(this.networkStage == 1)
         {
             AutomaticSocketServer server = AutomaticSocketServer.getServer();
