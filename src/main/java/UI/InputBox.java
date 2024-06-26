@@ -1,8 +1,11 @@
 package UI;
 
+import UI.Events.EnterInterface;
+import UI.Text.KeyHelper;
 import WarlordEmblem.GlobalManager;
 import WarlordEmblem.helpers.FontLibrary;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -43,6 +46,12 @@ public class InputBox extends AbstractPage implements InputProcessor {
     //输入框使用的字体
     public BitmapFont font;
 
+    //是否允许所有字符
+    public boolean allowAllSymbol = false;
+
+    //按下回车时的接口
+    public EnterInterface enterInterface = null;
+
     //正常的始终输入框
     //这个构造函数需要指定明确的字体
     public InputBox(float x,float y,float width,float height,
@@ -66,9 +75,31 @@ public class InputBox extends AbstractPage implements InputProcessor {
         this(x,y,width,height, FontLibrary.getBaseFont());
     }
 
+    //文本退格
+    public void backspace()
+    {
+        textField = textField.substring(0, textField.length() - 1);
+    }
+
+    //文本追加
+    public void appendStr(String str)
+    {
+        textField = textField + str;
+    }
+
+    //判断一个字符是否被允许输入
+    public boolean isCharAllowed(char symbol)
+    {
+        if((int)symbol == 0)
+            return false;
+        //只允许数字或字母
+        return allowAllSymbol || Character.isSpaceChar(symbol) ||
+            Character.isLetterOrDigit(symbol);
+    }
+
     public void update() {
         if (GlobalManager.activateBox == this && Gdx.input.isKeyPressed(67) && !textField.isEmpty() && this.waitTimer <= 0.0F) {
-            textField = textField.substring(0, textField.length() - 1);
+            backspace();
             this.waitTimer = 0.09F;
         }
 
@@ -94,9 +125,11 @@ public class InputBox extends AbstractPage implements InputProcessor {
     private void renderTextbox(SpriteBatch sb) {
         //sb.draw(ImageMaster.RENAME_BOX, (float)Settings.WIDTH / 2.0F - 160.0F, Settings.OPTION_Y + 20.0F * Settings.scale - 160.0F, 160.0F, 160.0F, 320.0F, 320.0F, Settings.scale, Settings.scale, 0.0F, 0, 0, 320, 320, false, false);
         sb.draw(ImageMaster.WHITE_SQUARE_IMG, this.x, this.y-this.height, this.width,this.height*2);
-        FontHelper.renderSmartText(sb, this.font, textField,
-            this.x + X_OFFSET,
-            this.y + Y_OFFSET, 100000.0F, 0.0F, this.uiColor, 1);
+//        FontHelper.renderSmartText(sb, this.font, textField,
+//            this.x + X_OFFSET,
+//            this.y + Y_OFFSET, 100000.0F, 0.02F, this.uiColor, 1);
+        FontHelper.renderFont(sb,this.font,textField,x+X_OFFSET,y+Y_OFFSET,
+                Color.WHITE);
         float tmpAlpha = (MathUtils.cosDeg((float)(System.currentTimeMillis() / 3L % 360L)) + 1.25F) / 3.0F * this.uiColor.a;
         //需要先判断它是不是被激活了的输入框
         if(GlobalManager.activateBox == this)
@@ -124,26 +157,38 @@ public class InputBox extends AbstractPage implements InputProcessor {
         return false;
     }
 
+    //按下回车时的响应
+    public void enterPressed()
+    {
+        //判断是否有响应回车的接口
+        if(this.enterInterface != null)
+            enterInterface.enterPressed(this.textField);
+    }
+
     //用户输入的基本逻辑，用户每按下一个按键，在这里就会有对应
     @Override
     public boolean keyTyped(char character) {
         String charStr = String.valueOf(character);
-        logger.info(charStr);
+        // logger.info(charStr);
         if (charStr.length() != 1) {
             return false;
-        } else {
+        }
+        else if((int)character == 13)
+        {
+            enterPressed();
+        }
+        else {
 
             //判断是不是退格或者换行之类的操作
             if(character == '\n' || character == '\b' ||
-                    (!Character.isDigit(character) &&
-                    !Character.isLetter(character))
+                    !isCharAllowed(character)
             ){
                 return false;
             }
-            textField = textField + charStr;
+            appendStr(charStr);
 
-            return true;
         }
+        return true;
     }
 
     @Override

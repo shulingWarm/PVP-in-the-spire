@@ -2,6 +2,7 @@ package WarlordEmblem;
 
 
 
+import UI.Text.KeyHelper;
 import WarlordEmblem.EffectTransport.EffectManager;
 import WarlordEmblem.EffectTransport.EmptyTransporter;
 import WarlordEmblem.EffectTransport.XYTransporter;
@@ -249,6 +250,7 @@ public class WarlordEmblem implements
         Communication.registerEvent(new MonsterDamageEvent());
         Communication.registerEvent(new DamageOnMonsterEvent());
         Communication.registerEvent(new VFXEffectEvent());
+        Communication.registerEvent(new ChatMessageEvent(null));
 
         //初始化随机怪物的事件
         RandMonsterHelper.initMonsterList();
@@ -257,6 +259,9 @@ public class WarlordEmblem implements
         //注册通用特效
         effectManager.registerNewTransporter(new XYTransporter());
         effectManager.registerNewTransporter(new EmptyTransporter());
+
+        //注册输入框禁用按钮
+        KeyHelper.initKeys();
     }
 
 

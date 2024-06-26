@@ -4,6 +4,7 @@ import UI.*;
 import UI.Button.BackButton;
 import UI.Button.ConnectInLocal;
 import UI.Button.ConnectInSteam;
+import UI.Chat.ChatBox;
 import WarlordEmblem.GlobalManager;
 import WarlordEmblem.Screens.midExit.ExitButton;
 import com.badlogic.gdx.Game;
@@ -32,9 +33,6 @@ public class GameRoomUI {
 
     //返回按钮
     public BackButton backButton;
-
-    //用于测试的界面，在这里放一个聊天页面
-
 
     public GameRoomUI()
     {

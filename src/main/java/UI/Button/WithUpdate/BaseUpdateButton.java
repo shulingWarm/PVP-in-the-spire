@@ -80,11 +80,17 @@ public class BaseUpdateButton extends AbstractPage {
 
     }
 
+    //获取一般的渲染color
+    public Color getInactiveColor()
+    {
+        return this.inactiveColor;
+    }
+
     public void render(SpriteBatch sb) {
         if (this.hb.hovered) {
             sb.setColor(this.activeColor);
         } else {
-            sb.setColor(this.inactiveColor);
+            sb.setColor(this.getInactiveColor());
         }
 
         if(this.img != null)

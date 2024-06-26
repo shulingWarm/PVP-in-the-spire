@@ -5,6 +5,7 @@ import UI.Events.ConfigChangeEvent;
 import UI.Events.UpdateCharacter;
 import WarlordEmblem.SocketServer;
 import com.megacrit.cardcrawl.characters.AbstractPlayer;
+import com.megacrit.cardcrawl.core.CardCrawlGame;
 
 import java.io.DataInputStream;
 import java.io.IOException;
@@ -88,6 +89,9 @@ public class ConfigProtocol {
                 //请求发送角色数据
                 case REQUEST_CHARACTER:
                     configChangeCallback.receiveCharacterRequest(server.inputHandle);
+                    break;
+                case FightProtocol.CUSTOM_EVENT:
+                    FightProtocol.handleCustomEvent(server.inputHandle);
                     break;
             }
         }

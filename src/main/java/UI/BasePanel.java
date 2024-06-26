@@ -38,6 +38,9 @@ public class BasePanel extends AbstractPage implements ScrollBarListener {
     //目前已经添加的page的列表
     ArrayList<AbstractPage> pageList = new ArrayList<>();
 
+    //滚动条的初始位置
+    public float scrollInitLocation = 0;
+
     //初始化的时候需要给定完整的位置和宽高
     public BasePanel(float x,float y,float width,float height)
     {
@@ -46,8 +49,7 @@ public class BasePanel extends AbstractPage implements ScrollBarListener {
         this.height = height;
         this.width = width;
         //最开始的时候滚动条的范围是屏幕顶部
-        scrollRange[0] = this.y + this.height;
-        scrollRange[1] = this.y + this.height;
+        initScrollRange();
         //初始化滚动条
         scrollBar = new ScrollBar(this,this.x+this.width,this.y + this.height/2,this.height);
         //设置输入的捕捉信息
@@ -55,10 +57,23 @@ public class BasePanel extends AbstractPage implements ScrollBarListener {
 
     }
 
+    //初始化滚动条的范围
+    public void initScrollRange()
+    {
+        scrollRange[0] = this.y + this.height;
+        scrollRange[1] = this.y + this.height;
+    }
+
     //清空列表
     public void clearPanel()
     {
         this.pageList.clear();
+    }
+
+    //获取新的page.y
+    public void updatePageY(float panelBound,AbstractPage page)
+    {
+        page.y = panelBound - pageGap - page.height;
     }
 
     //在panel里面添加新的项目
@@ -69,11 +84,11 @@ public class BasePanel extends AbstractPage implements ScrollBarListener {
         if(pageList.isEmpty())
         {
             //这种情况需要更新滚动条，把它放到顶部
-            scrolledUsingBar(0);
+            scrolledUsingBar(scrollInitLocation);
         }
         //更新这个page的上边缘位置
         page.x = this.x + xGap;
-        page.y = minBound - pageGap - page.height;
+        updatePageY(minBound,page);
         scrollRange[0] = page.y;
         pageList.add(page);
         //更新滚动条的显示

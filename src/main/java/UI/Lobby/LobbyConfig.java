@@ -4,6 +4,7 @@ import UI.*;
 import UI.Button.ReadyButton;
 import UI.Button.ReadyButtonCallback;
 import UI.Button.WithUpdate.BaseUpdateButton;
+import UI.Chat.ChatFoldPage;
 import UI.Events.*;
 import UI.configOptions.*;
 import WarlordEmblem.AutomaticSocketServer;
@@ -654,6 +655,8 @@ public class LobbyConfig extends AbstractPage
         this.networkUpdate();
         //更新返回按钮
         this.backButton.update();
+        //更新聊天框
+        ChatFoldPage.getInstance().update();
     }
 
     //渲染配置选项
@@ -687,5 +690,7 @@ public class LobbyConfig extends AbstractPage
         this.leftButton.render(sb);
         this.rightButton.render(sb);
         this.backButton.render(sb);
+        //渲染聊天框
+        ChatFoldPage.getInstance().render(sb);
     }
 }

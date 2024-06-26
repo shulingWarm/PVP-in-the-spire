@@ -44,4 +44,14 @@ public class AbstractPage extends InputAdapter {
         this.width = otherPage.width;
     }
 
+    //关闭页面
+    public void close()
+    {
+
+    }
+
+    public void open()
+    {}
+
+
 }

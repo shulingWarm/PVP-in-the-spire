@@ -2,6 +2,7 @@ package UI;
 
 import UI.Button.ReadyButton;
 import UI.Button.ReadyButtonCallback;
+import UI.Chat.ChatFoldPage;
 import UI.Events.ConfigChangeEvent;
 import UI.Events.UpdateCharacter;
 import UI.configOptions.*;
@@ -291,6 +292,8 @@ public class ConfigPage extends AbstractPage implements UpdateCharacter, ConfigC
     public void update() {
         //调用渲染列表的更新
         configPanel.update();
+        //更新聊天框
+        ChatFoldPage.getInstance().update();
     }
 
     //渲染配置选项
@@ -318,6 +321,8 @@ public class ConfigPage extends AbstractPage implements UpdateCharacter, ConfigC
         //渲染我方版本号和对方版本号
         myVersionText.render(sb);
         oppositeVersionText.render(sb);
+        //渲染聊天框
+        ChatFoldPage.getInstance().render(sb);
         //每个渲染周期都要解析一下配置信息
         ConfigProtocol.readData(AutomaticSocketServer.getServer());
     }
