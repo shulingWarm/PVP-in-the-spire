@@ -26,6 +26,9 @@ public class CardBox {
     //最多同时显示的牌数
     public static final int MAX_SHOW_NUM = 10;
 
+    //目前的攻击意图的值
+    public int damageAmount = 0;
+
     public CardBox(float xCenter, float yCenter,
        CardRecorder shownCards)
     {
@@ -44,17 +47,42 @@ public class CardBox {
         return -(idCard-2);
     }
 
+    //获得接下来5张牌的攻击总数
+    public int sumDamageAmount(int cardNum)
+    {
+        //判断查找的牌数是否超过
+        if(cardNum > shownCards.drawingCards.size())
+        {
+            cardNum = shownCards.drawingCards.size();
+        }
+        //总的伤害数
+        int sumDamage = 0;
+        //遍历即将读取到的每个牌
+        for(int idCard=0;idCard<cardNum;++idCard)
+        {
+            //获取对应的牌
+            AbstractCard card = shownCards.drawingCards.get(idCard);
+            //判断是不是攻击牌
+            if(card.type == AbstractCard.CardType.ATTACK)
+            {
+                sumDamage += card.baseDamage;
+            }
+        }
+        return  sumDamage;
+    }
+
     //根据即将抽到的第一张牌更新意图
     public AbstractMonster.Intent getIntent()
     {
         //如果没有牌的话就是unknown
         if(shownCards.drawingCards.isEmpty())
             return AbstractMonster.Intent.UNKNOWN;
+        //求和接下来5张牌里面的伤害总和
+        this.damageAmount = sumDamageAmount(5);
+        if(damageAmount > 0)
+            return AbstractMonster.Intent.ATTACK;
         //获得第一张牌
         AbstractCard firstCard = shownCards.drawingCards.get(0);
-        //判断是不是攻击牌
-        if(firstCard.type == AbstractCard.CardType.ATTACK)
-            return AbstractMonster.Intent.ATTACK;
         //判断是不是能力牌
         if(firstCard.type == AbstractCard.CardType.POWER)
             return AbstractMonster.Intent.BUFF;
@@ -89,7 +117,7 @@ public class CardBox {
                 if(tempIntent== AbstractMonster.Intent.ATTACK)
                 {
                     ControlMoster.instance.setMove((byte)1,tempIntent,
-                            shownCards.drawingCards.get(0).baseDamage);
+                            this.damageAmount);
                 }
                 else {
                     ControlMoster.instance.setMove((byte)1,tempIntent,-1);

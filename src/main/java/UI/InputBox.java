@@ -4,6 +4,7 @@ import UI.Events.EnterInterface;
 import UI.Text.KeyHelper;
 import WarlordEmblem.GlobalManager;
 import WarlordEmblem.helpers.FontLibrary;
+import WarlordEmblem.patches.InputActionPatch;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
@@ -16,6 +17,7 @@ import com.megacrit.cardcrawl.core.CardCrawlGame;
 import com.megacrit.cardcrawl.core.Settings;
 import com.megacrit.cardcrawl.helpers.*;
 import com.megacrit.cardcrawl.helpers.controller.CInputActionSet;
+import com.megacrit.cardcrawl.helpers.input.InputAction;
 import com.megacrit.cardcrawl.helpers.input.InputActionSet;
 import com.megacrit.cardcrawl.helpers.input.InputHelper;
 import com.megacrit.cardcrawl.helpers.input.ScrollInputProcessor;
@@ -51,6 +53,9 @@ public class InputBox extends AbstractPage implements InputProcessor {
 
     //按下回车时的接口
     public EnterInterface enterInterface = null;
+
+    //上一个输入处理器
+    public InputProcessor backendProcessor = null;
 
     //正常的始终输入框
     //这个构造函数需要指定明确的字体
@@ -138,6 +143,8 @@ public class InputBox extends AbstractPage implements InputProcessor {
     }
 
     public void open() {
+        //记录备份的输入处理器
+        backendProcessor = Gdx.input.getInputProcessor();
         Gdx.input.setInputProcessor(this);
         if (SteamInputHelper.numControllers == 1 && CardCrawlGame.clientUtils != null && CardCrawlGame.clientUtils.isSteamRunningOnSteamDeck()) {
             CardCrawlGame.clientUtils.showFloatingGamepadTextInput(SteamUtils.FloatingGamepadTextInputMode.ModeSingleLine, 0, 0, Settings.WIDTH, (int)((float)Settings.HEIGHT * 0.25F));
@@ -145,6 +152,18 @@ public class InputBox extends AbstractPage implements InputProcessor {
         this.shown = true;
         //处理当前的激活输入框
         GlobalManager.activateBox = this;
+        //这种情况下禁用快捷键
+        InputActionPatch.allowShortcut = false;
+    }
+
+    @Override
+    public void close() {
+        //恢复之前的输入处理框
+        Gdx.input.setInputProcessor(this.backendProcessor);
+        this.shown = false;
+        GlobalManager.activateBox = null;
+        //启用快捷键
+        InputActionPatch.allowShortcut = true;
     }
 
     @Override

@@ -60,6 +60,10 @@
     "DESCRIPTION":  " 消耗 NL 从对方抽牌堆前5张牌中选一张，将其 消耗 ,在你手中加入这张牌",
     "UPGRADE_DESCRIPTION":  " 消耗 NL 从对方抽牌堆前5张牌中选一张，将其 消耗 ,在你手中加入这张牌, 这张牌本回合耗能为0"
   },
+  "ChangeSelfRepair": {
+    "NAME": "自我修复",
+    "DESCRIPTION":  "获得 !M! 层 再生 。"
+  },
   "ChangeOffering": {
     "NAME": "祭品",
     "DESCRIPTION": "失去 !D! (10%最大生命) 点生命。 NL 获得 [R] [R] 。 NL 抽 !M! 张牌。 NL 消耗 。",

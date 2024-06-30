@@ -351,6 +351,24 @@ public class PowerMapping {
         }
     }
 
+    //对再生效果的映射
+    public static class RegenMapping extends PowerCreate
+    {
+        @Override
+        public AbstractPower make(AbstractCreature owner,int amount,boolean isSourceMonster) {
+            return new FakeRegenPower(owner,amount);
+        }
+    }
+
+    //缓存负面效果的buff
+    public static class PelletsPowerMapping extends PowerCreate
+    {
+        @Override
+        public AbstractPower make(AbstractCreature owner,int amount,boolean isSourceMonster) {
+            return new PelletsPower(owner);
+        }
+    }
+
     //从ID到power生成方法的映射
     public static HashMap<String,PowerCreate> creatorMapper;
 
@@ -436,6 +454,10 @@ public class PowerMapping {
         creatorMapper.put(RitualPower.POWER_ID,new RitualMapping());
         //脆弱
         creatorMapper.put(FrailPower.POWER_ID,new FrailMapping());
+        //再生
+        creatorMapper.put(RegenPower.POWER_ID,new RegenMapping());
+        //药丸的buff
+        creatorMapper.put(PelletsPower.POWER_ID,new PelletsPowerMapping());
     }
 
     //根据id生成具体的power对象

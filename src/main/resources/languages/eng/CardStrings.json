@@ -51,6 +51,10 @@
     "DESCRIPTION": "When you deal unblocked attach, add a *Wounds in the enemy's discard pile. Keey !M! turns.",
     "UPGRADE_DESCRIPTION":"When you deal unblocked attach, add a *Wounds in the enemy's discard pile. Keey !M! turns. NL Retain. "
   },
+  "ChangeSelfRepair": {
+    "NAME": "Self Repair",
+    "DESCRIPTION":  "Gain !M! Regen."
+  },
   "electronicInterference": {
     "NAME": "Electronic Interference",
     "DESCRIPTION":  "In the next X turns, the enemy lose [B].",

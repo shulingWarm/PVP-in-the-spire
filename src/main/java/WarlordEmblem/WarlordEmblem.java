@@ -3,6 +3,7 @@ package WarlordEmblem;
 
 
 import UI.Text.KeyHelper;
+import UI.TextureManager;
 import WarlordEmblem.EffectTransport.EffectManager;
 import WarlordEmblem.EffectTransport.EmptyTransporter;
 import WarlordEmblem.EffectTransport.XYTransporter;
@@ -11,6 +12,7 @@ import WarlordEmblem.PVPApi.Communication;
 import WarlordEmblem.card.*;
 import WarlordEmblem.helpers.RandMonsterHelper;
 import WarlordEmblem.relics.BlockGainer;
+import WarlordEmblem.relics.OrangePelletsChange;
 import basemod.ModLabeledToggleButton;
 import basemod.ModPanel;
 import basemod.abstracts.CustomRelic;
@@ -200,9 +202,11 @@ public class WarlordEmblem implements
 
     @Override
     public void receiveEditRelics() {
+        TextureManager.initTexture();
 
         //把格挡增益添加到遗物池里面，只是为了方便在哈希表里面找到它
         BaseMod.addRelic(new BlockGainer(),RelicType.SHARED);
+        BaseMod.addRelic(new OrangePelletsChange(),RelicType.SHARED);
 
     }
 

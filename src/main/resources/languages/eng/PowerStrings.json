@@ -62,6 +62,12 @@
     "times left."
   ]
 },
+  "PelletsPower": {
+  "NAME": "Pellets",
+  "DESCRIPTIONS": [
+    "At begin of the next turn, gain: "
+  ]
+},
   "WarlordEmblem:BloodMaskPower": {
   "NAME": "鲜血印记",
   "DESCRIPTIONS": [

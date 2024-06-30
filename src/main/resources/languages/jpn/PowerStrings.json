@@ -41,6 +41,12 @@
       "占術によって状態異常を捨てたとき、それらを相手の捨て札に送る。"
     ]
   },
+  "PelletsPower": {
+  "NAME": "ペレット",
+  "DESCRIPTIONS": [
+    "次のターンの開始時に、が得られます："
+  ]
+},
   "dropEnergy": {
   "NAME": "マイナスエナジー",
   "DESCRIPTIONS": [

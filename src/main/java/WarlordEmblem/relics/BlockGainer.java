@@ -1,5 +1,6 @@
 package WarlordEmblem.relics;
 
+import UI.TextureManager;
 import basemod.abstracts.CustomRelic;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.MathUtils;
@@ -21,7 +22,7 @@ public class BlockGainer extends CustomRelic {
     public static float blockGainRate = 0.5f;
 
     public BlockGainer() {
-        super(ID,new Texture("pvp/relic/blockGainer.png"),
+        super(ID, TextureManager.BLOCK_GAIN,
         RelicTier.SPECIAL, CustomRelic.LandingSound.FLAT);
     }
 

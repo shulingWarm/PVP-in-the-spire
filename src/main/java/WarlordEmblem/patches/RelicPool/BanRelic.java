@@ -43,6 +43,7 @@ public class BanRelic {
                 case TheSpecimen.ID:
                 case MembershipCard.ID:
                 case Sling.ID:
+                case OrangePellets.ID: //药丸
                 case LizardTail.ID: //尾巴
                 //case Brimstone.ID: //硫磺
                 return SpireReturn.Return(true);

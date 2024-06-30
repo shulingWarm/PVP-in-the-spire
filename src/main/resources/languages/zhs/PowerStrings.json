@@ -62,6 +62,12 @@
     "次。"
   ]
 },
+  "PelletsPower": {
+  "NAME": "药丸",
+  "DESCRIPTIONS": [
+    "下回合开始时获得："
+  ]
+},
   "WarlordEmblem:BloodMaskPower": {
   "NAME": "鲜血印记",
   "DESCRIPTIONS": [

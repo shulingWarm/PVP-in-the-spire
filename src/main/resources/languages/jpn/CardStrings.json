@@ -52,6 +52,10 @@
     "DESCRIPTION":  "相手の山札の上の5枚のカードから1枚を選び、それを 廃棄 して、手札に複製を加える。 NL 廃棄",
     "UPGRADE_DESCRIPTION":  "相手の山札の、上の5枚のカードから1枚を選び、それを 廃棄 して、手札に複製を加える。 NL このターン、そのコストは0。 NL 廃棄"
   },
+  "ChangeSelfRepair": {
+    "NAME": "自己修復",
+    "DESCRIPTION":  "再生 !M! を得る。"
+  },
   "ChangeOffering": {
     "NAME": "供物",
     "DESCRIPTION": "HP !D! (最大hpの10%)を失う。 NL [R] [R] を得る。 NL カードを !M! 枚引く。 NL 廃棄",

@@ -90,6 +90,12 @@ public class ChatBox extends AbstractPage
     }
 
     @Override
+    public void close() {
+        //关闭输入框的内容
+        this.inputBox.close();
+    }
+
+    @Override
     public void render(SpriteBatch sb) {
         //渲染背景
         this.background.render(sb);

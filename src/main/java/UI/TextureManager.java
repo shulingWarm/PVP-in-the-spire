@@ -23,6 +23,13 @@ public class TextureManager {
     //关闭按钮
     public static Texture CLOSE_BUTTON;
 
+    //以下是遗物里面会用到的
+    public static Texture BLOCK_GAIN;
+    public static Texture RED_PELLETS;
+
+    public static Texture PELLETS_BUFF_128;
+    public static Texture PELLETS_BUFF_48;
+
     public static void initTexture()
     {
         if(initFlag)
@@ -33,6 +40,13 @@ public class TextureManager {
         SEND_BUTTON = ImageMaster.loadImage("pvp/ui/sendButton.png");
         MESSAGE_BUTTON = ImageMaster.loadImage("pvp/ui/message.png");
         CLOSE_BUTTON = ImageMaster.loadImage("pvp/ui/close.png");
+
+        BLOCK_GAIN = new Texture("pvp/relic/blockGainer.png");
+        RED_PELLETS = new Texture("pvp/relic/OrangePelletsChange.png");
+        //药丸的buff图片
+        PELLETS_BUFF_48 = new Texture("pvp/power/Pellets48.png");
+        PELLETS_BUFF_128 = new Texture("pvp/power/Pellets128.png");
+
         initFlag = true;
     }
 
