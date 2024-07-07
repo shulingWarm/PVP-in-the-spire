@@ -7,6 +7,7 @@ import WarlordEmblem.Dungeon.FakeEnding;
 import WarlordEmblem.EffectTransport.EffectManager;
 import WarlordEmblem.PVPApi.BaseEvent;
 import WarlordEmblem.Screens.midExit.MidExitScreen;
+import WarlordEmblem.network.MessageTriggerInterface;
 import WarlordEmblem.network.SteamConnector;
 import WarlordEmblem.patches.*;
 import WarlordEmblem.patches.CardShowPatch.UseCardSend;
@@ -59,6 +60,8 @@ public class GlobalManager {
     public static InputBox activateBox = null;
     //在当前在主界面直接进入lobby
     public static boolean enterLobbyFlag = false;
+    //当前阶段的消息处理接口
+    public static MessageTriggerInterface messageTriggerInterface;
 
     public static void characterPatchInit()
     {

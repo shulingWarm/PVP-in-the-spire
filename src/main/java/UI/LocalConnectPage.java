@@ -2,6 +2,7 @@ package UI;
 
 import UI.Button.BackButton;
 import UI.Events.ConnectOkEvent;
+import UI.Lobby.IpLobbyConfig;
 import WarlordEmblem.Screens.Buttons.AsServerButton;
 import WarlordEmblem.Screens.Buttons.ConnectButton;
 import WarlordEmblem.patches.connection.InputIpBox;
@@ -69,7 +70,7 @@ public class LocalConnectPage extends AbstractPage implements ConnectOkEvent {
     @Override
     public void connectOk() {
         //进入自定义面板的配置页面
-        this.configPage = new ConfigPage();
+        this.configPage = new IpLobbyConfig();
     }
 
     //判断这个页面是否可以被关闭了

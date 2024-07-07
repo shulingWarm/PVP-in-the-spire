@@ -4,6 +4,7 @@ import UI.ConfigPage;
 import UI.Events.ConfigChangeEvent;
 import UI.Events.UpdateCharacter;
 import WarlordEmblem.SocketServer;
+import WarlordEmblem.network.MessageTriggerInterface;
 import com.megacrit.cardcrawl.characters.AbstractPlayer;
 import com.megacrit.cardcrawl.core.CardCrawlGame;
 
@@ -11,7 +12,7 @@ import java.io.DataInputStream;
 import java.io.IOException;
 
 //自定义配置界面的相关设置
-public class ConfigProtocol {
+public class ConfigProtocol implements MessageTriggerInterface {
 
     //双方角色更新的消息
     public static final int UPDATE_CHARACTER = 20001;
@@ -58,40 +59,34 @@ public class ConfigProtocol {
         }
     }
 
-
-    //处理自定义配置阶段的相关信息
-    public static void readData(SocketServer server)
+    public static void readData(DataInputStream stream)
     {
         try
         {
-            if(!server.isDataAvailable())
-            {
-                return;
-            }
             //临时读取一个数据
-            int tempData = server.inputHandle.readInt();
+            int tempData = stream.readInt();
             switch (tempData)
             {
                 case UPDATE_CHARACTER:
-                    characterUpdateReceive(server.inputHandle);
+                    characterUpdateReceive(stream);
                     break;
                 case CHANGE_CONFIG:
-                    configChangeCallback.receiveConfigChange(server.inputHandle);
+                    configChangeCallback.receiveConfigChange(stream);
                     break;
                 //准备状态的更新
                 case READY_INFO:
-                    configChangeCallback.updateReadyStage(server.inputHandle);
+                    configChangeCallback.updateReadyStage(stream);
                     break;
                 //所有的config数据
                 case ALL_CONFIG_INFO:
-                    configChangeCallback.receiveAllConfig(server.inputHandle);
+                    configChangeCallback.receiveAllConfig(stream);
                     break;
                 //请求发送角色数据
                 case REQUEST_CHARACTER:
-                    configChangeCallback.receiveCharacterRequest(server.inputHandle);
+                    configChangeCallback.receiveCharacterRequest(stream);
                     break;
                 case FightProtocol.CUSTOM_EVENT:
-                    FightProtocol.handleCustomEvent(server.inputHandle);
+                    FightProtocol.handleCustomEvent(stream);
                     break;
             }
         }
@@ -101,4 +96,20 @@ public class ConfigProtocol {
         }
     }
 
+
+    //处理自定义配置阶段的相关信息
+    public static void readData(SocketServer server)
+    {
+        if(!server.isDataAvailable())
+        {
+            return;
+        }
+        readData(server.inputHandle);
+    }
+
+    @Override
+    public void triggerMessage(DataInputStream stream) {
+        //当接收到消息时，需要调用静态的消息处理函数
+        readData(stream);
+    }
 }

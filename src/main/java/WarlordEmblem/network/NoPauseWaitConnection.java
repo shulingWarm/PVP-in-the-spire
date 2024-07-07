@@ -37,7 +37,7 @@ public class NoPauseWaitConnection {
             serverSocket = new ServerSocket(idPort);
             executorService = Executors.newSingleThreadExecutor();
             //否则会额外开辟一个线程一直等待连接
-            this.future = this.executorService.submit(this::acceptNewConnection);
+            this.future = executorService.submit(this::acceptNewConnection);
         }
         catch (IOException e)
         {

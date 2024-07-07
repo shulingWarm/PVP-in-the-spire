@@ -119,7 +119,7 @@ public class LobbyConfig extends AbstractPage
     //房主的标志
     public boolean ownerFlag = false;
     //发送hello信息的计数，每过一段时间再发送一次
-    public int sendHelloFrame = 100;
+    public int sendHelloFrame = 10;
 
     @Override
     public void updateCharacter(AbstractPlayer.PlayerClass playerClass,String versionInfo) {
@@ -225,27 +225,33 @@ public class LobbyConfig extends AbstractPage
         }
     }
 
+    //即将进入游戏的逻辑
+    public void enterGame()
+    {
+        //判断是否有mod需要使用
+        this.checkGlobalMods();
+        MeunScreenFadeout.connectOk = true;
+        //初始化友军管理器
+        FriendManager.initGlobalManager();
+        //这次是真的可以了，准备进入游戏
+        RenderPatch.delayBox = new DelayBox();
+        //指定自己选中的角色
+        CardCrawlGame.chosenCharacter = this.getCurrentPlayerClass();
+        //判断自己是不是房主，如果是房主的话，就把房间标记成消失
+        if(this.ownerFlag)
+        {
+            LobbyManager.destroyRoom(LobbyManager.currentLobby.lobbyId);
+        }
+        //准备进入游戏
+        GameManager.prepareEnterGame();
+    }
+
     //判断是否两边都准备了
     public void judgeAllReady()
     {
         if(this.readyButton.readyFlag && this.oppositeReadyFlag)
         {
-            //判断是否有mod需要使用
-            this.checkGlobalMods();
-            MeunScreenFadeout.connectOk = true;
-            //初始化友军管理器
-            FriendManager.initGlobalManager();
-            //这次是真的可以了，准备进入游戏
-            RenderPatch.delayBox = new DelayBox();
-            //指定自己选中的角色
-            CardCrawlGame.chosenCharacter = this.getCurrentPlayerClass();
-            //判断自己是不是房主，如果是房主的话，就把房间标记成消失
-            if(this.ownerFlag)
-            {
-                LobbyManager.destroyRoom(LobbyManager.currentLobby.lobbyId);
-            }
-            //准备进入游戏
-            GameManager.prepareEnterGame();
+            enterGame();
         }
     }
 
@@ -282,6 +288,12 @@ public class LobbyConfig extends AbstractPage
         }
     }
 
+    //获取我方的名字
+    public String getMyName()
+    {
+        return SteamManager.getMyName();
+    }
+
     //给对方发送自己的形象
     public void sendMyCharacter(DataOutputStream streamHandle,
                                 AbstractPlayer.PlayerClass playerClass)
@@ -294,7 +306,7 @@ public class LobbyConfig extends AbstractPage
             //发送自己的版本号
             streamHandle.writeUTF(myVersionText.text);
             //发送自己的名字
-            streamHandle.writeUTF(SteamManager.getMyName());
+            streamHandle.writeUTF(this.getMyName());
         }
         catch (IOException e)
         {
@@ -469,8 +481,14 @@ public class LobbyConfig extends AbstractPage
         }
     }
 
-
+    //适配了ip子类的初始化
     public LobbyConfig()
+    {
+        this(null);
+    }
+
+
+    public LobbyConfig(AbstractPlayer.PlayerClass playerClass)
     {
         //初始化所有角色的列表
         initPlayerClassList();
@@ -486,8 +504,20 @@ public class LobbyConfig extends AbstractPage
         //初始化用于渲染的角色
 //        characterBox = new CharacterBox(Settings.WIDTH*X_PADDING,
 //            Settings.HEIGHT*Y_PADDING, CardCrawlGame.chosenCharacter);
+        if(playerClass == null)
+            playerClass = this.classArrayList.get(0);
+        else {
+            for(int i=0;i<classArrayList.size();++i)
+            {
+                if(classArrayList.get(i).equals(playerClass))
+                {
+                    this.currentCharacter = i;
+                    break;
+                }
+            }
+        }
         characterBox = new CharacterBox(Settings.WIDTH*X_PADDING,
-                Settings.HEIGHT*Y_PADDING, new CharacterInfo(this.classArrayList.get(0)));
+                Settings.HEIGHT*Y_PADDING, new CharacterInfo(playerClass));
         //初始化左右的按钮
         this.leftButton = new BaseUpdateButton(Settings.WIDTH*0.04f,
                 Settings.HEIGHT*0.73f,
@@ -603,6 +633,8 @@ public class LobbyConfig extends AbstractPage
             {
                 //将网络状态置为下一个状态，也就是监听状态
                 this.networkStage = 1;
+                //加快加载角色数据的过程
+                this.sendHelloFrame = 10;
                 //打开准备按钮
                 this.readyButton.disabled = false;
                 //把自己的信息置为配置页面的回调
