@@ -3,8 +3,12 @@ package UI;
 import UI.Button.BackButton;
 import UI.Events.ConnectOkEvent;
 import UI.Lobby.IpLobbyConfig;
+import WarlordEmblem.GlobalManager;
 import WarlordEmblem.Screens.Buttons.AsServerButton;
 import WarlordEmblem.Screens.Buttons.ConnectButton;
+import WarlordEmblem.Screens.Buttons.MultiConnectButton;
+import WarlordEmblem.Screens.Buttons.MultiServerButton;
+import WarlordEmblem.actions.ConfigProtocol;
 import WarlordEmblem.patches.connection.InputIpBox;
 import WarlordEmblem.patches.connection.IpInputProcessor;
 import com.badlogic.gdx.Gdx;
@@ -49,12 +53,13 @@ public class LocalConnectPage extends AbstractPage implements ConnectOkEvent {
         {
             titleFont = InputIpBox.generateFont(60);
         }
-        //初始化连接至对方的按钮
-        buttonForConnection = new ConnectButton(0.52F*Settings.WIDTH,
+        //初始化连接至对方的按钮 注意这里把按钮改成了多人通信的版本
+        buttonForConnection = new MultiConnectButton(0.52F*Settings.WIDTH,
                 0.35F*Settings.HEIGHT,0.22F*Settings.WIDTH,0.13F*Settings.HEIGHT,
                 InputIpBox.generateFont(40),ipInputProcessor.inputResult);
         //初始化用于实验的按钮
-        button = new AsServerButton(0.27F*Settings.WIDTH,0.35F*Settings.HEIGHT,
+        //在这里换成了多server的连接器，为以后的多人连接做准备
+        button = new MultiServerButton(0.27F*Settings.WIDTH,0.35F*Settings.HEIGHT,
                 0.22F*Settings.WIDTH,0.13F*Settings.HEIGHT,
                 InputIpBox.generateFont(40),ipInputProcessor.inputResult,buttonForConnection);
         //初始化返回按钮
@@ -69,6 +74,8 @@ public class LocalConnectPage extends AbstractPage implements ConnectOkEvent {
     //连接成功时的回调函数
     @Override
     public void connectOk() {
+        //把通信协议改成config协议
+        GlobalManager.messageTriggerInterface = new ConfigProtocol();
         //进入自定义面板的配置页面
         this.configPage = new IpLobbyConfig();
     }

@@ -36,6 +36,11 @@ public class AbstractPage extends InputAdapter {
         y+=yChange;
     }
 
+    public void moveTo(float targetX,float targetY)
+    {
+        this.move(targetX-x,targetY-y);
+    }
+
     public void copyLocation(AbstractPage otherPage)
     {
         this.x = otherPage.x;

@@ -3,6 +3,7 @@ package UI;
 import WarlordEmblem.character.CharacterInfo;
 import WarlordEmblem.character.ControlMoster;
 import WarlordEmblem.character.PlayerForShow;
+import WarlordEmblem.patches.AnimationRecorder;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -103,6 +104,8 @@ public class CharacterBox extends CreatureBox {
         //从角色信息里面载入动画
         //loadAnimationFromCharacter(characterInfo);
         this.player = characterInfo.player;
+        //重置player的大小
+        AnimationRecorder.resetCreatureScale(this.player,1.3f);
         this.player.drawX = this.x;
         this.player.drawY = this.y;
 
@@ -121,6 +124,10 @@ public class CharacterBox extends CreatureBox {
         {
             AbstractCreature.initialize();
         }
+    }
+
+    public void setFlipHorizontal(boolean flipHorizontal) {
+        this.flipHorizontal = flipHorizontal;
     }
 
     @Override
@@ -144,6 +151,17 @@ public class CharacterBox extends CreatureBox {
         AbstractCreature.sr.draw(CardCrawlGame.psb, this.skeleton);
         CardCrawlGame.psb.end();
         sb.begin();
+    }
+
+    @Override
+    public void move(float xChange, float yChange) {
+        super.move(xChange,yChange);
+        if(player != null)
+        {
+            player.drawX += xChange;
+            player.drawY += yChange;
+        }
+
     }
 
     //获取要渲染的角色的位置

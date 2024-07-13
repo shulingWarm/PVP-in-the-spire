@@ -23,10 +23,7 @@ import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
 import com.megacrit.cardcrawl.screens.charSelect.CharacterSelectScreen;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 //全局的静态变量管理器，每次调用的时候需要把所有的静态变量初始化一次
 public class GlobalManager {
@@ -62,6 +59,11 @@ public class GlobalManager {
     public static boolean enterLobbyFlag = false;
     //当前阶段的消息处理接口
     public static MessageTriggerInterface messageTriggerInterface;
+    public static Random randGenerator = new Random();
+    //我方player的tag
+    public static int myPlayerTag = 0;
+    //玩家的管理器
+    
 
     public static void characterPatchInit()
     {
@@ -99,6 +101,8 @@ public class GlobalManager {
         AbstractDungeon.ascensionLevel = 0;
         //初始化格挡增益遗物的数量
         BlockGainer.gainedNum=0;
+        //初始化当前我方的tag
+        myPlayerTag = randGenerator.nextInt();
     }
 
     public static void initGlobal()

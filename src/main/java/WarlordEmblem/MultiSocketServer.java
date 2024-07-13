@@ -5,9 +5,7 @@ import WarlordEmblem.network.ClientHandle;
 import WarlordEmblem.network.ClientManager;
 import WarlordEmblem.network.ReceiveInterface;
 
-import java.io.ByteArrayInputStream;
-import java.io.DataInputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
 
@@ -20,20 +18,47 @@ public class MultiSocketServer extends AutomaticSocketServer
     //已经连接上的用户的列表
     public ArrayList<ClientHandle> clientList;
     //多用户的管理器，这是用来监听用户连接的
-    public ClientManager clientManager;
+    public ClientManager clientManager = null;
+    //用于存储实质性数据的底层字节流
+    public ByteArrayOutputStream byteSendStream = new ByteArrayOutputStream();
 
     public MultiSocketServer(int idPort)
     {
         super();
         //初始化用户数据的列表
         this.clientList = new ArrayList<>();
+        initIOStream();
         //初始化client的管理器
         this.clientManager = new ClientManager(idPort,this);
+    }
+
+    //这是给客户端使用的情况
+    //这里面不会初始化client manager
+    public MultiSocketServer(Socket socket)
+    {
+        super();
+        //初始化用户数据的列表
+        this.clientList = new ArrayList<>();
+        //把这个socket直接用作客户端就可以了
+        receiveConnection(socket);
+        initIOStream();
+    }
+
+    //初始化io stream
+    public void initIOStream()
+    {
+        //数据访问的时候使用的输入流，整个游戏都在使用这个接口
+        streamHandle = new DataOutputStream(byteSendStream);
     }
 
     //这里的接收信息是由多线程来控制的
     @Override
     public boolean isDataAvailable() {
+        //遍历检查每个client,但处理消息的逻辑是这里自身直接处理的
+        for(ClientHandle eachClient : clientList)
+        {
+            eachClient.checkMessage();
+        }
         return false;
     }
 
@@ -70,6 +95,19 @@ public class MultiSocketServer extends AutomaticSocketServer
             e.printStackTrace();
         }
         return new byte[0];
+    }
+
+    @Override
+    public void send() {
+        //取出数据里面的字节
+        byte[] byteData = byteSendStream.toByteArray();
+        //遍历每个用户来发送消息
+        for(ClientHandle eachClient : clientList)
+        {
+            eachClient.sendByte(byteData);
+        }
+        //清空字节流里面的数据
+        byteSendStream.reset();
     }
 
     @Override

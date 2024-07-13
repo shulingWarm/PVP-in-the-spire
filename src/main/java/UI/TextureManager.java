@@ -22,6 +22,8 @@ public class TextureManager {
     public static Texture MESSAGE_BUTTON;
     //关闭按钮
     public static Texture CLOSE_BUTTON;
+    //角色的边框
+    public static Texture SIDE_BOX;
 
     //以下是遗物里面会用到的
     public static Texture BLOCK_GAIN;
@@ -40,6 +42,7 @@ public class TextureManager {
         SEND_BUTTON = ImageMaster.loadImage("pvp/ui/sendButton.png");
         MESSAGE_BUTTON = ImageMaster.loadImage("pvp/ui/message.png");
         CLOSE_BUTTON = ImageMaster.loadImage("pvp/ui/close.png");
+        SIDE_BOX = ImageMaster.loadImage("pvp/ui/SideBox.png");
 
         BLOCK_GAIN = new Texture("pvp/relic/blockGainer.png");
         RED_PELLETS = new Texture("pvp/relic/OrangePelletsChange.png");

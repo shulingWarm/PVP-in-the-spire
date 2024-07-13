@@ -81,6 +81,12 @@ public class ConnectButton extends UserButton {
 
     }
 
+    //初始化server
+    public void initGlobalServer(Socket socket)
+    {
+        AutomaticSocketServer.globalServer = new AutomaticSocketServer(socket);
+    }
+
     //点击事件，当发生点击的时候和对方做连接
     @Override
     public void clickEvent() {
@@ -92,7 +98,7 @@ public class ConnectButton extends UserButton {
             //从输入的字符串里面解析端口号和ip
             IpPortInfo tempInfo = new IpPortInfo(inputResult.toString());
             testSocket.connect(new InetSocketAddress(tempInfo.pureIp,tempInfo.idPort), 30);
-            AutomaticSocketServer.globalServer = new AutomaticSocketServer(testSocket);
+            initGlobalServer(testSocket);
             //判断是否有回调函数需要处理
             if(callbackEvent!=null)
             {

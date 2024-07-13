@@ -43,8 +43,8 @@ public class ClientHandle {
             e.printStackTrace();
         }
         //准备用于监听消息的进程
-        this.executorService = Executors.newSingleThreadExecutor();
-        this.executorService.submit(this::listenMessage);
+//        this.executorService = Executors.newSingleThreadExecutor();
+//        this.executorService.submit(this::listenMessage);
     }
 
     //接收到消息时的函数
@@ -52,18 +52,23 @@ public class ClientHandle {
     {
         while(!endFlag)
         {
-            try
+            this.checkMessage();
+        }
+    }
+
+    public void checkMessage()
+    {
+        try
+        {
+            if(inputHandle.available() > 0)
             {
-                if(inputHandle.available() > 0)
-                {
-                    //调用回调函数，把自己的input stream传给回调
-                    receiveInterface.receiveMessage(this.inputHandle,this.idClient);
-                }
+                //调用回调函数，把自己的input stream传给回调
+                receiveInterface.receiveMessage(this.inputHandle,this.idClient);
             }
-            catch (IOException e)
-            {
-                e.printStackTrace();
-            }
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
         }
     }
 
@@ -74,6 +79,7 @@ public class ClientHandle {
         //需要确保同一时刻只能有一个线程往这里面发送数据
         synchronized (this)
         {
+            System.out.printf("Sending bytes %s\n",byteData.length);
             //向output里面写入数据
             try
             {

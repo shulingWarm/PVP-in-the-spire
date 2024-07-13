@@ -115,6 +115,14 @@ public class AsServerButton extends UserButton {
         return NoPauseWaitConnection.DEFAULT_PORT + GlobalManager.idGame;
     }
 
+    //准备连接对方的服务器
+    public void prepareConnectTool(int idPort)
+    {
+        //准备用于连接的句柄
+        connectTool = new NoPauseWaitConnection(idPort);
+    }
+
+
     //当按钮被点击的时候，把关联的ip设置成本机的ip
     @Override
     public void clickEvent() {
@@ -136,12 +144,12 @@ public class AsServerButton extends UserButton {
             ipString.append(getLocalIp());
             ipString.append(":");
             ipString.append(idPort);
+            System.out.printf("ip: %s\n",ipString);
             //把显示的按钮改成取消
             this.text = "cancel";
             //禁用发送数据给对方的按钮
             connectButton.disabled = true;
-            //准备用于连接的句柄
-            connectTool = new NoPauseWaitConnection(idPort);
+            prepareConnectTool(idPort);
         }
     }
 }

@@ -48,7 +48,7 @@
   },
   "painSword": {
     "NAME": "Pain Sword",
-    "DESCRIPTION": "When you deal unblocked attach, add a *Wounds in the enemy's discard pile. Keey !M! turns.",
+    "DESCRIPTION": "When you deal unblocked attack, add a *Wounds in the enemy's discard pile. Keey !M! turns.",
     "UPGRADE_DESCRIPTION":"When you deal unblocked attach, add a *Wounds in the enemy's discard pile. Keey !M! turns. NL Retain. "
   },
   "ChangeSelfRepair": {
