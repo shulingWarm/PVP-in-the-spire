@@ -119,7 +119,7 @@ public class LobbyCallback implements SteamMatchmakingCallback {
             this.lobbyId = steamID;
             //判断是否有创建成功时的回调
             if(lobbyCreateCallback != null)
-                lobbyCreateCallback.connectOk();
+                lobbyCreateCallback.connectOk(true);
         }
         else {
             System.out.println("Create lobby failed");

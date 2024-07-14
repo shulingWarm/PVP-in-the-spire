@@ -27,6 +27,7 @@ public class RegisterPlayerEvent extends BaseEvent {
         try
         {
             int playerTag = streamHandle.readInt();
+            GlobalManager.playerManager.registerPlayer(playerTag);
         }
         catch (IOException e)
         {

@@ -126,7 +126,7 @@ public class CreateLobbyPage extends AbstractPage
 
     //这个主要是创建房间成功时的回调
     @Override
-    public void connectOk() {
+    public void connectOk(boolean isOwner) {
         //移除overlap房间
         this.overlapPage = null;
         //初始化房间属性

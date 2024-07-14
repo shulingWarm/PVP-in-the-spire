@@ -10,12 +10,14 @@ import UI.configOptions.*;
 import WarlordEmblem.AutomaticSocketServer;
 import WarlordEmblem.GameManager;
 import WarlordEmblem.GlobalManager;
+import WarlordEmblem.PlayerManagement.PlayerJoinInterface;
 import WarlordEmblem.Room.FriendManager;
 import WarlordEmblem.SocketServer;
 import WarlordEmblem.actions.ConfigProtocol;
 import WarlordEmblem.character.CharacterInfo;
 import WarlordEmblem.helpers.FontLibrary;
 import WarlordEmblem.network.Lobby.LobbyManager;
+import WarlordEmblem.network.PlayerInfo;
 import WarlordEmblem.network.SteamConnector;
 import WarlordEmblem.patches.RenderPatch;
 import WarlordEmblem.patches.connection.InputIpBox;
@@ -44,7 +46,8 @@ public class MultiplayerConfigPage extends AbstractPage
         ConfigChangeEvent,
         ReadyButtonCallback,
         ClickCallback,
-        MemberChangeEvent
+        MemberChangeEvent,
+        PlayerJoinInterface
 {
 
     public static final UIStrings uiStrings =
@@ -358,14 +361,10 @@ public class MultiplayerConfigPage extends AbstractPage
 
     }
 
-    //适配了ip子类的初始化
-    public MultiplayerConfigPage()
-    {
-        this(null);
-    }
 
-
-    public MultiplayerConfigPage(AbstractPlayer.PlayerClass playerClass)
+    public MultiplayerConfigPage(AbstractPlayer.PlayerClass playerClass,
+                                 boolean isOwner
+    )
     {
         //初始化所有角色的列表
         initPlayerClassList();
@@ -392,8 +391,15 @@ public class MultiplayerConfigPage extends AbstractPage
                 TextureManager.BACK_BUTTON,
                 this
         );
+        //注册回调信息
+        GlobalManager.playerManager.playerJoinInterface = this;
         //初始化渲染角色的控件
         this.characterPanel = new CharacterPanel();
+        //给玩家管理器传递用于显示角色的两个grid
+        GlobalManager.playerManager.initCharacterLayout(
+            this.characterPanel.leftCharacters,
+            this.characterPanel.rightCharacters
+        );
         initConfigOption();
         InputHelper.initialize();
     }
@@ -492,4 +498,13 @@ public class MultiplayerConfigPage extends AbstractPage
         ChatFoldPage.getInstance().render(sb);
     }
 
+    //有玩家加入时的注册信息
+    @Override
+    public void registerPlayer(PlayerInfo player) {
+        //如果我是房主，就安排分配一下这个player所属的team
+        if(this.ownerFlag)
+        {
+            GlobalManager.playerManager.assignTeam(player);
+        }
+    }
 }

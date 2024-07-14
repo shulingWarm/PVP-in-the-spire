@@ -23,6 +23,6 @@ public class MultiServerButton extends AsServerButton {
         //直接初始化多用户的连接器
         AutomaticSocketServer.globalServer = new MultiSocketServer(idPort);
         //直接设置当前状态为连接成功
-        callbackEvent.connectOk();
+        callbackEvent.connectOk(true);
     }
 }

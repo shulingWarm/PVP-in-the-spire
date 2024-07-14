@@ -6,6 +6,7 @@ import UI.TextureManager;
 import WarlordEmblem.Dungeon.FakeEnding;
 import WarlordEmblem.EffectTransport.EffectManager;
 import WarlordEmblem.PVPApi.BaseEvent;
+import WarlordEmblem.PlayerManagement.PlayerManager;
 import WarlordEmblem.Screens.midExit.MidExitScreen;
 import WarlordEmblem.network.MessageTriggerInterface;
 import WarlordEmblem.network.SteamConnector;
@@ -36,6 +37,8 @@ public class GlobalManager {
     public static int invincibleRate = 2;
     //版本号
     public static final String VERSION = "v0.4.12";
+    //玩家的名字，如果选用steam渠道的话就会通过这里个性
+    public static final String myName = "user";
     //是否启用customMOD,例如现开套牌
     public static boolean useModFlag = false;
     //最后决定使用的mod
@@ -63,7 +66,7 @@ public class GlobalManager {
     //我方player的tag
     public static int myPlayerTag = 0;
     //玩家的管理器
-    
+    public static PlayerManager playerManager;
 
     public static void characterPatchInit()
     {
@@ -103,6 +106,8 @@ public class GlobalManager {
         BlockGainer.gainedNum=0;
         //初始化当前我方的tag
         myPlayerTag = randGenerator.nextInt();
+        //初始化玩家管理器
+        playerManager = new PlayerManager();
     }
 
     public static void initGlobal()

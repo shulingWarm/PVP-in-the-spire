@@ -17,9 +17,9 @@ import com.megacrit.cardcrawl.core.CardCrawlGame;
 //但由于开发之前没有设计好，这里就只能让它去继承之前的lobby config了
 public class IpLobbyConfig extends MultiplayerConfigPage {
 
-    public IpLobbyConfig()
+    public IpLobbyConfig(boolean isOwner)
     {
-        super(CardCrawlGame.chosenCharacter);
+        super(CardCrawlGame.chosenCharacter,isOwner);
         //网络的状态直接就是已经连接上的那种
         this.networkStage = 1;
     }

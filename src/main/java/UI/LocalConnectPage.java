@@ -73,11 +73,11 @@ public class LocalConnectPage extends AbstractPage implements ConnectOkEvent {
 
     //连接成功时的回调函数
     @Override
-    public void connectOk() {
+    public void connectOk(boolean isOwner) {
         //把通信协议改成config协议
         GlobalManager.messageTriggerInterface = new ConfigProtocol();
         //进入自定义面板的配置页面
-        this.configPage = new IpLobbyConfig();
+        this.configPage = new IpLobbyConfig(isOwner);
     }
 
     //判断这个页面是否可以被关闭了

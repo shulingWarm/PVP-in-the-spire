@@ -84,7 +84,7 @@ public class AsServerButton extends UserButton {
                     //判断是否有回调接口需要处理
                     if(callbackEvent!=null)
                     {
-                        callbackEvent.connectOk();
+                        callbackEvent.connectOk(true);
                     }
                     else {
                         //标记已经连接完成

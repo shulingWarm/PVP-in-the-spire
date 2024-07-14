@@ -102,7 +102,7 @@ public class ConnectButton extends UserButton {
             //判断是否有回调函数需要处理
             if(callbackEvent!=null)
             {
-                callbackEvent.connectOk();
+                callbackEvent.connectOk(false);
             }
             else {
                 //通知连接完成
