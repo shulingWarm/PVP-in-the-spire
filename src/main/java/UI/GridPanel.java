@@ -15,6 +15,18 @@ public class GridPanel extends AbstractPage {
     public float cellWidth;
     public float cellHeight;
 
+    //交换两个panel的内容
+    public static void exchangePanel(GridPanel panel1,GridPanel panel2)
+    {
+        ArrayList<AbstractPage> tempList = panel1.pageList;
+        panel1.pageList = panel2.pageList;
+        panel2.pageList = tempList;
+        //重置两个panel的位置
+        panel1.allocateLocation();
+        panel2.allocateLocation();
+    }
+
+
     public GridPanel(int gridWidth,
          float cellWidth,float cellHeight,
          float x, float y

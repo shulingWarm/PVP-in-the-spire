@@ -17,9 +17,12 @@ public class AssignTeamEvent extends BaseEvent {
     {
         this.playerTag = playerTag;
         this.idTeam = idTeam;
+        this.eventId = "AssignTeamEvent";
     }
 
-    public AssignTeamEvent(){}
+    public AssignTeamEvent(){
+        this(0,0);
+    }
 
     @Override
     public void encode(DataOutputStream streamHandle) {

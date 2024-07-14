@@ -31,7 +31,13 @@ public class CharacterConfigPage extends AbstractPage {
     public static final float HEIGHT = Settings.HEIGHT * 0.25f;
 
     //版本号
-    VersionText versionText;
+    public VersionText versionText;
+
+    //是否需要翻转显示的信息
+    public boolean flipFlag = false;
+
+    //构造人物的时候是否需要重置大小
+    public boolean resetScaleFlag = true;
 
     //初始化测试用的画面
     //正常运行的时候是不走这个的
@@ -63,20 +69,21 @@ public class CharacterConfigPage extends AbstractPage {
         this.readyLabel.x = this.x + this.width * 0.5f - readyLabel.width * 0.5f;
         this.readyLabel.y = this.y + this.readyLabel.height * 0.5f;
         //初始化版本信息
-        this.versionText = new VersionText(this.nameLabel.x,this.readyLabel.y,FontLibrary.getBaseFont());
+        this.versionText = new VersionText(this.nameLabel.x,this.y,FontLibrary.getBaseFont());
         this.versionText.width = this.width;
         versionText.text = "v0.4.12";
         this.isReady = true;
     }
 
-    //仅仅用于实验测试的页面
-    public CharacterConfigPage()
+    //获取character box的y坐标
+    public float getCharacterBoxY()
     {
-        //页面的基本位置
-        this.y = Settings.HEIGHT * 0.5f;
-        this.width = WIDTH;
-        this.x = (Settings.WIDTH - this.width)/2;
-        this.height = HEIGHT;
+        return this.height * 0.3f + this.y;
+    }
+
+    //根据宽高初始化基础界面
+    public void initBaseInfo()
+    {
         //背景图
         this.plainBox = new PlainBox(
                 this.width,this.height, Color.RED
@@ -92,6 +99,28 @@ public class CharacterConfigPage extends AbstractPage {
         this.readyLabel.y = this.y + this.readyLabel.height * 0.5f;
     }
 
+    public CharacterConfigPage(float width,float height)
+    {
+        //页面的基本位置
+        this.y = Settings.HEIGHT * 0.5f;
+        this.width = width;
+        this.x = (Settings.WIDTH - this.width)/2;
+        this.height = height;
+        initBaseInfo();
+    }
+
+    //仅仅用于实验测试的页面
+    public CharacterConfigPage()
+    {
+        this(WIDTH,HEIGHT);
+    }
+
+    //设置边框颜色
+    public void setBoxColor(Color color)
+    {
+        this.plainBox.color = color;
+    }
+
     //设置玩家的信息
     public void setPlayerInfo(CharacterInfo characterInfo,
                               String name,
@@ -100,16 +129,17 @@ public class CharacterConfigPage extends AbstractPage {
         if(characterBox != null)
         {
             characterBox.updateCharacter(characterInfo);
-            this.nameLabel = new TextLabel(this.x,this.y + this.height*0.9f,
-                    this.width,Settings.HEIGHT*0.01f,
-                    name, FontLibrary.getBaseFont());
-            this.versionText = new VersionText(this.nameLabel.x,this.readyLabel.y,FontLibrary.getBaseFont());
-            this.versionText.width = this.width;
+            this.nameLabel.text = name;
         }
         else {
             characterBox = new CharacterBox(this.x + this.width * 0.5f,
-                    this.y + this.height * 0.2f,characterInfo);
-            this.nameLabel.text = name;
+                    getCharacterBoxY(),characterInfo,resetScaleFlag);
+            characterBox.setFlipHorizontal(this.flipFlag);
+            this.nameLabel = new TextLabel(this.x,this.y + this.height*0.98f,
+                    this.width,Settings.HEIGHT*0.01f,
+                    name, FontLibrary.getBaseFont());
+            this.versionText = new VersionText(this.nameLabel.x,this.y,FontLibrary.getBaseFont());
+            this.versionText.width = this.width;
         }
         this.versionText.text = version;
     }
@@ -128,7 +158,9 @@ public class CharacterConfigPage extends AbstractPage {
     //把角色设置成横向翻转
     public void setHorizontalFlip(boolean newFlag)
     {
-        this.characterBox.setFlipHorizontal(newFlag);
+        this.flipFlag = newFlag;
+        if(this.characterBox != null)
+            this.characterBox.setFlipHorizontal(newFlag);
     }
 
     @Override
@@ -150,8 +182,9 @@ public class CharacterConfigPage extends AbstractPage {
     {
         this.characterBox = new CharacterBox(
                 this.x + this.width * 0.5f,
-                this.y + this.height * 0.2f, characterInfo
+                getCharacterBoxY(), characterInfo,resetScaleFlag
         );
+        this.characterBox.setFlipHorizontal(this.flipFlag);
     }
 
     //设置准备状态
@@ -175,6 +208,12 @@ public class CharacterConfigPage extends AbstractPage {
         }
     }
 
+    //准备好的状态下渲染的内容
+    public void renderReadyFlag(SpriteBatch sb)
+    {
+        this.readyLabel.render(sb);
+    }
+
     @Override
     public void render(SpriteBatch sb) {
         plainBox.render(sb);
@@ -183,7 +222,7 @@ public class CharacterConfigPage extends AbstractPage {
             characterBox.render(sb);
             this.nameLabel.render(sb);
             if(this.isReady)
-                this.readyLabel.render(sb);
+                renderReadyFlag(sb);
             else
                 this.versionText.render(sb);
         }

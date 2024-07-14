@@ -50,7 +50,7 @@ public class PlayerInfo {
     public int playerTag;
 
     //目前所属的team id
-    public int idTeam;
+    public int idTeam = -1;
 
     public void initConfigPage()
     {
@@ -90,6 +90,12 @@ public class PlayerInfo {
     public String getVersion()
     {
         return configPage.getVersion();
+    }
+
+    public void setReadyFlag(boolean readyFlag)
+    {
+        //指定config里面的ready状态
+        configPage.setReady(readyFlag);
     }
 
     //获得player的class

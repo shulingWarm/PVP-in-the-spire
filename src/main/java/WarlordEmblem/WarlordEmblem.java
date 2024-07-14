@@ -257,6 +257,8 @@ public class WarlordEmblem implements
         Communication.registerEvent(new ChatMessageEvent(null));
         Communication.registerEvent(new RegisterPlayerEvent());
         Communication.registerEvent(new AssignTeamEvent());
+        Communication.registerEvent(new ExecuteAssignTeamEvent(-1));
+        Communication.registerEvent(new ConfigReadyEvent(false));
 
         //初始化随机怪物的事件
         RandMonsterHelper.initMonsterList();

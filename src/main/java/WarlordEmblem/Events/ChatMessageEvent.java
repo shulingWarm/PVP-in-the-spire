@@ -16,6 +16,7 @@ public class ChatMessageEvent extends BaseEvent {
 
     public ChatMessageEvent(AdvTextManager textManager)
     {
+        eventId = "ChatMessageEvent";
         sendingMessage = textManager;
     }
 

@@ -20,6 +20,7 @@ public class ExecuteAssignTeamEvent extends BaseEvent {
     public ExecuteAssignTeamEvent(int idTeam)
     {
         this.idTeam = idTeam;
+        this.eventId = "ExecuteAssignTeamEvent";
     }
 
     @Override
@@ -51,6 +52,8 @@ public class ExecuteAssignTeamEvent extends BaseEvent {
             int tempTag = streamHandle.readInt();
             //读取team的id
             int tempIdTeam = streamHandle.readInt();
+            //先注册玩家信息，有可能这个玩家还没有注册过
+            GlobalManager.playerManager.registerPlayer(tempTag);
             //执行team分配
             GlobalManager.playerManager.assignTeam(tempTag,tempIdTeam);
             //读取名字

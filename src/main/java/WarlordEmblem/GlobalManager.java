@@ -20,6 +20,8 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.evacipated.cardcrawl.modthespire.lib.SpirePatch;
 import com.evacipated.cardcrawl.modthespire.lib.SpirePrefixPatch;
+import com.megacrit.cardcrawl.characters.AbstractPlayer;
+import com.megacrit.cardcrawl.core.CardCrawlGame;
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
 import com.megacrit.cardcrawl.screens.charSelect.CharacterSelectScreen;
 
@@ -67,6 +69,8 @@ public class GlobalManager {
     public static int myPlayerTag = 0;
     //玩家的管理器
     public static PlayerManager playerManager;
+    //初始化player时默认的玩家类型
+    public static AbstractPlayer.PlayerClass defaultClass = null;
 
     public static void characterPatchInit()
     {
@@ -106,6 +110,11 @@ public class GlobalManager {
         BlockGainer.gainedNum=0;
         //初始化当前我方的tag
         myPlayerTag = randGenerator.nextInt();
+        //如果没有默认选择的角色，就选择为战士
+        if(defaultClass == null)
+        {
+            defaultClass = AbstractPlayer.PlayerClass.IRONCLAD;
+        }
         //初始化玩家管理器
         playerManager = new PlayerManager();
     }
@@ -135,7 +144,6 @@ public class GlobalManager {
         friendMonsterFlag = false;
         //败者奖励，默认是小屋子
         loserRewardFlag = 0;
-
         //以下是与网络无关的设置
         initGameGlobal();
     }
@@ -152,7 +160,11 @@ public class GlobalManager {
             System.out.println("confirm clicked!!!");
             //如果当前不是房间模式才会使用到这个地方的初始化
             if(!PanelScreenPatch.lobbyFlag)
+            {
+                //把默认选择的角色指定为当前选择的角色
+                defaultClass = CardCrawlGame.chosenCharacter;
                 GlobalManager.initGlobal();
+            }
         }
     }
 

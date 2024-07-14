@@ -37,7 +37,7 @@ public class GameRoomUI {
     public BackButton backButton;
 
     //config里面的角色页面，仅仅是放到这里做一下调试
-    public CharacterPanel testPage;
+    // public CharacterPanel testPage;
 
     public GameRoomUI()
     {
@@ -57,7 +57,7 @@ public class GameRoomUI {
         );
         //初始化返回按钮
         this.backButton = new BackButton(BackButton.getFont());
-        this.testPage = new CharacterPanel();
+        // this.testPage = new CharacterPanel();
     }
 
     //页面更新相关的逻辑
@@ -68,7 +68,7 @@ public class GameRoomUI {
         {
             mainPage.update();
         }
-        testPage.update();
+        // testPage.update();
     }
 
     //对返回按钮的渲染，这里面包含如果用户已经点击过了，就直接退出的逻辑
@@ -89,7 +89,7 @@ public class GameRoomUI {
     {
         //渲染背景框
         background.render(sb);
-        testPage.render(sb);
+        // testPage.render(sb);
         //判断目前是否有主界面
         if(mainPage!=null)
         {

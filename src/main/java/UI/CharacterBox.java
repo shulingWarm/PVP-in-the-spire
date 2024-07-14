@@ -30,6 +30,11 @@ public class CharacterBox extends CreatureBox {
     //仅仅是用于渲染的
     public AbstractPlayer player;
 
+    //判断是否需要每次加载人物时都重置大小
+    public boolean resetScaleFlag = true;
+    //需要重置情况下的人物大小
+    public final float RESET_SCALE = 1.3f;
+
     //载入人物的原画
     public void loadAnimation(String atlasUrl, String skeletonUrl, float scale) {
         this.atlas = new TextureAtlas(Gdx.files.internal(atlasUrl));
@@ -74,6 +79,26 @@ public class CharacterBox extends CreatureBox {
         }
     }
 
+    //初始化player的动画状态，必须调用这个它才能正常动
+    public static void initPlayerAnimation(AbstractPlayer player)
+    {
+        if(player.state!=null)
+        {
+            try
+            {
+                player.state.setAnimation(0, "Idle", true);
+            }
+            catch (IllegalArgumentException e)
+            {
+                e.printStackTrace();
+            }
+        }
+        if(AbstractCreature.sr==null)
+        {
+            AbstractCreature.initialize();
+        }
+    }
+
     //更新当前显示的角色
     public void updateCharacter(CharacterInfo newCharacter)
     {
@@ -81,6 +106,9 @@ public class CharacterBox extends CreatureBox {
         this.player = newCharacter.player;
         this.player.drawX = this.x;
         this.player.drawY = this.y;
+        if(this.resetScaleFlag)
+            AnimationRecorder.resetCreatureScale(this.player,RESET_SCALE);
+        initPlayerAnimation(this.player);
     }
 
     public CharacterBox(float x, float y, AbstractPlayer.PlayerClass selectedCharacter)
@@ -96,34 +124,28 @@ public class CharacterBox extends CreatureBox {
         }
     }
 
-    //通过角色信息做的初始化
     public CharacterBox(float x, float y, CharacterInfo characterInfo)
+    {
+        this(x,y,characterInfo,true);
+    }
+
+
+    //通过角色信息做的初始化
+    public CharacterBox(float x, float y, CharacterInfo characterInfo,boolean resetScale)
     {
         this.x = x;
         this.y = y;
         //从角色信息里面载入动画
         //loadAnimationFromCharacter(characterInfo);
         this.player = characterInfo.player;
+        this.resetScaleFlag = resetScale;
         //重置player的大小
-        AnimationRecorder.resetCreatureScale(this.player,1.3f);
+        if(resetScale)
+            AnimationRecorder.resetCreatureScale(this.player,1.3f);
         this.player.drawX = this.x;
         this.player.drawY = this.y;
+        initPlayerAnimation(this.player);
 
-        if(this.player.state!=null)
-        {
-            try
-            {
-                this.player.state.setAnimation(0, "Idle", true);
-            }
-            catch (IllegalArgumentException e)
-            {
-                e.printStackTrace();
-            }
-        }
-        if(AbstractCreature.sr==null)
-        {
-            AbstractCreature.initialize();
-        }
     }
 
     public void setFlipHorizontal(boolean flipHorizontal) {

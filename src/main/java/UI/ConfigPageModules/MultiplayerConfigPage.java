@@ -8,8 +8,10 @@ import UI.Chat.ChatFoldPage;
 import UI.Events.*;
 import UI.configOptions.*;
 import WarlordEmblem.AutomaticSocketServer;
+import WarlordEmblem.Events.RegisterPlayerEvent;
 import WarlordEmblem.GameManager;
 import WarlordEmblem.GlobalManager;
+import WarlordEmblem.PVPApi.Communication;
 import WarlordEmblem.PlayerManagement.PlayerJoinInterface;
 import WarlordEmblem.Room.FriendManager;
 import WarlordEmblem.SocketServer;
@@ -73,7 +75,6 @@ public class MultiplayerConfigPage extends AbstractPage
 
     //用来渲染角色的控件
     public CharacterPanel characterPanel;
-
 
     //返回按钮
     public BaseUpdateButton backButton;
@@ -361,11 +362,25 @@ public class MultiplayerConfigPage extends AbstractPage
 
     }
 
-
-    public MultiplayerConfigPage(AbstractPlayer.PlayerClass playerClass,
-                                 boolean isOwner
-    )
+    //申请team座位的逻辑
+    public void requestSait()
     {
+        //如果是房主的话，就直接给自己分配房间就可以了
+        if(ownerFlag)
+        {
+            GlobalManager.playerManager.assignTeam(
+                GlobalManager.myPlayerTag,0
+            );
+        }
+        else {
+            //申请自己的座位
+            Communication.sendEvent(new RegisterPlayerEvent());
+        }
+    }
+
+    public MultiplayerConfigPage(boolean isOwner)
+    {
+        this.ownerFlag = isOwner;
         //初始化所有角色的列表
         initPlayerClassList();
         configPanel = new BasePanel(
@@ -402,6 +417,8 @@ public class MultiplayerConfigPage extends AbstractPage
         );
         initConfigOption();
         InputHelper.initialize();
+        //给本地玩家申请座位，或者说是直接注册座位
+        requestSait();
     }
 
     //初始化网络状态
@@ -506,5 +523,10 @@ public class MultiplayerConfigPage extends AbstractPage
         {
             GlobalManager.playerManager.assignTeam(player);
         }
+    }
+
+    @Override
+    public void setMainCharacter(AbstractPage page) {
+        this.characterPanel.setMainCharacter(page);
     }
 }

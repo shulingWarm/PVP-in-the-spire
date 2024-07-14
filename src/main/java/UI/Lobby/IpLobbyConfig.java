@@ -19,7 +19,7 @@ public class IpLobbyConfig extends MultiplayerConfigPage {
 
     public IpLobbyConfig(boolean isOwner)
     {
-        super(CardCrawlGame.chosenCharacter,isOwner);
+        super(isOwner);
         //网络的状态直接就是已经连接上的那种
         this.networkStage = 1;
     }
