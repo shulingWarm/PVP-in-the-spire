@@ -157,7 +157,7 @@ public class PlayerManager implements TeamCallback {
                 && teams[1].getPlayerNum() > 0
         )
         {
-            System.out.println("All ready!!");
+            playerJoinInterface.enterGame();
         }
     }
 }

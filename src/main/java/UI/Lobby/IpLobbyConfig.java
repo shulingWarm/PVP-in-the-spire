@@ -41,7 +41,7 @@ public class IpLobbyConfig extends MultiplayerConfigPage {
         //初始化友军管理器
         FriendManager.initGlobalManager();
         //这次是真的可以了，准备进入游戏
-        RenderPatch.delayBox = new DelayBox();
+        //RenderPatch.delayBox = new DelayBox();
     }
 
     @Override

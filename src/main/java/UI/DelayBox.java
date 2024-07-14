@@ -98,74 +98,74 @@ public class DelayBox extends AbstractPage {
     //发送新的延迟测试消息
     public void sendNewTest(int sendingTag)
     {
-        //如果发送的是请求信息，标记等待回复
-        if(sendingTag<0)
-        {
-            this.lastMessageRepliedFlag = false;
-        }
-        SocketServer server = AutomaticSocketServer.getServer();
-        try
-        {
-            //发送延迟测试的数据头
-            server.streamHandle.writeInt(FightProtocol.DELAY_TEST);
-            //发送数据的tag
-            server.streamHandle.writeInt(sendingTag);
-            //System.out.printf("send tag %d\n",sendingTag);
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-        server.send();
+//        //如果发送的是请求信息，标记等待回复
+//        if(sendingTag<0)
+//        {
+//            this.lastMessageRepliedFlag = false;
+//        }
+//        SocketServer server = AutomaticSocketServer.getServer();
+//        try
+//        {
+//            //发送延迟测试的数据头
+//            server.streamHandle.writeInt(FightProtocol.DELAY_TEST);
+//            //发送数据的tag
+//            server.streamHandle.writeInt(sendingTag);
+//            //System.out.printf("send tag %d\n",sendingTag);
+//        }
+//        catch (IOException e)
+//        {
+//            e.printStackTrace();
+//        }
+//        server.send();
     }
 
     //更新显示的延迟信息的文本
     public void updateDelayText(long newDelay)
     {
-        //更新需要显示的时间
-        int delayTime = newDelay<10000 ? (int)newDelay : 10000;
-        //更新要显示的文本
-        label.text = String.valueOf(delayTime);
-        //根据时间的情况更改文本颜色
-        if(delayTime<150)
-            label.color = Color.GREEN;
-        else if(delayTime<500)
-            label.color = Color.ORANGE;
-        else
-            label.color = Color.RED;
+//        //更新需要显示的时间
+//        int delayTime = newDelay<10000 ? (int)newDelay : 10000;
+//        //更新要显示的文本
+//        label.text = String.valueOf(delayTime);
+//        //根据时间的情况更改文本颜色
+//        if(delayTime<150)
+//            label.color = Color.GREEN;
+//        else if(delayTime<500)
+//            label.color = Color.ORANGE;
+//        else
+//            label.color = Color.RED;
     }
 
     @Override
     public void render(SpriteBatch sb) {
-        //获取当前的时间
-        long currTime = System.currentTimeMillis();
-        //判断是否需要发送测试
-        if(currTime - lastCheckTime > TEST_GAP)
-        {
-            lastCheckTime = currTime;
-            //判断上次发送的消息是否已经收到回复
-            if(lastMessageRepliedFlag)
-            {
-                //这说明可以发送下次的消息了 发送负消息表示收到请回复
-                sendNewTest(-messageTag);
-                //记录此时的时间
-                lastSendTime = currTime;
-            }
-            else {
-                //判断是不是距离上次发送已经超过了5倍的等待时间
-                if(currTime - lastSendTime > reSendGap)
-                {
-                    //放弃对上次的消息的等待
-                    improveTag();
-                    sendNewTest(-messageTag);
-                    //增加重发的时间
-                    reSendGap += TEST_GAP*3;
-                }
-                //更新显示的时间差的文本
-                updateDelayText(currTime - lastSendTime);
-            }
-        }
-        //渲染要显示的文本
-        label.render(sb);
+//        //获取当前的时间
+//        long currTime = System.currentTimeMillis();
+//        //判断是否需要发送测试
+//        if(currTime - lastCheckTime > TEST_GAP)
+//        {
+//            lastCheckTime = currTime;
+//            //判断上次发送的消息是否已经收到回复
+//            if(lastMessageRepliedFlag)
+//            {
+//                //这说明可以发送下次的消息了 发送负消息表示收到请回复
+//                sendNewTest(-messageTag);
+//                //记录此时的时间
+//                lastSendTime = currTime;
+//            }
+//            else {
+//                //判断是不是距离上次发送已经超过了5倍的等待时间
+//                if(currTime - lastSendTime > reSendGap)
+//                {
+//                    //放弃对上次的消息的等待
+//                    improveTag();
+//                    sendNewTest(-messageTag);
+//                    //增加重发的时间
+//                    reSendGap += TEST_GAP*3;
+//                }
+//                //更新显示的时间差的文本
+//                updateDelayText(currTime - lastSendTime);
+//            }
+//        }
+//        //渲染要显示的文本
+//        label.render(sb);
     }
 }
