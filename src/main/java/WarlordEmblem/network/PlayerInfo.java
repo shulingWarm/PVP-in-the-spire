@@ -1,9 +1,13 @@
 package WarlordEmblem.network;
 
+import UI.CharacterBox;
 import UI.ConfigPageModules.CharacterConfigPage;
 import WarlordEmblem.GlobalManager;
 import WarlordEmblem.character.CharacterInfo;
+import WarlordEmblem.character.PlayerMonster;
+import WarlordEmblem.patches.AnimationRecorder;
 import com.megacrit.cardcrawl.characters.AbstractPlayer;
+import com.megacrit.cardcrawl.monsters.AbstractMonster;
 
 //玩家的信息
 //以前的这乱七八槽的都是在socketserver里面放着，后面这些东西要改地方了
@@ -14,6 +18,9 @@ public class PlayerInfo {
 
     //玩家的角色信息
     public CharacterInfo characterInfo;
+
+    //当前的玩家保有的monster信息
+    public PlayerMonster playerMonster;
 
     //对方的最大生命值，这是用来初始化敌人生命的
     public int maxHealth;
@@ -117,5 +124,42 @@ public class PlayerInfo {
         }
     }
 
+    //将当前player的信息打包成monster
+    public AbstractMonster generateMonster(int idMonster)
+    {
+        //每次调用时都会生成一个新的monster
+        this.playerMonster = new PlayerMonster(idMonster == 0,
+                (260.f)*idMonster,100*idMonster);
+        return playerMonster;
+    }
+
+    //获取friend monster
+    //目前的过程基本和敌方的monster是一致的，等有需要改变的地方再说
+    public PlayerMonster getFriendMonster()
+    {
+        this.playerMonster = new PlayerMonster(false,-1170,100);
+        return playerMonster;
+    }
+
+    //把信息载入到monster里面
+    public void loadInfoToMonster()
+    {
+        this.playerMonster.initHealth(
+            this.maxHealth,
+                this.currentHealth,
+                characterInfo,
+                this.tailNum,
+                this.beginOrbNum
+        );
+    }
+
+    //重置角色大小
+    public void resetPlayerTexture()
+    {
+        AnimationRecorder.resetCreatureScale(
+            this.characterInfo.player,1.f
+        );
+        CharacterBox.initPlayerAnimation(this.characterInfo.player);
+    }
 
 }

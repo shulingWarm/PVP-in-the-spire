@@ -20,4 +20,23 @@ public class SelfPlayerInfo extends PlayerInfo {
         setCharacterInfo(GlobalManager.myName,GlobalManager.VERSION,
                 GlobalManager.defaultClass);
     }
+
+    //初始化进入游戏的时间
+    public void initEnterTime()
+    {
+        this.enterTime = System.currentTimeMillis() - GlobalManager.playerManager.beginGameTime;
+        //更新player的进入时间
+        GlobalManager.playerManager.updateEnterTime(this,this.enterTime);
+    }
+
+    //本地玩家不需要执行这个操作
+    @Override
+    public void loadInfoToMonster() {
+
+    }
+
+    @Override
+    public void resetPlayerTexture() {
+
+    }
 }

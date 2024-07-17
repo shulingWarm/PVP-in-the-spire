@@ -60,28 +60,6 @@ public class PauseAction extends AbstractGameAction {
             globalManager.addToBottom(new PauseAction(globalManager,serverHandle,protocol));
             haveAddSonFlag = true;
         }
-        //下面是以前的读取网络内容的版本，现在不用了，现在这里只用来阻塞回合结束
-        //测试由读取协议读取数据
-//        if(protocol.readData(serverHandle))
-//        {
-//            //读取成功则让它生成相应的action
-//            ArrayList<AbstractGameAction> actList =
-//                    protocol.getAction();
-//            //遍历每个action把它添加到manager里面
-//            for(AbstractGameAction eachAction : actList)
-//            {
-//                //把action添加到底部
-//                globalManager.addToBottom(eachAction);
-//            }
-//        }
-//        else {
-//            if((!haveAddSonFlag) && this.isDone)
-//            {
-//                //向队列里面再添加一个自己
-//                globalManager.addToBottom(new PauseAction(globalManager,serverHandle,protocol));
-//                haveAddSonFlag = true;
-//            }
-//        }
     }
 
 

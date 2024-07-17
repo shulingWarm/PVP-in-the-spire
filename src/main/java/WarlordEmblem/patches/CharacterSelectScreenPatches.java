@@ -3,7 +3,10 @@ package WarlordEmblem.patches;
 import UI.PotionPanel;
 import UI.RelicPanel;
 import WarlordEmblem.Dungeon.FakeEnding;
+import WarlordEmblem.Events.BattleInfoEvent;
 import WarlordEmblem.GlobalManager;
+import WarlordEmblem.PVPApi.Communication;
+import WarlordEmblem.PlayerManagement.PlayerManager;
 import WarlordEmblem.Room.FriendManager;
 import WarlordEmblem.Screens.FakeSettingScreen;
 import WarlordEmblem.Screens.midExit.MidExitScreen;
@@ -307,7 +310,6 @@ public class CharacterSelectScreenPatches
             }
         }
 
-
         //通知退出等待状态
         public static void endWaitStage(boolean forceEnd)
         {
@@ -315,8 +317,6 @@ public class CharacterSelectScreenPatches
             if(forceEnd || testScreen!=null)
             {
                 AbstractDungeon.isScreenUp = false;
-                //通知敌人端处理角色的生命上限
-                ControlMoster.instance.initHealthAndTexture();
                 //初始化双方的先手状态，先到房间的为先手
                 if(SocketServer.battleNum==0)
                 {
@@ -327,9 +327,6 @@ public class CharacterSelectScreenPatches
                 }
                 //修改血条 这里面会把时间点改成0.7,这样它就会重新计算血条更新的过程
                 AbstractDungeon.player.showHealthBar();
-                ControlMoster.instance.showHealthBar();
-                //敌人可能不是满血出场的，需要更新一下血条
-                ControlMoster.instance.healthBarUpdatedEvent();
                 //恢复允许发送血量的操作
                 ActionNetworkPatches.HealEventSend.disableSend = false;
                 //打开战斗状态时的触发
@@ -338,8 +335,8 @@ public class CharacterSelectScreenPatches
                 SocketServer.battleNum++;
 
                 testScreen = null;
-                //发送自己的遗物列表
-                RelicPanel.sendMyRelic();
+                //发送自己的遗物列表 关于遗物列表，后面再说
+                // RelicPanel.sendMyRelic();
                 //如果之前处于等待状态，说明遗物初始化的时候被跳过了，需要重新调用它们一次
                 //但有时间可能它并不是先手，跳过就跳过了
                 dealApplyPreCombatLogic();
@@ -360,10 +357,8 @@ public class CharacterSelectScreenPatches
         //告诉对面我方已经进入了
         public static void entrySend()
         {
-            AutomaticSocketServer server = AutomaticSocketServer.getServer();
-            //发送角色的健康数据
-            ActionNetworkPatches.sendHealth(server.streamHandle);
-            server.send();
+            //发送我方角色信息
+            Communication.sendEvent(new BattleInfoEvent());
         }
 
         @SpirePostfixPatch
@@ -378,34 +373,20 @@ public class CharacterSelectScreenPatches
             FriendManager.instance.battleBeginInit();
 
             System.out.println("player entry!!!");
-            //如果是第一场战斗，根据谁先进来的决定谁是先手
-            if(SocketServer.battleNum==0)
-            {
-                //由于双方进入系统的时间太接近的话会出现同时先手的情况，因此使用双方进入房间的时间来进行比较
-                SocketServer.myEnterTime = System.currentTimeMillis() - SocketServer.beginGameTime;
-                //SocketServer.firstHandFlag = (!SocketServer.oppositePlayerReady);
-            }
             //记录自己是否有符文圆顶，这决定了自己是不是能看见对面的牌
             SocketServer.hasDome = AbstractDungeon.player.hasRelic(RunicDome.ID);
-            //告诉对面我方已经进入了
-            initJumpFlag();
-            entrySend();
             //初始化战斗状态 后面如果更新了先后手信息会再更新一次
             if(SocketServer.battleNum>0)
             {
                 initCombatStage();
             }
-            //判断自己是不是先进入的，如果是先进入的还需要做特殊的逻辑
-            if(!SocketServer.oppositePlayerReady)
-            {
-                //展开等待界面，把界面进入阻塞状态
-                testScreen = new FakeSettingScreen();
-                AbstractDungeon.isScreenUp = true;
-            }
-            else {
-                //说明不用等待了，直接开局
-                endWaitStage(true);
-            }
+            //告诉对面我方已经进入了
+            initJumpFlag();
+            //展开等待界面，把界面进入阻塞状态
+            testScreen = new FakeSettingScreen();
+            AbstractDungeon.isScreenUp = true;
+            GlobalManager.playerManager.selfPlayerInfo.initEnterTime();
+            entrySend();
         }
     }
 
@@ -1102,7 +1083,7 @@ public class CharacterSelectScreenPatches
             }
             saveNodeY = AbstractDungeon.getCurrMapNode().y;
             //debug的时候打开这里，这样可以直接进入boss房间
-            //AbstractDungeon.getCurrMapNode().y = 2;
+            AbstractDungeon.getCurrMapNode().y = 2;
             //如果当前到了3层说明可以进boss房间了
             if(saveNodeY>=FakeEnding.ROW_NUM-1)
             {
@@ -1342,9 +1323,8 @@ public class CharacterSelectScreenPatches
                 if(key.equals("ControlMoster") || key.equals("The Heart"))
                 //if(key.equals("ControlMoster"))
                 {
-                    System.out.print("find control !!!!!\n\n\n\n\n\n");
                     //直接返回自己定义的怪物类型
-                    return SpireReturn.Return(new MonsterGroup(new ControlMoster(0,-10.F)));
+                    return SpireReturn.Return(GlobalManager.playerManager.getMonsterGroup());
                 }
                 else if(key.equals("Cultist"))
                 {

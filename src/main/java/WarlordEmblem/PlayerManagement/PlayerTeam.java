@@ -5,6 +5,8 @@ import WarlordEmblem.Events.ExecuteAssignTeamEvent;
 import WarlordEmblem.PVPApi.Communication;
 import WarlordEmblem.network.PlayerInfo;
 import com.badlogic.gdx.graphics.Color;
+import com.megacrit.cardcrawl.monsters.AbstractMonster;
+import com.megacrit.cardcrawl.monsters.MonsterGroup;
 
 import java.util.HashSet;
 
@@ -26,6 +28,9 @@ public class PlayerTeam {
     public int idTeam = 0;
 
     public TeamCallback teamCallback;
+
+    //这个team最早的进入时间
+    public long enterTime = -1;
 
     public PlayerTeam(int idTeam,Color color,boolean isLeft,
                       TeamCallback teamCallback
@@ -54,6 +59,34 @@ public class PlayerTeam {
         }
     }
 
+    //根据当前的玩家内容获取怪物列表
+    public MonsterGroup getMonsterGroup()
+    {
+        AbstractMonster[] monsterList = new AbstractMonster[this.getPlayerNum()];
+        int idMonster = 0;
+        //遍历每个player
+        for(PlayerInfo eachPlayer : playerInfos)
+        {
+            monsterList[idMonster] = eachPlayer.generateMonster(idMonster);
+            ++idMonster;
+        }
+        return new MonsterGroup(monsterList);
+    }
+
+    //初始化友军monster group
+    public FriendPlayerGroup getFriendPlayerGroup()
+    {
+        FriendPlayerGroup friendPlayerGroup = new FriendPlayerGroup();
+        //遍历所有的玩家
+        for(PlayerInfo eachInfo : this.playerInfos)
+        {
+            if(!eachInfo.isSelfPlayer())
+                friendPlayerGroup.addPlayer(eachInfo.getFriendMonster());
+        }
+        return friendPlayerGroup;
+    }
+
+
     //添加玩家
     public void addPlayer(PlayerInfo playerInfo)
     {
@@ -78,5 +111,12 @@ public class PlayerTeam {
 
     public void setGridPanel(GridPanel gridPanel) {
         this.gridPanel = gridPanel;
+    }
+
+    //更新这个team进入游戏的时间
+    public void updateEnterTime(long enterTime)
+    {
+        if(this.enterTime < 0 || this.enterTime > enterTime)
+            this.enterTime = enterTime;
     }
 }

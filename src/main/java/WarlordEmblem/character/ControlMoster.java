@@ -265,6 +265,8 @@ public class ControlMoster extends AbstractMonster {
 
     public ControlMoster(float x, float y, boolean talk) {
         super(SocketServer.oppositeName, "Cultist", 150, -4.0F, -16.0F, 220.0F, 290.0F, (String)null, x, y);
+        //这一句是故意写上去让它报错的，看下到底有没有使用过ControlMonster.
+        System.out.println(orbs.size());
         //强制让敌人与玩家保持对称
         AbstractPlayer player = AbstractDungeon.player;
         this.drawX = LocationHelper.xInvert(player.drawX);

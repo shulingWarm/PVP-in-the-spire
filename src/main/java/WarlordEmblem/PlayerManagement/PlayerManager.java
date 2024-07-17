@@ -3,11 +3,13 @@ package WarlordEmblem.PlayerManagement;
 import UI.ConfigPageModules.CharacterPanel;
 import UI.GridPanel;
 import WarlordEmblem.Events.AssignTeamEvent;
+import WarlordEmblem.Events.BattleInfoEvent;
 import WarlordEmblem.Events.ExecuteAssignTeamEvent;
 import WarlordEmblem.PVPApi.Communication;
 import WarlordEmblem.network.PlayerInfo;
 import WarlordEmblem.network.SelfPlayerInfo;
 import com.badlogic.gdx.graphics.Color;
+import com.megacrit.cardcrawl.monsters.MonsterGroup;
 
 import java.util.HashMap;
 
@@ -27,8 +29,15 @@ public class PlayerManager implements TeamCallback {
     //本地玩家的Player信息
     public SelfPlayerInfo selfPlayerInfo;
 
+    //与战斗有关的信息
+    public BattleInfo battleInfo;
+
     //目前总共的统计数量
+    //目前进入到战斗房间的数量用的也是这个
     public int readyNum = 0;
+
+    //开始游戏的时间
+    public long beginGameTime = 0;
 
     public PlayerManager()
     {
@@ -39,6 +48,8 @@ public class PlayerManager implements TeamCallback {
         //初始化本地玩家的player信息
         selfPlayerInfo = new SelfPlayerInfo();
         playerInfoMap.put(selfPlayerInfo.playerTag,selfPlayerInfo);
+        //战斗相关的信息
+        battleInfo = new BattleInfo();
     }
 
     //注册新的玩家
@@ -143,6 +154,40 @@ public class PlayerManager implements TeamCallback {
         updateReadyFlag(this.playerInfoMap.get(playerTag),readyFlag);
     }
 
+    //获取与player相反的team
+    public PlayerTeam getOppositeTeam()
+    {
+        if(selfPlayerInfo.idTeam == 0)
+            return teams[1];
+        return teams[0];
+    }
+
+    public PlayerTeam getSelfTeam()
+    {
+        return teams[selfPlayerInfo.idTeam];
+    }
+
+    //获取怪物列表
+    public MonsterGroup getMonsterGroup()
+    {
+        //获取我方的team
+        PlayerTeam selfTeam = getSelfTeam();
+        //同时初始化我方的友军
+        this.battleInfo.friendPlayerGroup = selfTeam.getFriendPlayerGroup();
+        //获取与player相反的team
+        PlayerTeam oppositeTeam = getOppositeTeam();
+        //从team里面获取对方的group
+        return oppositeTeam.getMonsterGroup();
+    }
+
+    //重置所有角色的贴图 把它们的大小重置回正常状态
+    public void resetPlayerTexture()
+    {
+        for(PlayerInfo eachPlayer : playerInfoMap.values())
+        {
+            eachPlayer.resetPlayerTexture();
+        }
+    }
 
     //更新我方player的准备状态
     public void updateReadyFlag(PlayerInfo info,boolean readyFlag)
@@ -157,7 +202,46 @@ public class PlayerManager implements TeamCallback {
                 && teams[1].getPlayerNum() > 0
         )
         {
+            //初始化开始游戏的时间
+            beginGameTime = System.currentTimeMillis();
             playerJoinInterface.enterGame();
+            this.readyNum = 0;
+            resetPlayerTexture();
+        }
+    }
+
+    //把每个玩家的信息load到自己的monster里面
+    public void loadInfoToMonster()
+    {
+        //遍历每个player
+        for(PlayerInfo eachPlayer : this.playerInfoMap.values())
+        {
+            eachPlayer.loadInfoToMonster();
+        }
+    }
+
+    //判断我方是否为先手
+    public boolean isSelfFirstHand()
+    {
+        return getSelfTeam().enterTime <
+                getOppositeTeam().enterTime;
+    }
+
+    //更新玩家进入的时间
+    public void updateEnterTime(PlayerInfo playerInfo,long enterTime)
+    {
+        //记录玩家的进入时间，虽然这个可能不是很重要
+        playerInfo.enterTime = enterTime;
+        //获取对应的team
+        PlayerTeam team = teams[playerInfo.idTeam];
+        team.updateEnterTime(enterTime);
+        ++this.readyNum;
+        System.out.printf("ready update: %d\n",this.readyNum);
+        //如果进入到战斗房间的总数达标了，就调用进入战斗的流程
+        if(this.readyNum == this.playerInfoMap.size())
+        {
+            loadInfoToMonster();
+            this.battleInfo.enterBattle(isSelfFirstHand());
         }
     }
 }
