@@ -1,7 +1,9 @@
 package WarlordEmblem.orbs;
 
 
+import WarlordEmblem.actions.FightProtocol;
 import com.megacrit.cardcrawl.orbs.AbstractOrb;
+import com.megacrit.cardcrawl.orbs.Plasma;
 
 import java.util.HashMap;
 
@@ -46,6 +48,30 @@ public class OrbMapping {
         if(!playerOrbMapping.containsKey(orb))
             return -1;
         return playerOrbMapping.get(orb);
+    }
+
+    //根据球的种类生成球
+    public static AbstractOrb generateOrbByType(int idType)
+    {
+        if(idType == FightProtocol.ORB_LIGHTING)
+        {
+            return new FakeLighting();
+        }
+        else if(idType == FightProtocol.ORB_BLOCK)
+        {
+            //冰球
+            return new FakeFrost();
+        }
+        else if(idType == FightProtocol.ORB_DARK)
+        {
+            //黑球 但这里加的是假的黑球
+            return new FakrDark();
+        }
+        else if(idType == FightProtocol.ORB_PLASMA)
+        {
+            return new Plasma();
+        }
+        return null;
     }
 
     //把某个球和对应的敌人的标号添加到数据中

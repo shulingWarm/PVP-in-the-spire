@@ -1,7 +1,11 @@
 package WarlordEmblem.patches;
 
 import WarlordEmblem.AutomaticSocketServer;
+import WarlordEmblem.Events.ChannelOrbEvent;
+import WarlordEmblem.Events.EvokeOrbEvent;
+import WarlordEmblem.Events.IncreaseOrbSlotEvent;
 import WarlordEmblem.Events.MonsterDamageEvent;
+import WarlordEmblem.GlobalManager;
 import WarlordEmblem.PVPApi.Communication;
 import WarlordEmblem.Room.FriendManager;
 import WarlordEmblem.SocketServer;
@@ -13,6 +17,7 @@ import WarlordEmblem.actions.EffectMapping.EffectMapping;
 import WarlordEmblem.actions.OrbAction.ChannelActionEnemy;
 import WarlordEmblem.actions.OrbAction.UpdateOrbDescriptionAction;
 import WarlordEmblem.character.ControlMoster;
+import WarlordEmblem.character.PlayerMonster;
 import WarlordEmblem.orbs.FakeFrost;
 import WarlordEmblem.orbs.FakeLighting;
 import WarlordEmblem.orbs.FakrDark;
@@ -136,32 +141,16 @@ public class ActionNetworkPatches {
     public static void creatureEncode(DataOutputStream streanHandle,
           AbstractCreature creature, boolean invert)
     {
-        boolean isPlayer = creature instanceof AbstractPlayer;
-        //如果需要反向处理就取反
-        if(invert)
-        {
-            isPlayer = !isPlayer;
-        }
         try
         {
-            //判断creature是不是友军
-            if(FriendManager.instance.judgeOppositeFriend(creature))
+            //判断是不是player
+            if(creature instanceof AbstractPlayer)
             {
-                //这表示需要处理友军的编码解码逻辑
-                streanHandle.writeInt(1);
-                streanHandle.writeInt(
-                    FriendManager.instance.getIdByMonster((AbstractMonster) creature));
+                streanHandle.writeInt(GlobalManager.myPlayerTag);
             }
             else {
-                //这表示和友军没关系
-                streanHandle.writeInt(0);
-                if(isPlayer)
-                {
-                    streanHandle.writeInt(FightProtocol.PLAYER);
-                }
-                else {
-                    streanHandle.writeInt(FightProtocol.MONSTER);
-                }
+                PlayerMonster playerMonster = (PlayerMonster) creature;
+                streanHandle.writeInt(playerMonster.playerTag);
             }
         } catch (IOException e)
         {
@@ -174,33 +163,12 @@ public class ActionNetworkPatches {
     {
         try
         {
-            //先读取是不是不是对方的友军
-            int friendMonsterFlag = streanHandle.readInt();
-            if(friendMonsterFlag == 1)
-            {
-                //读取monster的id
-                int idMonster = streanHandle.readInt();
-                return FriendManager.instance.getMonsterById(
-                    idMonster).creatureBox.getCreature();
-            }
-            else {
-                //读取数据
-                boolean playerFlag = streanHandle.readInt() == FightProtocol.PLAYER;
-                //如果此时战斗已经结束了，就不用再解析了
-                if(disableCombatTrigger)
-                    return null;
-                //如果需要反向处理
-                if(invert)
-                    playerFlag = !playerFlag;
-                if(playerFlag)
-                {
-                    return AbstractDungeon.player;
-                }
-                else {
-                    //这种情况下只处理controlMonster
-                    return ControlMoster.instance;
-                }
-            }
+            //读取tag
+            int playerTag = streanHandle.readInt();
+            //如果tag是自身，那就返回player
+            if(playerTag == GlobalManager.myPlayerTag)
+                return AbstractDungeon.player;
+            return GlobalManager.playerManager.getPlayerInfo(playerTag).playerMonster;
         } catch (IOException | NullPointerException e)
         {
             e.printStackTrace();
@@ -583,12 +551,8 @@ public class ActionNetworkPatches {
             //如果当前是自己的回合再发送
             //if(FightProtocol.endReadFlag)
             {
-                //获取网络服务器
-                AutomaticSocketServer server = AutomaticSocketServer.getServer();
-                //对球信息做编码
-                channelOrbEncode(server.streamHandle,orbToSet);
-                //确保信息已经发送出去了
-                server.send();
+                //发送添加球的信息
+                Communication.sendEvent(new ChannelOrbEvent(orbToSet));
             }
         }
     }
@@ -1230,15 +1194,7 @@ public class ActionNetworkPatches {
                 //通知对面激发一个球
                 //if(FightProtocol.endReadFlag)
                 {
-                    try
-                    {
-                        AutomaticSocketServer server = AutomaticSocketServer.getServer();
-                        server.streamHandle.writeInt(FightProtocol.EVOKE_INFO);
-                    }
-                    catch (IOException e)
-                    {
-                        e.printStackTrace();
-                    }
+                    Communication.sendEvent(new EvokeOrbEvent());
                 }
             }
         }
@@ -1290,14 +1246,7 @@ public class ActionNetworkPatches {
             //判断是否需要发送信息
             if(SocketServer.USE_NETWORK)
             {
-                //if(FightProtocol.endReadFlag)
-                {
-                    //获取server
-                    AutomaticSocketServer server = AutomaticSocketServer.getServer();
-                    //发送扩容的信息
-                    increaseSlotEncode(server.streamHandle,slotIncrease);
-                    server.send();
-                }
+                Communication.sendEvent(new IncreaseOrbSlotEvent(slotIncrease));
             }
         }
     }

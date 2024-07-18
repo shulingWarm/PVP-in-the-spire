@@ -5,12 +5,17 @@ import UI.GridPanel;
 import WarlordEmblem.Events.AssignTeamEvent;
 import WarlordEmblem.Events.BattleInfoEvent;
 import WarlordEmblem.Events.ExecuteAssignTeamEvent;
+import WarlordEmblem.GlobalManager;
 import WarlordEmblem.PVPApi.Communication;
+import WarlordEmblem.character.PlayerMonster;
 import WarlordEmblem.network.PlayerInfo;
 import WarlordEmblem.network.SelfPlayerInfo;
 import com.badlogic.gdx.graphics.Color;
 import com.megacrit.cardcrawl.monsters.MonsterGroup;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.HashMap;
 
 //玩家信息的管理器
@@ -176,6 +181,8 @@ public class PlayerManager implements TeamCallback {
         this.battleInfo.friendPlayerGroup = selfTeam.getFriendPlayerGroup();
         //获取与player相反的team
         PlayerTeam oppositeTeam = getOppositeTeam();
+        //记录对方的玩家数量
+        this.battleInfo.oppositeTeam = oppositeTeam;
         //从team里面获取对方的group
         return oppositeTeam.getMonsterGroup();
     }
@@ -243,5 +250,34 @@ public class PlayerManager implements TeamCallback {
             loadInfoToMonster();
             this.battleInfo.enterBattle(isSelfFirstHand());
         }
+    }
+
+    //编码player
+    public void encodePlayer(DataOutputStream stream)
+    {
+        try
+        {
+            stream.writeInt(GlobalManager.myPlayerTag);
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    //从输入流中解码出player monster
+    //调用这个逻辑的时候需要确保解码出来的一定不是玩家自身
+    public PlayerMonster decodePlayer(DataInputStream stream)
+    {
+        try
+        {
+            int playerTag = stream.readInt();
+            return getPlayerInfo(playerTag).playerMonster;
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

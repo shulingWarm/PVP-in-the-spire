@@ -4,6 +4,7 @@ import UI.PotionPanel;
 import UI.RelicPanel;
 import WarlordEmblem.Dungeon.FakeEnding;
 import WarlordEmblem.Events.BattleInfoEvent;
+import WarlordEmblem.Events.EndTurnEvent;
 import WarlordEmblem.GlobalManager;
 import WarlordEmblem.PVPApi.Communication;
 import WarlordEmblem.PlayerManagement.PlayerManager;
@@ -795,19 +796,7 @@ public class CharacterSelectScreenPatches
         {
             if(SocketServer.USE_NETWORK && __instance.isDone)
             {
-                try
-                {
-                    AutomaticSocketServer server = AutomaticSocketServer.getServer();
-                    //发送回合结束的信号
-                    server.streamHandle.writeInt(
-                        FightProtocol.END_TURN
-                    );
-                    server.send();
-                }
-                catch (IOException e)
-                {
-                    e.printStackTrace();
-                }
+                Communication.sendEvent(new EndTurnEvent());
                 //发送一个同步血量的操作信息
 //                AbstractDungeon.actionManager.addToBottom(
 //                    new HealthSyncAction()

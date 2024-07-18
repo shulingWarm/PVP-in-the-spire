@@ -6,10 +6,12 @@ import UI.TextureManager;
 import WarlordEmblem.Dungeon.FakeEnding;
 import WarlordEmblem.EffectTransport.EffectManager;
 import WarlordEmblem.PVPApi.BaseEvent;
+import WarlordEmblem.PlayerManagement.BattleInfo;
 import WarlordEmblem.PlayerManagement.PlayerManager;
 import WarlordEmblem.Screens.midExit.MidExitScreen;
 import WarlordEmblem.network.MessageTriggerInterface;
 import WarlordEmblem.network.SteamConnector;
+import WarlordEmblem.orbs.OrbMapping;
 import WarlordEmblem.patches.*;
 import WarlordEmblem.patches.CardShowPatch.UseCardSend;
 import WarlordEmblem.patches.connection.MeunScreenFadeout;
@@ -72,6 +74,12 @@ public class GlobalManager {
     //初始化player时默认的玩家类型
     public static AbstractPlayer.PlayerClass defaultClass = null;
 
+    //获取battle info
+    public static BattleInfo getBattleInfo()
+    {
+        return playerManager.battleInfo;
+    }
+
     public static void characterPatchInit()
     {
         CharacterSelectScreenPatches.NeowGetRelic.hasGiveGift=false;
@@ -108,6 +116,8 @@ public class GlobalManager {
         AbstractDungeon.ascensionLevel = 0;
         //初始化格挡增益遗物的数量
         BlockGainer.gainedNum=0;
+        //初始化球位映射
+        OrbMapping.init();
         //初始化当前我方的tag
         myPlayerTag = randGenerator.nextInt();
         //如果没有默认选择的角色，就选择为战士

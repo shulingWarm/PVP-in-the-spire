@@ -1,5 +1,6 @@
 package UI.BattleUI;
 
+import WarlordEmblem.orbs.OrbExternalFunction;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.megacrit.cardcrawl.core.CardCrawlGame;
@@ -7,22 +8,17 @@ import com.megacrit.cardcrawl.core.Settings;
 import com.megacrit.cardcrawl.helpers.MathHelper;
 import com.megacrit.cardcrawl.orbs.AbstractOrb;
 import com.megacrit.cardcrawl.orbs.EmptyOrbSlot;
+import com.megacrit.cardcrawl.powers.AbstractPower;
+import com.megacrit.cardcrawl.powers.FocusPower;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
 
 public class OrbManager {
 
     //最大球位
     public int maxOrbs;
-
-    //球的显示位置
-    public float drawX;
-    public float drawY;
-    public float hb_x;
-    public float hb_y;
-    public float hb_h;
-    public float animX;
-    public float animY;
 
     //是否需要被渲染，有时候虽然有球位，但并不需要渲染
     public boolean renderFlag = false;
@@ -36,18 +32,20 @@ public class OrbManager {
     }
 
     //针对敌人本体的setSlot,它和对玩家的操作是不一样的
-    public void setSlot(AbstractOrb orb,int slotNum,int maxOrbs)
+    public void setSlot(AbstractOrb orb,int slotNum,int maxOrbs,
+        float drawX,float drawY,float hb_h
+    )
     {
         float dist = 160.0F * Settings.scale + (float)maxOrbs * 10.0F * Settings.scale;
         float angle = 100.0F + (float)maxOrbs * 12.0F;
         float offsetAngle = angle / 2.0F;
         angle *= (float)slotNum / ((float)maxOrbs - 1.0F);
         angle += 90.0F - offsetAngle;
-        orb.tX = -dist * MathUtils.cosDeg(angle) + this.drawX;
-        orb.tY = dist * MathUtils.sinDeg(angle) + this.drawY + this.hb_h / 2.0F;
+        orb.tX = -dist * MathUtils.cosDeg(angle) + drawX;
+        orb.tY = dist * MathUtils.sinDeg(angle) + drawY + hb_h / 2.0F;
         if (maxOrbs == 1) {
-            orb.tX = this.drawX;
-            orb.tY = 160.0F * Settings.scale + this.drawY + this.hb_h / 2.0F;
+            orb.tX = drawX;
+            orb.tY = 160.0F * Settings.scale + drawY + hb_h / 2.0F;
         }
 
         orb.hb.move(orb.tX, orb.tY);
@@ -55,7 +53,9 @@ public class OrbManager {
 
     //增加球位的数量
     //添加充能球栏位的操作
-    public void increaseMaxOrbSlots(int amount, boolean playSfx) {
+    public void increaseMaxOrbSlots(int amount, boolean playSfx,
+        float drawX,float drawY,float hb_h,float hb_x,float hb_y
+    ) {
 
         //如果是0就不用处理了
         if(amount == 0)
@@ -77,8 +77,8 @@ public class OrbManager {
         this.maxOrbs += amount;
 
         //添加球时的中心点
-        float xCenter = this.drawX + this.hb_x;
-        float yCenter = this.drawY + this.hb_y + this.hb_h / 2.0F;
+        float xCenter = drawX + hb_x;
+        float yCenter = drawY + hb_y + hb_h / 2.0F;
 
         int i;
         for(i = 0; i < amount; ++i) {
@@ -87,7 +87,7 @@ public class OrbManager {
 
         for(i = 0; i < this.orbs.size(); ++i) {
             //这里需要使用特殊的setSlot,默认函数里面的setSlot只能对玩家使用
-            setSlot(this.orbs.get(i),i,this.maxOrbs);
+            setSlot(this.orbs.get(i),i,this.maxOrbs,drawX,drawY,hb_h);
         }
     }
 
@@ -102,7 +102,7 @@ public class OrbManager {
     }
 
     //对充能球的动画更新
-    public void updateOrbAnimation(AbstractOrb orb)
+    public void updateOrbAnimation(AbstractOrb orb,float animX,float animY)
     {
         //临时记录它的中心位置，禁止它更新中心位置
         float saveX = orb.cX;
@@ -110,11 +110,67 @@ public class OrbManager {
         //调用动画效果的更新
         orb.updateAnimation();
         //按照敌人的位置来修改这个更新效果
-        orb.cX = MathHelper.orbLerpSnap(saveX, this.animX + orb.tX);
-        orb.cY = MathHelper.orbLerpSnap(saveY, this.animY + orb.tY);
+        orb.cX = MathHelper.orbLerpSnap(saveX, animX + orb.tX);
+        orb.cY = MathHelper.orbLerpSnap(saveY, animY + orb.tY);
     }
 
-    public void update()
+    public boolean channelOrb(AbstractOrb orbToSet,float drawX,float drawY,
+           float hb_h
+    ) {
+        //渲染球位
+        this.renderFlag = true;
+
+        if (this.maxOrbs > 0) {
+
+            int index = -1;
+
+            int plasmaCount;
+            for(plasmaCount = 0; plasmaCount < this.orbs.size(); ++plasmaCount) {
+                if (this.orbs.get(plasmaCount) instanceof EmptyOrbSlot) {
+                    index = plasmaCount;
+                    break;
+                }
+            }
+
+            //如果找不到可以放的位置就直接退出就行，先激发一个再放球这个操作对面会控制完成的
+            if (index != -1) {
+                ((AbstractOrb)orbToSet).cX = ((AbstractOrb)this.orbs.get(index)).cX;
+                ((AbstractOrb)orbToSet).cY = ((AbstractOrb)this.orbs.get(index)).cY;
+                this.orbs.set(index, orbToSet);
+                //setSlot需要使用针对敌人单位的setSlot
+                setSlot(this.orbs.get(index),index,this.maxOrbs,drawX,drawY,hb_h);
+                ((AbstractOrb)orbToSet).playChannelSFX();
+                return true;
+            }
+
+        }
+        return false;
+    }
+
+    //激发充能球的操作
+    public void evokeOrb(float drawX,float drawY,float hb_h) {
+        if (!this.orbs.isEmpty() && !(this.orbs.get(0) instanceof EmptyOrbSlot)) {
+            //球的攻击操作都是由对方来触发的，这里的激发只需要把球删除了就行
+            AbstractOrb orbSlot = new EmptyOrbSlot();
+
+            //把空的球槽换到最后面
+            int i;
+            for(i = 1; i < this.orbs.size(); ++i) {
+                Collections.swap(this.orbs, i, i - 1);
+            }
+
+            this.orbs.set(this.orbs.size() - 1, orbSlot);
+
+            for(i = 0; i < this.orbs.size(); ++i) {
+                //依次调用setSlot但需要调用敌人版本的激发
+                setSlot(orbs.get(i),i,this.maxOrbs,
+                        drawX,drawY,hb_h);
+            }
+        }
+
+    }
+
+    public void update(float animX,float animY)
     {
         //调用每个充能球执行动画更新的效果
         for(AbstractOrb eachOrb : orbs)
@@ -122,7 +178,7 @@ public class OrbManager {
             eachOrb.update();
             //关于充能球的动画更新需要换了，不能使用这个
             //但也不想做特殊的调用，不如调用一个静态函数
-            updateOrbAnimation(eachOrb);
+            updateOrbAnimation(eachOrb,animX,animY);
         }
     }
 }

@@ -9,6 +9,10 @@ import WarlordEmblem.patches.AnimationRecorder;
 import com.megacrit.cardcrawl.characters.AbstractPlayer;
 import com.megacrit.cardcrawl.monsters.AbstractMonster;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+
 //玩家的信息
 //以前的这乱七八槽的都是在socketserver里面放着，后面这些东西要改地方了
 public class PlayerInfo {
@@ -129,7 +133,7 @@ public class PlayerInfo {
     {
         //每次调用时都会生成一个新的monster
         this.playerMonster = new PlayerMonster(idMonster == 0,
-                (260.f)*idMonster,100*idMonster);
+                (260.f)*idMonster,100*idMonster,playerTag);
         return playerMonster;
     }
 
@@ -137,7 +141,7 @@ public class PlayerInfo {
     //目前的过程基本和敌方的monster是一致的，等有需要改变的地方再说
     public PlayerMonster getFriendMonster()
     {
-        this.playerMonster = new PlayerMonster(false,-1170,100);
+        this.playerMonster = new PlayerMonster(false,-1170,100,playerTag);
         return playerMonster;
     }
 
@@ -161,5 +165,6 @@ public class PlayerInfo {
         );
         CharacterBox.initPlayerAnimation(this.characterInfo.player);
     }
+
 
 }

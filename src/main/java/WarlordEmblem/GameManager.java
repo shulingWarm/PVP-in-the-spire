@@ -1,5 +1,6 @@
 package WarlordEmblem;
 
+import WarlordEmblem.orbs.OrbMapping;
 import com.megacrit.cardcrawl.core.CardCrawlGame;
 import com.megacrit.cardcrawl.core.Settings;
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
@@ -22,7 +23,7 @@ public class GameManager {
         Settings.seedSet = false;
     }
 
-    //执行进入游戏的准备
+    //执行进入游戏的准备 这个是从lobby进入游戏时专用的
     public static void prepareEnterGame()
     {
         //给游戏设置随机种子

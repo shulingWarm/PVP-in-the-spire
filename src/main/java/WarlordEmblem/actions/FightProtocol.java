@@ -58,7 +58,7 @@ public class FightProtocol extends AbstractActionProtocol
 
     public static final int INVALID_TAG = 0;
     //各种数据
-    public static final int END_TURN = 10028;
+    public static final int END_TURN = 10028; //已废弃
     //攻击行为的字段头
     public static final int DAMAGE = 10001;
     //获得格挡的数据类型
@@ -68,13 +68,13 @@ public class FightProtocol extends AbstractActionProtocol
     //失去生命的操作
     public static final int LOSE_HP = 10004;
     //造球信息的标头
-    public static final int CHANNEL_ORB = 10005;
+    public static final int CHANNEL_ORB = 10005; //已废弃
     //发送特效时的信息
     public static final int EFFECT_INFO = 10006;
     //充能球激发时的操作
-    public static final int EVOKE_INFO = 10007;
+    public static final int EVOKE_INFO = 10007; //已废弃
     //添加扩容信息的操作
-    public static final int INCREASE_SLOT = 10008;
+    public static final int INCREASE_SLOT = 10008; //已废弃
     //触发循环buff的信息
     public static final int LOOP_BUFF_INFO = 10009;
     //减少球位的操作
