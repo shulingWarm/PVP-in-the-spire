@@ -634,7 +634,6 @@ public class CharacterSelectScreenPatches
                 EndTurnOnBegin.idTurn++;
                 //清空本回合使用过的牌
                 UseCardSend.SendUseCardAction.resetCardCost();
-                System.out.println("idTurn!!!!");
                 System.out.println(EndTurnOnBegin.idTurn);
                 //如果是第一回合并且是客户端，就跳过它
                 if(!AutomaticSocketServer.firstHandFlag)

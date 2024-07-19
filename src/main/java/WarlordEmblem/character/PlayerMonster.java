@@ -38,12 +38,16 @@ public class PlayerMonster extends AbstractMonster {
     public int tailNum;
     //用于实际被渲染的角色
     public AbstractPlayer renderPlayer;
+    //是否为友军
+    public boolean friendFlag;
 
     //用于判断当前的monster是否负责做pause操作
     //它是在敌方回合阻塞玩家的出牌的
-    public boolean pauseFlag = false;
+    public boolean pauseFlag;
     //是否有外卡钳
     public boolean hasCaliper = false;
+    //是否允许破甲
+    public boolean allowLoseBlock = false;
 
     //姿态
     public AbstractStance stance;
@@ -64,6 +68,7 @@ public class PlayerMonster extends AbstractMonster {
             this.orbManager = new OrbManager();
         this.pauseFlag = pauseFlag;
         this.playerTag = playerTag;
+        this.friendFlag = sameTeam;
         //最开始时初始化为无姿态
         this.stance = new NeutralStance();
     }
@@ -195,7 +200,8 @@ public class PlayerMonster extends AbstractMonster {
 
     @Override
     public void loseBlock() {
-        //什么都不做
+        if(allowLoseBlock)
+            super.loseBlock();
     }
 
     //强制失去block
@@ -210,6 +216,8 @@ public class PlayerMonster extends AbstractMonster {
 
     @Override
     public void damage(DamageInfo info) {
+        //允许打破护甲
+        this.allowLoseBlock = true;
         //如果对面已经逃跑了，不再受到任何伤害
         if(ActionNetworkPatches.disableCombatTrigger)
         {
@@ -327,6 +335,7 @@ public class PlayerMonster extends AbstractMonster {
             }
 
         }
+        this.allowLoseBlock = false;
         //伤害事件处理结束后，把info信息发送给对面
         ActionNetworkPatches.onAttackSend(info,this);
     }
@@ -335,6 +344,23 @@ public class PlayerMonster extends AbstractMonster {
     public void changeStance(AbstractStance stance)
     {
         this.stance = stance;
+    }
+
+    //处理回合结束时的buff更新
+    public void endOfTurnTrigger()
+    {
+        for(AbstractPower eachPower : powers)
+        {
+            eachPower.atEndOfTurnPreEndTurnCards(false);
+        }
+        for(AbstractPower eachPower : powers)
+        {
+            eachPower.atEndOfTurn(false);
+        }
+        for(AbstractPower eachPower : powers)
+        {
+            eachPower.atEndOfRound();
+        }
     }
 
     @Override

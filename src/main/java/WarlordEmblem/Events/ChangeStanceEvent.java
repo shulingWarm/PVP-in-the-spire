@@ -7,6 +7,7 @@ import WarlordEmblem.Stance.DivinityStanceEnemy;
 import WarlordEmblem.Stance.WrathStanceEnemy;
 import WarlordEmblem.character.ControlMoster;
 import WarlordEmblem.character.PlayerMonster;
+import com.megacrit.cardcrawl.core.AbstractCreature;
 import com.megacrit.cardcrawl.stances.*;
 
 import java.io.DataInputStream;
@@ -25,7 +26,7 @@ public class ChangeStanceEvent extends BaseEvent {
     }
 
     //从姿态名字中生成姿态
-    public static AbstractStance generateStance(String stanceName)
+    public static AbstractStance generateStance(String stanceName, AbstractCreature creature)
     {
         //要改变的新的姿态
         AbstractStance newStance;
@@ -33,13 +34,13 @@ public class ChangeStanceEvent extends BaseEvent {
         switch (stanceName)
         {
             case WrathStance.STANCE_ID:
-                newStance = new WrathStanceEnemy(ControlMoster.instance);
+                newStance = new WrathStanceEnemy(creature);
                 break;
             case CalmStance.STANCE_ID:
-                newStance = new CalmStanceEnemy(ControlMoster.instance);
+                newStance = new CalmStanceEnemy(creature);
                 break;
             case DivinityStance.STANCE_ID:
-                newStance = new DivinityStanceEnemy(ControlMoster.instance);
+                newStance = new DivinityStanceEnemy(creature);
                 break;
             default:
                 newStance = new NeutralStance();
@@ -66,7 +67,7 @@ public class ChangeStanceEvent extends BaseEvent {
         {
             PlayerMonster playerMonster = GlobalManager.playerManager.decodePlayer(streamHandle);
             String tempId = streamHandle.readUTF();
-            playerMonster.changeStance(generateStance(tempId));
+            playerMonster.changeStance(generateStance(tempId,playerMonster));
         }
         catch (IOException e)
         {

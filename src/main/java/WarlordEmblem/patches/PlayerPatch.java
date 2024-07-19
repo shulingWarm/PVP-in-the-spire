@@ -1,6 +1,8 @@
 package WarlordEmblem.patches;
 
+import WarlordEmblem.Events.PlayerTurnBegin;
 import WarlordEmblem.GlobalManager;
+import WarlordEmblem.PVPApi.Communication;
 import WarlordEmblem.Room.FriendManager;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.evacipated.cardcrawl.modthespire.lib.SpirePatch;
@@ -64,8 +66,12 @@ public class PlayerPatch {
         @SpirePostfixPatch
         public static void fix(AbstractPlayer __instance)
         {
-            //发送开始回合的消息
-
+            //刚进入房间战斗准备的那次不需要发
+            if(GlobalManager.getBattleInfo().getIdTurn() > 1)
+            {
+                //发送开始回合的消息
+                Communication.sendEvent(new PlayerTurnBegin());
+            }
         }
     }
 

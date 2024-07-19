@@ -141,7 +141,7 @@ public class ActionNetworkPatches {
         try
         {
             //判断是不是player
-            if(creature instanceof AbstractPlayer)
+            if(creature == null || creature.isPlayer)
             {
                 streanHandle.writeInt(GlobalManager.myPlayerTag);
             }

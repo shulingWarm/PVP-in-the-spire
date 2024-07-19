@@ -24,6 +24,14 @@ public class PlayerTurnBegin extends BaseEvent {
     public void decode(DataInputStream streamHandle) {
         //获取对应的monster
         PlayerMonster playerMonster = GlobalManager.playerManager.decodePlayer(streamHandle);
+        //非战斗状态下不用管
+        if(playerMonster == null)
+            return;
+        //如果玩家和我方是同阵营的
+        if(playerMonster.friendFlag)
+        {
+            playerMonster.applyStartOfTurnPowers();
+        }
         //强制失去格挡
         playerMonster.forceLoseBlock();
     }

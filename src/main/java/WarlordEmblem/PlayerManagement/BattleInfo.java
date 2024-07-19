@@ -28,6 +28,13 @@ public class BattleInfo {
         CharacterSelectScreenPatches.TestUpdateFading.endWaitStage(true);
     }
 
+    //获取当前的id turn
+    public int getIdTurn()
+    {
+        //目前就简单先用旧的id turn
+        return CharacterSelectScreenPatches.EndTurnOnBegin.idTurn;
+    }
+
     //更新玩家结束回合的信息
     public void updateEndTurn(int playerTag)
     {
@@ -42,6 +49,9 @@ public class BattleInfo {
                 MultiPauseAction.pauseStage = false;
                 endTurnPlayerNum = 0;
             }
+        }
+        else if(playerInfo.playerMonster != null) {
+            playerInfo.playerMonster.endOfTurnTrigger();
         }
     }
 
