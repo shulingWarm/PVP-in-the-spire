@@ -2,6 +2,7 @@ package WarlordEmblem.Events;
 
 import WarlordEmblem.GlobalManager;
 import WarlordEmblem.PVPApi.BaseEvent;
+import WarlordEmblem.orbs.MonsterOrb;
 import WarlordEmblem.orbs.OrbMapping;
 import WarlordEmblem.patches.ActionNetworkPatches;
 import com.megacrit.cardcrawl.orbs.AbstractOrb;
@@ -60,7 +61,7 @@ public class ChannelOrbEvent extends BaseEvent {
             if(idOrb < 0)
                 return;
             //根据球的种类生成对应的球
-            AbstractOrb tempOrb = OrbMapping.generateOrbByType(orbType);
+            MonsterOrb tempOrb = OrbMapping.generateOrbByType(orbType);
             if(tempOrb == null)
                 return;
             //记录球的激发值

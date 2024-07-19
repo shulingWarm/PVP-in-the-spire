@@ -8,22 +8,17 @@ import WarlordEmblem.Screens.midExit.MidExitScreen;
 import WarlordEmblem.SocketServer;
 import WarlordEmblem.character.ControlMoster;
 import WarlordEmblem.network.MessageTriggerInterface;
-import WarlordEmblem.orbs.OrbPatch;
+import WarlordEmblem.orbs.MonsterDark;
 import WarlordEmblem.patches.ActionNetworkPatches;
 import WarlordEmblem.patches.CardShowPatch.DrawPileSender;
 import WarlordEmblem.patches.CardShowPatch.HandCardSend;
 import WarlordEmblem.patches.CardShowPatch.UseCardSend;
-import WarlordEmblem.patches.CharacterSelectScreenPatches;
 import WarlordEmblem.patches.RenderPatch;
 import WarlordEmblem.powers.FakeTimePower;
-import com.megacrit.cardcrawl.actions.common.DamageAction;
-import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
 
-import javax.swing.*;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 //两个玩家对战时的通信协议
 public class FightProtocol extends AbstractActionProtocol
@@ -252,7 +247,7 @@ public class FightProtocol extends AbstractActionProtocol
                     break;
                 //更新黑球信息的操作
                 case ORB_UPDATE_DES:
-                    OrbPatch.orbDescriptionDecode(stream);
+                    MonsterDark.orbDescriptionDecode(stream);
                     break;
                 //循环buff触发的时候，修改头部的黑球信息
                 case LOOP_BUFF_INFO:
@@ -314,7 +309,7 @@ public class FightProtocol extends AbstractActionProtocol
                     break;
                 //黑球回合结束时的解码操作
                 case DARK_END_TURN:
-                    OrbPatch.darkEndTurnDecode(stream);
+                    MonsterDark.darkEndTurnDecode(stream);
                     break;
                 //收到斩杀信息的时候对斩杀信息做解码操作
                 case INSTANT_KILL:

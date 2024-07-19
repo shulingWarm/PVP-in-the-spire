@@ -51,25 +51,25 @@ public class OrbMapping {
     }
 
     //根据球的种类生成球
-    public static AbstractOrb generateOrbByType(int idType)
+    public static MonsterOrb generateOrbByType(int idType)
     {
         if(idType == FightProtocol.ORB_LIGHTING)
         {
-            return new FakeLighting();
+            return new MonsterLighting();
         }
         else if(idType == FightProtocol.ORB_BLOCK)
         {
             //冰球
-            return new FakeFrost();
+            return new MonsterFrost();
         }
         else if(idType == FightProtocol.ORB_DARK)
         {
             //黑球 但这里加的是假的黑球
-            return new FakrDark();
+            return new MonsterDark();
         }
         else if(idType == FightProtocol.ORB_PLASMA)
         {
-            return new Plasma();
+            return new MonsterPlasma();
         }
         return null;
     }

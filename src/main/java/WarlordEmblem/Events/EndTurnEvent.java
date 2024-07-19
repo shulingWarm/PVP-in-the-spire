@@ -29,6 +29,7 @@ public class EndTurnEvent extends BaseEvent {
 
     @Override
     public void decode(DataInputStream streamHandle) {
+        System.out.println("Receive end turn!!!");
         try
         {
             int playerTag = streamHandle.readInt();

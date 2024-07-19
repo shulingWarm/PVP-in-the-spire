@@ -1621,16 +1621,16 @@ public class ActionNetworkPatches {
         AbstractDungeon.getCurrRoom().monsters.applyPreTurnLogic();
     }
 
-    //发送腾跃信息，通知对面给敌人清除格挡
-    @SpirePatch(clz = SkipEnemiesTurnAction.class, method = SpirePatch.CONSTRUCTOR)
-    public static class JumpEnemyTurnSend
-    {
-        @SpirePostfixPatch
-        public static void fix(SkipEnemiesTurnAction __instance)
-        {
-            Communication.sendEvent(new JumpTurnEvent());
-        }
-    }
+//    //发送腾跃信息，通知对面给敌人清除格挡
+//    @SpirePatch(clz = SkipEnemiesTurnAction.class, method = SpirePatch.CONSTRUCTOR)
+//    public static class JumpEnemyTurnSend
+//    {
+//        @SpirePostfixPatch
+//        public static void fix(SkipEnemiesTurnAction __instance)
+//        {
+//            Communication.sendEvent(new JumpTurnEvent());
+//        }
+//    }
 
     //发条鞋的伤害判定
     @SpirePatch(clz = Boot.class, method = "onAttackToChangeDamage")

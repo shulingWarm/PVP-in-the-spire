@@ -31,6 +31,11 @@ public class OrbManager {
         this.orbs = new ArrayList<>();
     }
 
+    float getOrbTx(float dist,float angle,float drawX)
+    {
+        return -dist * MathUtils.cosDeg(angle) + drawX;
+    }
+
     //针对敌人本体的setSlot,它和对玩家的操作是不一样的
     public void setSlot(AbstractOrb orb,int slotNum,int maxOrbs,
         float drawX,float drawY,float hb_h
@@ -41,7 +46,9 @@ public class OrbManager {
         float offsetAngle = angle / 2.0F;
         angle *= (float)slotNum / ((float)maxOrbs - 1.0F);
         angle += 90.0F - offsetAngle;
-        orb.tX = -dist * MathUtils.cosDeg(angle) + drawX;
+        //这里是玩家orb和敌方orb的关键区别
+
+        orb.tX = getOrbTx(dist,angle,drawX);
         orb.tY = dist * MathUtils.sinDeg(angle) + drawY + hb_h / 2.0F;
         if (maxOrbs == 1) {
             orb.tX = drawX;
@@ -154,12 +161,12 @@ public class OrbManager {
 
             //如果找不到可以放的位置就直接退出就行，先激发一个再放球这个操作对面会控制完成的
             if (index != -1) {
-                ((AbstractOrb)orbToSet).cX = ((AbstractOrb)this.orbs.get(index)).cX;
-                ((AbstractOrb)orbToSet).cY = ((AbstractOrb)this.orbs.get(index)).cY;
+                orbToSet.cX = this.orbs.get(index).cX;
+                orbToSet.cY = this.orbs.get(index).cY;
                 this.orbs.set(index, orbToSet);
                 //setSlot需要使用针对敌人单位的setSlot
                 setSlot(this.orbs.get(index),index,this.maxOrbs,drawX,drawY,hb_h);
-                ((AbstractOrb)orbToSet).playChannelSFX();
+                orbToSet.playChannelSFX();
                 return true;
             }
 

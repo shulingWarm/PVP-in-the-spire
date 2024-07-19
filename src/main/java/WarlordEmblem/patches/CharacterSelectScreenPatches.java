@@ -321,8 +321,8 @@ public class CharacterSelectScreenPatches
                 //初始化双方的先手状态，先到房间的为先手
                 if(SocketServer.battleNum==0)
                 {
-                    SocketServer.firstHandFlag =
-                            SocketServer.myEnterTime < SocketServer.oppositeEnterTime;
+//                    SocketServer.firstHandFlag =
+//                            SocketServer.myEnterTime < SocketServer.oppositeEnterTime;
                     //初始化战斗轮次状态
                     initCombatStage();
                 }
@@ -456,6 +456,7 @@ public class CharacterSelectScreenPatches
                 if(!AutomaticSocketServer.firstHandFlag)
                 {
                     System.out.println("end turn!!");
+                    SendEndTurnMessage.skipNextSend = true;
                     AbstractDungeon.actionManager.addToBottom(
                             new PressEndTurnButtonAction()
                     );
@@ -791,11 +792,20 @@ public class CharacterSelectScreenPatches
     @SpirePatch(clz = EnemyTurnEffect.class, method = "update")
     public static class SendEndTurnMessage
     {
+
+        //跳过下次end turn的发送
+        public static boolean skipNextSend = false;
+
         @SpirePostfixPatch
         public static void fix(EnemyTurnEffect __instance)
         {
             if(SocketServer.USE_NETWORK && __instance.isDone)
             {
+                if(skipNextSend)
+                {
+                    skipNextSend = false;
+                    return;
+                }
                 Communication.sendEvent(new EndTurnEvent());
                 //发送一个同步血量的操作信息
 //                AbstractDungeon.actionManager.addToBottom(
@@ -1433,7 +1443,7 @@ public class CharacterSelectScreenPatches
         //调用类似于烟雾弹的操作，直接结束玩家的游戏
         public static void endCombatAsSmoke()
         {
-            //指定下一次战斗为先手
+            //记录下次为先手
             SocketServer.firstHandFlag = true;
             SocketServer.oppositePlayerReady = false;
             //禁用战斗状态下的动作

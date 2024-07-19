@@ -1,7 +1,9 @@
 package WarlordEmblem.character;
 
 import UI.BattleUI.OrbManager;
+import UI.BattleUI.OrbManagerInvert;
 import WarlordEmblem.actions.MultiPauseAction;
+import WarlordEmblem.orbs.MonsterOrb;
 import WarlordEmblem.orbs.OrbExternalFunction;
 import WarlordEmblem.patches.ActionNetworkPatches;
 import basemod.abstracts.CustomMonster;
@@ -49,14 +51,17 @@ public class PlayerMonster extends AbstractMonster {
     //玩家的tag
     public int playerTag;
 
-    public PlayerMonster(boolean pauseFlag,float x,float y,int playerTag)
+    public PlayerMonster(boolean pauseFlag,float x,float y,int playerTag,boolean sameTeam)
     {
         super("test","PlayerMonster",10,0, 0, 180.0F, 240.0F, (String)null,x,y);
         //随便载入一个贴图，用于演示基本的人物效果
         //这是为了确保渲染父类的时候不报错
         this.loadAnimation("images/characters/watcher/idle/skeleton.atlas", "images/characters/watcher/idle/skeleton.json", 0.0F);
         //初始化球位管理器
-        this.orbManager = new OrbManager();
+        if(sameTeam)
+            this.orbManager = new OrbManagerInvert();
+        else
+            this.orbManager = new OrbManager();
         this.pauseFlag = pauseFlag;
         this.playerTag = playerTag;
         //最开始时初始化为无姿态
@@ -105,8 +110,10 @@ public class PlayerMonster extends AbstractMonster {
     }
 
     //生成球位
-    public void channelOrb(AbstractOrb orb)
+    public void channelOrb(MonsterOrb orb)
     {
+        //设置orb的所属
+        orb.setOwner(this);
         //先判断是否成功加入，加入成功的话再应用集中相关的buff
         if(orbManager.channelOrb(orb,drawX,drawY,hb_h))
         {
@@ -186,6 +193,20 @@ public class PlayerMonster extends AbstractMonster {
 
     }
 
+    @Override
+    public void loseBlock() {
+        //什么都不做
+    }
+
+    //强制失去block
+    public void forceLoseBlock()
+    {
+        //判断是否有外卡钳
+        if(this.hasCaliper)
+            super.loseBlock(15);
+        else
+            super.loseBlock();
+    }
 
     @Override
     public void damage(DamageInfo info) {

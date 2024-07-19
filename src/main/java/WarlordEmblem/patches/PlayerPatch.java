@@ -57,5 +57,17 @@ public class PlayerPatch {
         }
     }
 
+    //玩家回合开始时的patch,调用这个东西是为了方便同步失去block的操作
+    @SpirePatch(clz = AbstractPlayer.class, method = "applyStartOfTurnOrbs")
+    public static class PlayerTurnStartPatch
+    {
+        @SpirePostfixPatch
+        public static void fix(AbstractPlayer __instance)
+        {
+            //发送开始回合的消息
+
+        }
+    }
+
 
 }
