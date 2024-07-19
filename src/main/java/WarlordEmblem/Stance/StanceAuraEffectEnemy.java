@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
+import com.megacrit.cardcrawl.core.AbstractCreature;
 import com.megacrit.cardcrawl.core.Settings;
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
 import com.megacrit.cardcrawl.helpers.ImageMaster;
@@ -21,7 +22,7 @@ public class StanceAuraEffectEnemy extends AbstractGameEffect {
     private TextureAtlas.AtlasRegion img;
     public static boolean switcher = true;
 
-    public StanceAuraEffectEnemy(String stanceId, ControlMoster monster) {
+    public StanceAuraEffectEnemy(String stanceId, AbstractCreature monster) {
         this.img = ImageMaster.EXHAUST_L;
         this.duration = 2.0F;
         this.scale = MathUtils.random(2.7F, 2.5F) * Settings.scale;

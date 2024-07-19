@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
+import com.megacrit.cardcrawl.core.AbstractCreature;
 import com.megacrit.cardcrawl.core.Settings;
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
 import com.megacrit.cardcrawl.helpers.ImageMaster;
@@ -21,7 +22,7 @@ public class WrathParticleEffectEnemy extends AbstractGameEffect {
     private float dur_div2;
     private TextureAtlas.AtlasRegion img;
 
-    public WrathParticleEffectEnemy(ControlMoster monster) {
+    public WrathParticleEffectEnemy(AbstractCreature monster) {
         this.img = ImageMaster.GLOW_SPARK;
         this.duration = MathUtils.random(1.3F, 1.8F);
         this.scale = MathUtils.random(0.6F, 1.0F) * Settings.scale;

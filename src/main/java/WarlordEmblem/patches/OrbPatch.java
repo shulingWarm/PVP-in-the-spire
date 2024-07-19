@@ -1,6 +1,8 @@
 package WarlordEmblem.patches;
 
 import WarlordEmblem.AutomaticSocketServer;
+import WarlordEmblem.Events.EvokeOrbEvent;
+import WarlordEmblem.PVPApi.Communication;
 import WarlordEmblem.SocketServer;
 import WarlordEmblem.actions.FightProtocol;
 import com.evacipated.cardcrawl.modthespire.lib.SpirePatch;
@@ -40,10 +42,8 @@ public class OrbPatch {
             {
                 return;
             }
-            SocketServer server = AutomaticSocketServer.getServer();
-            //发送移除球相关的信息
-            removeOrbEncode(server.streamHandle);
-            server.send();
+            //激发操作就是移除球的操作
+            Communication.sendEvent(new EvokeOrbEvent());
         }
     }
 

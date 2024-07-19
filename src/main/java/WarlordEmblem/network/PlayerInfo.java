@@ -153,7 +153,8 @@ public class PlayerInfo {
                 this.currentHealth,
                 characterInfo,
                 this.tailNum,
-                this.beginOrbNum
+                this.beginOrbNum,
+                this.hasCaliper > 0
         );
     }
 

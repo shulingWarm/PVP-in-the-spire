@@ -1,10 +1,7 @@
 package WarlordEmblem.patches;
 
 import WarlordEmblem.AutomaticSocketServer;
-import WarlordEmblem.Events.ChannelOrbEvent;
-import WarlordEmblem.Events.EvokeOrbEvent;
-import WarlordEmblem.Events.IncreaseOrbSlotEvent;
-import WarlordEmblem.Events.MonsterDamageEvent;
+import WarlordEmblem.Events.*;
 import WarlordEmblem.GlobalManager;
 import WarlordEmblem.PVPApi.Communication;
 import WarlordEmblem.Room.FriendManager;
@@ -1264,18 +1261,7 @@ public class ActionNetworkPatches {
             {
                 if(FightProtocol.endReadFlag)
                 {
-                    //获取server
-                    AutomaticSocketServer server = AutomaticSocketServer.getServer();
-                    //发送减少球的信息
-                    try
-                    {
-                        server.streamHandle.writeInt(FightProtocol.DECREASE_SLOT);
-                    }
-                    catch (IOException e)
-                    {
-                        e.printStackTrace();
-                    }
-                    server.send();
+                    Communication.sendEvent(new IncreaseOrbSlotEvent(-1));
                 }
             }
         }
@@ -1505,16 +1491,7 @@ public class ActionNetworkPatches {
         public static void fix(ChangeStanceAction __instance,
            String stanceId)
         {
-            if(SocketServer.USE_NETWORK)
-            {
-                if(FightProtocol.endReadFlag)
-                {
-                    //调用对信息转换的编码
-                    AutomaticSocketServer server = AutomaticSocketServer.getServer();
-                    changeStanceEncode(server.streamHandle,stanceId);
-                    server.send();
-                }
-            }
+            Communication.sendEvent(new ChangeStanceEvent(stanceId));
         }
     }
 
@@ -1651,20 +1628,7 @@ public class ActionNetworkPatches {
         @SpirePostfixPatch
         public static void fix(SkipEnemiesTurnAction __instance)
         {
-            //发送跳过回合的操作
-            if(SocketServer.USE_NETWORK)
-            {
-                AutomaticSocketServer server = AutomaticSocketServer.getServer();
-                try
-                {
-                    server.streamHandle.writeInt(FightProtocol.JUMP_ENEMY_TURN);
-                    server.send();
-                }
-                catch (IOException e)
-                {
-                    e.printStackTrace();
-                }
-            }
+            Communication.sendEvent(new JumpTurnEvent());
         }
     }
 
@@ -1738,13 +1702,9 @@ public class ActionNetworkPatches {
                 return;
             }
             //发送治疗事件 目前只处理对玩家的治疗信息
-            if(SocketServer.USE_NETWORK &&
-                __instance instanceof AbstractPlayer)
+            if(__instance instanceof AbstractPlayer)
             {
-                AutomaticSocketServer server = AutomaticSocketServer.getServer();
-                //发送治疗信息
-                healEncode(server.streamHandle,healAmount);
-                server.send();
+                Communication.sendEvent(new HealEvent(healAmount));
             }
         }
 

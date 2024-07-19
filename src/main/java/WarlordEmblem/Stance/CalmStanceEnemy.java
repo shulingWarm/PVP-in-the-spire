@@ -3,6 +3,7 @@ package WarlordEmblem.Stance;
 import WarlordEmblem.character.ControlMoster;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
+import com.megacrit.cardcrawl.core.AbstractCreature;
 import com.megacrit.cardcrawl.core.Settings;
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
 import com.megacrit.cardcrawl.stances.CalmStance;
@@ -13,9 +14,9 @@ import com.megacrit.cardcrawl.vfx.stance.StanceAuraEffect;
 public class CalmStanceEnemy extends CalmStance {
 
     //动画施加的目标
-    ControlMoster monster;
+    AbstractCreature monster;
 
-    public CalmStanceEnemy(ControlMoster monster)
+    public CalmStanceEnemy(AbstractCreature monster)
     {
         super();
         this.monster = monster;

@@ -76,31 +76,31 @@ public class FightProtocol extends AbstractActionProtocol
     //添加扩容信息的操作
     public static final int INCREASE_SLOT = 10008; //已废弃
     //触发循环buff的信息
-    public static final int LOOP_BUFF_INFO = 10009;
+    public static final int LOOP_BUFF_INFO = 10009; //废弃
     //减少球位的操作
-    public static final int DECREASE_SLOT = 10010;
+    public static final int DECREASE_SLOT = 10010; //废弃
     //移除所有的格挡
     public static final int REMOVE_ALL_BLOCK = 10011;
     //改变姿态的操作
-    public static final int CHANGE_STANCE = 10012;
+    public static final int CHANGE_STANCE = 10012; //废弃
     //发送自己的健康状态
-    public static final int SEND_HEALTH = 10013;
+    public static final int SEND_HEALTH = 10013;//废弃
     //跳过敌人回合
-    public static final int JUMP_ENEMY_TURN = 10014;
+    public static final int JUMP_ENEMY_TURN = 10014; //废弃
     //治疗信息
-    public static final int HEAL_INFO = 10015;
+    public static final int HEAL_INFO = 10015; //废弃
     //对怪物的斩杀信息
-    public static final int SUICIDE_INFO = 10016;
+    public static final int SUICIDE_INFO = 10016; //废弃
     //玩家死亡后重生的信息，把这个信息通知给对方
-    public static final int REBIRTH_INFO = 10017;
+    public static final int REBIRTH_INFO = 10017; //废弃
     //通知对面执行斩杀操作
-    public static final int MAKE_IT_DIE = 10018;
+    public static final int MAKE_IT_DIE = 10018; //废弃
     //审判的数据头
-    public static final int JUDGEMENT = 10019;
+    public static final int JUDGEMENT = 10019; //废弃
     //新版本的伤害编码
     public static final int DAMAGE_CODE_0812 = 10020;
     //移除所有debuff的编码
-    public static final int REMOVE_DEBUFF = 10021;
+    public static final int REMOVE_DEBUFF = 10021;//废弃，主要是药丸没了
     //黑球回合结束时的正常操作
     public static final int DARK_END_TURN = 10022;
     //球更新描述的数据头
@@ -110,7 +110,7 @@ public class FightProtocol extends AbstractActionProtocol
     //卡牌信息的数据头
     public static final int CARD_INFO_HEAD = 10025;
     //更新手里的卡牌内容的数据头
-    public static final int UPDATE_HAND_CARD = 10026;
+    public static final int UPDATE_HAND_CARD = 10026; //后面需要大改
     //对斩杀信息的编码
     public static final int INSTANT_KILL = 10027;
     //steam里面基本的打招呼信息 这个消息不需要被响应，接收到之后直接忽略就可以了
@@ -125,25 +125,25 @@ public class FightProtocol extends AbstractActionProtocol
     //对方结束游戏的信号
     public static final int EXIT_GAME_INFO = 10033;
     //移除球相关的操作
-    public static final int REMOVE_ORB_INFO = 10034;
+    public static final int REMOVE_ORB_INFO = 10034; //废弃
     //时间吞噬的信息更新
-    public static final int TIME_EAT_UPDATE = 10035;
+    public static final int TIME_EAT_UPDATE = 10035; //后面需要大改
     //给对方施加卡牌
-    public static final int TRANSFORM_CARD = 10036;
+    public static final int TRANSFORM_CARD = 10036; //后面需要大改
     //延迟测试的数据头
-    public static final int DELAY_TEST = 10037;
+    public static final int DELAY_TEST = 10037; //后面需要大改
     //战斗过程中收到的状态信息
-    public static final int BATTLE_HEALTH = 10038;
+    public static final int BATTLE_HEALTH = 10038; //废弃
     //遗物列表
-    public static final int RELIC_LIST = 10039;
+    public static final int RELIC_LIST = 10039; //后面需要大改
     //传输药水的列表
-    public static final int POTION_LIST = 10040;
+    public static final int POTION_LIST = 10040; //后面需要大改
     //能量更新
-    public static final int ENERGY_UPDATE = 10041;
+    public static final int ENERGY_UPDATE = 10041; //后面需要大改
     //即将抽到的牌的更新
-    public static final int DRAWING_CARD_UPDATE = 10042;
+    public static final int DRAWING_CARD_UPDATE = 10042; //后面需要大改
     //强制消耗对方某张牌的命令
-    public static final int FORCE_EXHAUST_CARD = 10043;
+    public static final int FORCE_EXHAUST_CARD = 10043; //后面需要大改
     //用户自定义事件，以后大部分事件都会在这里面实现
     public static final int CUSTOM_EVENT = 10044;
     //用于区分不同类型的目标

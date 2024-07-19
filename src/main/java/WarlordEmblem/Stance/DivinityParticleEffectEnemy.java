@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
+import com.megacrit.cardcrawl.core.AbstractCreature;
 import com.megacrit.cardcrawl.core.Settings;
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
 import com.megacrit.cardcrawl.helpers.ImageMaster;
@@ -21,7 +22,7 @@ public class DivinityParticleEffectEnemy extends AbstractGameEffect {
     private float dur_div2;
     private TextureAtlas.AtlasRegion img;
 
-    public DivinityParticleEffectEnemy(ControlMoster monster) {
+    public DivinityParticleEffectEnemy(AbstractCreature monster) {
         this.scale = Settings.scale;
         this.img = ImageMaster.EYE_ANIM_0;
         this.scale = MathUtils.random(1.0F, 1.5F);

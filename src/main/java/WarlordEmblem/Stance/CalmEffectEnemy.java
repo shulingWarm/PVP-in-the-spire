@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
+import com.megacrit.cardcrawl.core.AbstractCreature;
 import com.megacrit.cardcrawl.core.Settings;
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
 import com.megacrit.cardcrawl.helpers.ImageMaster;
@@ -23,7 +24,7 @@ public class CalmEffectEnemy extends AbstractGameEffect {
     private float dvy;
     private float dvx;
 
-    public CalmEffectEnemy(ControlMoster targetMonster) {
+    public CalmEffectEnemy(AbstractCreature targetMonster) {
         this.duration = MathUtils.random(0.6F, 1.0F);
         this.scale = MathUtils.random(0.6F, 1.2F) * Settings.scale;
         this.dur_div2 = this.duration / 2.0F;

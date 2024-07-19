@@ -8,23 +8,21 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-//增加球位的操作
-public class IncreaseOrbSlotEvent extends BaseEvent {
+public class HealEvent extends BaseEvent {
 
-    int slotNum;
+    int healAmount;
 
-    public IncreaseOrbSlotEvent(int slotNum)
+    public HealEvent(int healAmount)
     {
-        this.slotNum = slotNum;
-        this.eventId = "IncreaseOrbSlotEvent";
+        this.healAmount = healAmount;
+        this.eventId = "HealEvent";
     }
 
     @Override
     public void encode(DataOutputStream streamHandle) {
-        try
-        {
+        try{
             GlobalManager.playerManager.encodePlayer(streamHandle);
-            streamHandle.writeInt(this.slotNum);
+            streamHandle.writeInt(healAmount);
         }
         catch (IOException e)
         {
@@ -37,11 +35,8 @@ public class IncreaseOrbSlotEvent extends BaseEvent {
         try
         {
             PlayerMonster playerMonster = GlobalManager.playerManager.decodePlayer(streamHandle);
-            int slotNum = streamHandle.readInt();
-            if(slotNum == -1)
-                playerMonster.decreaseOrbSlot();
-            else
-                playerMonster.increaseOrbSlot(slotNum);
+            int tempAmount = streamHandle.readInt();
+            playerMonster.heal(tempAmount);
         }
         catch (IOException e)
         {

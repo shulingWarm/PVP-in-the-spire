@@ -3,6 +3,7 @@ package WarlordEmblem.Stance;
 import WarlordEmblem.character.ControlMoster;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
+import com.megacrit.cardcrawl.core.AbstractCreature;
 import com.megacrit.cardcrawl.core.Settings;
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
 import com.megacrit.cardcrawl.stances.DivinityStance;
@@ -12,9 +13,9 @@ import com.megacrit.cardcrawl.vfx.stance.StanceAuraEffect;
 //手动的神格姿态
 public class DivinityStanceEnemy extends DivinityStance {
 
-    public ControlMoster monster;
+    public AbstractCreature monster;
 
-    public DivinityStanceEnemy(ControlMoster monster)
+    public DivinityStanceEnemy(AbstractCreature monster)
     {
         super();
         this.monster = monster;

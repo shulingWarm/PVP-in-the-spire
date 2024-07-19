@@ -91,6 +91,26 @@ public class OrbManager {
         }
     }
 
+    //减少球位的操作
+    //其实这个函数只能用来把球数减1
+    public void decreaseMaxOrbSlots(int amount,float drawX,
+                float drawY,float hb_h) {
+        if (this.maxOrbs > 0) {
+            this.maxOrbs -= amount;
+            if (this.maxOrbs < 0) {
+                this.maxOrbs = 0;
+            }
+
+            if (!this.orbs.isEmpty()) {
+                this.orbs.remove(this.orbs.size() - 1);
+            }
+
+            for(int i = 0; i < this.orbs.size(); ++i) {
+                setSlot(this.orbs.get(i),i,this.maxOrbs,drawX,drawY,hb_h);
+            }
+        }
+    }
+
     public void render(SpriteBatch sb)
     {
         if(!renderFlag)

@@ -3,6 +3,7 @@ package WarlordEmblem.Stance;
 import WarlordEmblem.character.ControlMoster;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.MathUtils;
+import com.megacrit.cardcrawl.core.AbstractCreature;
 import com.megacrit.cardcrawl.core.Settings;
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
 import com.megacrit.cardcrawl.stances.WrathStance;
@@ -12,9 +13,9 @@ import com.megacrit.cardcrawl.vfx.stance.WrathParticleEffect;
 //手动制作的愤怒姿态
 public class WrathStanceEnemy extends WrathStance {
 
-    public ControlMoster monster;
+    public AbstractCreature monster;
 
-    public WrathStanceEnemy(ControlMoster monster)
+    public WrathStanceEnemy(AbstractCreature monster)
     {
         super();
         this.monster = monster;
