@@ -1,6 +1,9 @@
 package WarlordEmblem.powers;
 
+import WarlordEmblem.GlobalManager;
+import WarlordEmblem.PlayerManagement.BattleInfo;
 import WarlordEmblem.actions.TransformCardAction;
+import WarlordEmblem.character.PlayerMonster;
 import com.megacrit.cardcrawl.actions.common.ReducePowerAction;
 import com.megacrit.cardcrawl.actions.common.RemoveSpecificPowerAction;
 import com.megacrit.cardcrawl.cards.AbstractCard;
@@ -34,7 +37,9 @@ public class BurnTransformPower extends AbstractPower {
         //如果这张牌是状态牌，将这张牌转移给对面
         if(card.type == AbstractCard.CardType.STATUS)
         {
-            TransformCardAction.sendAddCard(card,1);
+            PlayerMonster randMonster = GlobalManager.getBattleInfo().getRandEnemy();
+            if(randMonster != null)
+                TransformCardAction.sendAddCard(card,1,randMonster);
         }
     }
 

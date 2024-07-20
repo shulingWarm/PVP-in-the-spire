@@ -1,6 +1,8 @@
 package WarlordEmblem.patches;
 
+import WarlordEmblem.GlobalManager;
 import WarlordEmblem.actions.TransformCardAction;
+import WarlordEmblem.character.PlayerMonster;
 import WarlordEmblem.powers.FateTransformPower;
 import com.evacipated.cardcrawl.modthespire.lib.SpirePatch;
 import com.evacipated.cardcrawl.modthespire.lib.SpirePostfixPatch;
@@ -51,10 +53,14 @@ public class CardGroupPatch {
             if(LabelScryProcess.onScry && c.type== AbstractCard.CardType.STATUS
             && AbstractDungeon.player.hasPower(FateTransformPower.POWER_ID))
             {
-                //阻止这个操作的正常生效，而是把这个牌转移给对面
-                AbstractDungeon.actionManager.addToBottom(
-                    new TransformCardAction(c,__instance,1)
-                );
+                PlayerMonster randMonster = GlobalManager.getBattleInfo().getRandEnemy();
+                if(randMonster != null)
+                {
+                    //阻止这个操作的正常生效，而是把这个牌转移给对面
+                    AbstractDungeon.actionManager.addToBottom(
+                            new TransformCardAction(c,__instance,1,randMonster)
+                    );
+                }
                 return SpireReturn.Return();
             }
             //其它情况下正常执行

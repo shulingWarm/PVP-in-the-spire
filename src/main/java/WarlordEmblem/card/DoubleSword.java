@@ -1,6 +1,7 @@
 package WarlordEmblem.card;
 
 import WarlordEmblem.actions.TransformCardAction;
+import WarlordEmblem.character.PlayerMonster;
 import WarlordEmblem.powers.FakeHexPower;
 import basemod.abstracts.CustomCard;
 import com.megacrit.cardcrawl.actions.AbstractGameAction;
@@ -58,9 +59,13 @@ public class DoubleSword extends CustomCard {
         this.addToBot(new DamageAction(m, new DamageInfo(p, this.damage, this.damageTypeForTurn), AbstractGameAction.AttackEffect.SLASH_DIAGONAL));
         //给自己塞两张伤口
         this.addToBot(new MakeTempCardInHandAction(new Wound(),this.magicNumber));
-        //给对方也塞两张伤口
-        TransformCardAction.sendAddCard(new Wound(),this.magicNumber,
-                TransformCardAction.HAND);
+        if(m instanceof PlayerMonster)
+        {
+            //给对方也塞两张伤口
+            TransformCardAction.sendAddCard(new Wound(),this.magicNumber,
+                    TransformCardAction.HAND,(PlayerMonster) m);
+        }
+
     }
 
     public AbstractCard makeCopy() {

@@ -178,7 +178,7 @@ public class WarlordEmblem implements
 
         //添加自定义的牌
         List<CustomCard> cards = new ArrayList<>();
-        cards.add(new TimeEat());
+        // cards.add(new TimeEat());
         cards.add(new HexCard());
         cards.add(new BurnTransform());
         cards.add(new ComputeTransform());
@@ -187,7 +187,7 @@ public class WarlordEmblem implements
         cards.add(new DoubleSword());
         cards.add(new PainSword());
         cards.add(new ElectronicInterference());
-        cards.add(new PsychicSnooping());
+        // cards.add(new PsychicSnooping());
 
         for (CustomCard card : cards) {
             BaseMod.addCard(card);
@@ -271,6 +271,7 @@ public class WarlordEmblem implements
         Communication.registerEvent(new CardInfoEvent(null,0));
         Communication.registerEvent(new UseCardEvent(0));
         Communication.registerEvent(new DeadEvent());
+        Communication.registerEvent(new TransformCardEvent(null,0,0,null));
 
         //初始化随机怪物的事件
         RandMonsterHelper.initMonsterList();

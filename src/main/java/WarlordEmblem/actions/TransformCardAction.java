@@ -1,6 +1,9 @@
 package WarlordEmblem.actions;
 
 import WarlordEmblem.AutomaticSocketServer;
+import WarlordEmblem.Events.TransformCardEvent;
+import WarlordEmblem.PVPApi.Communication;
+import WarlordEmblem.character.PlayerMonster;
 import com.megacrit.cardcrawl.actions.AbstractGameAction;
 import com.megacrit.cardcrawl.actions.common.MakeTempCardInDiscardAction;
 import com.megacrit.cardcrawl.actions.common.MakeTempCardInDrawPileAction;
@@ -24,6 +27,8 @@ public class TransformCardAction extends AbstractGameAction {
     public CardGroup group;
     //要发送的卡牌数量
     public int sendNum;
+    //要发送的目标玩家
+    PlayerMonster monster;
 
     //发送卡牌的种类
     //送进手牌
@@ -34,11 +39,12 @@ public class TransformCardAction extends AbstractGameAction {
     public static final int DRAW = 2;
 
     //记录需要被转换的牌
-    public TransformCardAction(AbstractCard card, CardGroup group,int sendNum)
+    public TransformCardAction(AbstractCard card, CardGroup group,int sendNum,PlayerMonster monster)
     {
         this.card = card;
         this.group = group;
         this.sendNum = sendNum;
+        this.monster = monster;
     }
 
     public static void addCardEncode(AbstractCard card, int sendNum,int sendType, DataOutputStream streamHandle)
@@ -101,19 +107,19 @@ public class TransformCardAction extends AbstractGameAction {
         }
     }
 
-    public static void sendAddCard(AbstractCard card,int sendNum,int sendType)
+    public static void sendAddCard(AbstractCard card, int sendNum, int sendType,
+                                   PlayerMonster monster)
     {
-        AutomaticSocketServer server = AutomaticSocketServer.getServer();
-        //发送卡牌信息
-        addCardEncode(card,sendNum,sendType,server.streamHandle);
-        server.send();
+        Communication.sendEvent(new TransformCardEvent(
+            card,sendNum,sendType,monster
+        ));
     }
 
 
     //发送卡牌的编码信息，表示把这个牌塞给对面
-    public static void sendAddCard(AbstractCard card,int sendNum)
+    public static void sendAddCard(AbstractCard card,int sendNum,PlayerMonster monster)
     {
-        sendAddCard(card,sendNum,DISCARD);
+        sendAddCard(card,sendNum,DISCARD,monster);
     }
 
 
@@ -123,7 +129,7 @@ public class TransformCardAction extends AbstractGameAction {
         if(!group.contains(this.card))
             return;
         //把要移除的卡牌发送给对方
-        sendAddCard(this.card,this.sendNum);
+        sendAddCard(this.card,this.sendNum,this.monster);
         //把牌从对应的地方移除
         group.removeCard(this.card);
     }

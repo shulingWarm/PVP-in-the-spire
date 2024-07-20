@@ -1,6 +1,8 @@
 package WarlordEmblem.powers;
 
+import WarlordEmblem.GlobalManager;
 import WarlordEmblem.actions.TransformCardAction;
+import WarlordEmblem.character.PlayerMonster;
 import com.megacrit.cardcrawl.actions.utility.UseCardAction;
 import com.megacrit.cardcrawl.cards.AbstractCard;
 import com.megacrit.cardcrawl.cards.CardGroup;
@@ -63,7 +65,9 @@ public class VirusTransformPower extends AbstractPower {
             //依次移除每个卡牌
             for(AbstractCard eachCard : cardToRemove)
             {
-                TransformCardAction.sendAddCard(eachCard,1);
+                PlayerMonster randMonster = GlobalManager.getBattleInfo().getRandEnemy();
+                if(randMonster != null)
+                    TransformCardAction.sendAddCard(eachCard,1,randMonster);
                 drawGroup.removeCard(eachCard);
             }
         }

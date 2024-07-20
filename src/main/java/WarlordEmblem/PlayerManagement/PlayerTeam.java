@@ -4,11 +4,14 @@ import UI.GridPanel;
 import WarlordEmblem.Events.ExecuteAssignTeamEvent;
 import WarlordEmblem.PVPApi.Communication;
 import WarlordEmblem.actions.MultiPauseAction;
+import WarlordEmblem.character.PlayerMonster;
 import WarlordEmblem.network.PlayerInfo;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.MathUtils;
 import com.megacrit.cardcrawl.monsters.AbstractMonster;
 import com.megacrit.cardcrawl.monsters.MonsterGroup;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 
 //玩家队伍，当进入游戏房间时会往里面加入玩家
@@ -154,5 +157,22 @@ public class PlayerTeam {
         {
             info.playerMonster.endTurnFlag = true;
         }
+    }
+
+    //获取随机的monster
+    public PlayerMonster getRandMonster()
+    {
+        ArrayList<PlayerMonster> monsterList = new ArrayList<>();
+        for(PlayerInfo eachInfo : playerInfos)
+        {
+            if(eachInfo.playerMonster != null &&
+                !eachInfo.playerMonster.isDead)
+            {
+                monsterList.add(eachInfo.playerMonster);
+            }
+        }
+        if(monsterList.isEmpty())
+            return null;
+        return monsterList.get(MathUtils.random(0,monsterList.size()-1));
     }
 }

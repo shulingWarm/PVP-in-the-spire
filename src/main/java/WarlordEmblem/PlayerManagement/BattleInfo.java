@@ -18,6 +18,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.megacrit.cardcrawl.characters.AbstractPlayer;
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
 
+import java.util.ArrayList;
 import java.util.logging.FileHandler;
 
 //与战斗有关的信息
@@ -129,6 +130,12 @@ public class BattleInfo {
         //发送死亡信息
         Communication.sendEvent(new DeadEvent());
         updateDeadInfo(GlobalManager.playerManager.selfPlayerInfo);
+    }
+
+    //获得随机的敌人
+    public PlayerMonster getRandEnemy()
+    {
+        return oppositeTeam.getRandMonster();
     }
 
 }

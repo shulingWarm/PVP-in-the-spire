@@ -1,6 +1,8 @@
 package WarlordEmblem.powers;
 
+import WarlordEmblem.GlobalManager;
 import WarlordEmblem.actions.TransformCardAction;
+import WarlordEmblem.character.PlayerMonster;
 import com.evacipated.cardcrawl.modthespire.lib.SpirePatch;
 import com.evacipated.cardcrawl.modthespire.lib.SpirePostfixPatch;
 import com.megacrit.cardcrawl.cards.AbstractCard;
@@ -60,19 +62,23 @@ public class ComputeTransformPower extends AbstractPower {
             if(judgeTransform(__instance) &&
                 AbstractDungeon.player.hasPower(ComputeTransformPower.POWER_ID))
             {
-                //从5个地方找这张牌
-                AbstractDungeon.actionManager.addToTop(
-                    new TransformCardAction(__instance,
-                    AbstractDungeon.player.discardPile,1)
-                );
-                AbstractDungeon.actionManager.addToTop(
-                        new TransformCardAction(__instance,
-                                AbstractDungeon.player.hand,1)
-                );
-                AbstractDungeon.actionManager.addToTop(
-                        new TransformCardAction(__instance,
-                                AbstractDungeon.player.drawPile,1)
-                );
+                PlayerMonster randMonster = GlobalManager.getBattleInfo().getRandEnemy();
+                if(randMonster != null)
+                {
+                    //从5个地方找这张牌
+                    AbstractDungeon.actionManager.addToTop(
+                            new TransformCardAction(__instance,
+                                    AbstractDungeon.player.discardPile,1,randMonster)
+                    );
+                    AbstractDungeon.actionManager.addToTop(
+                            new TransformCardAction(__instance,
+                                    AbstractDungeon.player.hand,1,randMonster)
+                    );
+                    AbstractDungeon.actionManager.addToTop(
+                            new TransformCardAction(__instance,
+                                    AbstractDungeon.player.drawPile,1,randMonster)
+                    );
+                }
             }
         }
     }
