@@ -166,7 +166,7 @@ public class PlayerMonster extends AbstractMonster {
         {
             //准备开始阻塞
             AbstractDungeon.actionManager.addToBottom(
-                new MultiPauseAction(this)
+                new MultiPauseAction()
             );
         }
     }

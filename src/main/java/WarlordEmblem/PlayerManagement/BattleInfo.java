@@ -111,10 +111,6 @@ public class BattleInfo {
             {
                 battleWin();
             }
-            else {
-                //检查
-                updateEndTurn(info.playerMonster);
-            }
         }
         else if(selfTeam.isAllDead()) {
             battleLose();

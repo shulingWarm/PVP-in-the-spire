@@ -702,6 +702,13 @@ public class CharacterSelectScreenPatches
 //                            tempMonster));
 //                }
             }
+            //添加一个灭除之刃
+            Strike_Blue tempCard = new Strike_Blue();
+            tempCard.baseDamage = 999;
+            tempCard.damage = 999;
+            AbstractDungeon.actionManager.addToBottom(
+                new MakeTempCardInHandAction(tempCard,1)
+            );
             return SpireReturn.Continue();
         }
     }
@@ -809,6 +816,9 @@ public class CharacterSelectScreenPatches
                 //标记为阻塞状态
                 MultiPauseAction.pauseStage = true;
                 Communication.sendEvent(new EndTurnEvent());
+                AbstractDungeon.actionManager.addToBottom(
+                    new MultiPauseAction()
+                );
                 //发送一个同步血量的操作信息
 //                AbstractDungeon.actionManager.addToBottom(
 //                    new HealthSyncAction()

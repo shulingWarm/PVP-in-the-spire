@@ -15,15 +15,11 @@ public class MultiPauseAction extends AbstractGameAction {
     //跳过下一次阻塞
     public static int jumpNextPause = 0;
 
-    //所属的player info
-    public PlayerMonster monster;
-
-    public MultiPauseAction(PlayerMonster monster)
+    public MultiPauseAction()
     {
         this.duration = 0.1f;
         //设置为需要延时等待
         this.actionType = ActionType.WAIT;
-        this.monster = monster;
     }
 
     @Override
@@ -33,7 +29,7 @@ public class MultiPauseAction extends AbstractGameAction {
         {
             //向队列里面添加一个自身
             AbstractDungeon.actionManager.addToBottom(
-                new MultiPauseAction(this.monster)
+                new MultiPauseAction()
             );
             this.addedSonFlag = true;
         }

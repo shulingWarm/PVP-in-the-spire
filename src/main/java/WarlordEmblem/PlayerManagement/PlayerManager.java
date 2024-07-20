@@ -256,6 +256,7 @@ public class PlayerManager implements TeamCallback {
         {
             loadInfoToMonster();
             this.battleInfo.enterBattle(isSelfFirstHand());
+            this.readyNum = 0;
         }
     }
 
