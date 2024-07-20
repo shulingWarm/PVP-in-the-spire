@@ -183,8 +183,11 @@ public class PlayerManager implements TeamCallback {
         PlayerTeam oppositeTeam = getOppositeTeam();
         //记录对方的玩家数量
         this.battleInfo.oppositeTeam = oppositeTeam;
-        //从team里面获取对方的group
-        return oppositeTeam.getMonsterGroup();
+        MonsterGroupManager monsterGroupManager =
+                oppositeTeam.getMonsterGroup();
+        //将添加monster group的友军信息
+        monsterGroupManager.setFriendPlayerGroup(this.battleInfo.friendPlayerGroup);
+        return monsterGroupManager;
     }
 
     //重置所有角色的贴图 把它们的大小重置回正常状态
@@ -265,14 +268,12 @@ public class PlayerManager implements TeamCallback {
         }
     }
 
-    //从输入流中解码出player monster
-    //调用这个逻辑的时候需要确保解码出来的一定不是玩家自身
-    public PlayerMonster decodePlayer(DataInputStream stream)
+    public PlayerInfo decodePlayerInfo(DataInputStream stream)
     {
         try
         {
             int playerTag = stream.readInt();
-            return getPlayerInfo(playerTag).playerMonster;
+            return getPlayerInfo(playerTag);
         }
         catch (IOException e)
         {
@@ -280,4 +281,16 @@ public class PlayerManager implements TeamCallback {
         }
         return null;
     }
+
+    //从输入流中解码出player monster
+    //调用这个逻辑的时候需要确保解码出来的一定不是玩家自身
+    public PlayerMonster decodePlayer(DataInputStream stream)
+    {
+        PlayerInfo info = decodePlayerInfo(stream);
+        if(info != null)
+            return info.playerMonster;
+        return null;
+    }
+
+
 }

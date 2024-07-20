@@ -1,6 +1,9 @@
 package WarlordEmblem.patches.CardShowPatch;
 
 import WarlordEmblem.AutomaticSocketServer;
+import WarlordEmblem.Events.CardInfoEvent;
+import WarlordEmblem.Events.UseCardEvent;
+import WarlordEmblem.PVPApi.Communication;
 import WarlordEmblem.SocketServer;
 import WarlordEmblem.actions.FightProtocol;
 import com.evacipated.cardcrawl.modthespire.lib.SpirePatch;
@@ -139,7 +142,8 @@ public class UseCardSend {
             int newCode = playerCardMap.size();
             playerCardMap.put(card,newCode);
             //发送卡牌的基本信息
-            sendCardInfo(card,streamHandle,newCode);
+            Communication.sendEvent(new CardInfoEvent(card,newCode));
+            // sendCardInfo(card,streamHandle,newCode);
             return newCode;
         }
         //已经存在的情况下直接正常返回就可以
@@ -154,9 +158,6 @@ public class UseCardSend {
         {
             //获得卡牌的编码
             int cardCode = getCardCommunicationID(card,streamHandle);
-            System.out.println("card send");
-            System.out.println(cardCode);
-            System.out.println(card.cardID);
             streamHandle.writeInt(FightProtocol.USE_CARD);
             //发送卡牌的编码
             streamHandle.writeInt(cardCode);
@@ -296,9 +297,8 @@ public class UseCardSend {
                 return;
             }
             //当发生卡牌使用时，把用牌的消息发送给对方
-            AutomaticSocketServer server = AutomaticSocketServer.getServer();
-            useCardEncode(server.streamHandle,c);
-            server.send();
+            int cardCode = getCardCommunicationID(c,null);
+            Communication.sendEvent(new UseCardEvent(cardCode));
             updateUseTime(c);
         }
     }

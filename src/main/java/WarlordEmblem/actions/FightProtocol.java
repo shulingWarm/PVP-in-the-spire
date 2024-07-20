@@ -103,7 +103,7 @@ public class FightProtocol extends AbstractActionProtocol
     //使用牌的消息
     public static final int USE_CARD = 10024;
     //卡牌信息的数据头
-    public static final int CARD_INFO_HEAD = 10025;
+    public static final int CARD_INFO_HEAD = 10025; //废弃
     //更新手里的卡牌内容的数据头
     public static final int UPDATE_HAND_CARD = 10026; //后面需要大改
     //对斩杀信息的编码

@@ -38,27 +38,6 @@ public class PlayerPatch {
 //        }
 //    }
 
-    @SpirePatch(clz = MonsterGroup.class, method = "render")
-    public static class FriendRenderPatch
-    {
-        @SpirePostfixPatch
-        public static void fix(MonsterGroup __instance,
-                               SpriteBatch sb)
-        {
-            GlobalManager.playerManager.battleInfo.friendPlayerGroup.render(sb);
-        }
-    }
-
-    @SpirePatch(clz = MonsterGroup.class, method = "update")
-    public static class FriendUpdatePatch
-    {
-        @SpirePostfixPatch
-        public static void fix(MonsterGroup __instance)
-        {
-            GlobalManager.playerManager.battleInfo.friendPlayerGroup.update();
-        }
-    }
-
     //玩家回合开始时的patch,调用这个东西是为了方便同步失去block的操作
     @SpirePatch(clz = AbstractPlayer.class, method = "applyStartOfTurnOrbs")
     public static class PlayerTurnStartPatch

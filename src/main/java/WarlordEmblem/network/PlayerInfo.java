@@ -3,6 +3,7 @@ package WarlordEmblem.network;
 import UI.CharacterBox;
 import UI.ConfigPageModules.CharacterConfigPage;
 import WarlordEmblem.GlobalManager;
+import WarlordEmblem.PlayerManagement.PlayerCardManager;
 import WarlordEmblem.character.CharacterInfo;
 import WarlordEmblem.character.PlayerMonster;
 import WarlordEmblem.patches.AnimationRecorder;
@@ -25,6 +26,9 @@ public class PlayerInfo {
 
     //当前的玩家保有的monster信息
     public PlayerMonster playerMonster;
+
+    //卡牌信息管理器
+    public PlayerCardManager cardManager;
 
     //对方的最大生命值，这是用来初始化敌人生命的
     public int maxHealth;
@@ -73,6 +77,7 @@ public class PlayerInfo {
     {
         this.playerTag = playerTag;
         initConfigPage();
+        this.cardManager = new PlayerCardManager();
     }
 
     //判断是不是本地Player
@@ -133,7 +138,7 @@ public class PlayerInfo {
     {
         //每次调用时都会生成一个新的monster
         this.playerMonster = new PlayerMonster(idMonster == 0,
-                (260.f)*idMonster,100*idMonster,playerTag,false);
+                (260.f)*idMonster,100*idMonster,playerTag,false,cardManager);
         return playerMonster;
     }
 
@@ -141,7 +146,8 @@ public class PlayerInfo {
     //目前的过程基本和敌方的monster是一致的，等有需要改变的地方再说
     public PlayerMonster getFriendMonster()
     {
-        this.playerMonster = new PlayerMonster(false,-1170,100,playerTag,true);
+        this.playerMonster = new PlayerMonster(false,-1170,100,playerTag,
+                true,cardManager);
         return playerMonster;
     }
 

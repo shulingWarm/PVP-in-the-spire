@@ -34,5 +34,14 @@ public class FriendPlayerGroup {
         }
     }
 
+    //更新这里面玩家的power显示
+    public void updateAnimation()
+    {
+        for(PlayerMonster eachPlayer : playerList)
+        {
+            eachPlayer.updatePowers();
+        }
+    }
+
 
 }

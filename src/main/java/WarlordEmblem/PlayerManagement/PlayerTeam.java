@@ -60,7 +60,7 @@ public class PlayerTeam {
     }
 
     //根据当前的玩家内容获取怪物列表
-    public MonsterGroup getMonsterGroup()
+    public MonsterGroupManager getMonsterGroup()
     {
         AbstractMonster[] monsterList = new AbstractMonster[this.getPlayerNum()];
         int idMonster = 0;
@@ -70,7 +70,7 @@ public class PlayerTeam {
             monsterList[idMonster] = eachPlayer.generateMonster(idMonster);
             ++idMonster;
         }
-        return new MonsterGroup(monsterList);
+        return new MonsterGroupManager(monsterList);
     }
 
     //初始化友军monster group

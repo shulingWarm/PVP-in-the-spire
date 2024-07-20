@@ -2,6 +2,7 @@ package WarlordEmblem.character;
 
 import UI.BattleUI.OrbManager;
 import UI.BattleUI.OrbManagerInvert;
+import WarlordEmblem.PlayerManagement.PlayerCardManager;
 import WarlordEmblem.actions.MultiPauseAction;
 import WarlordEmblem.orbs.MonsterOrb;
 import WarlordEmblem.orbs.OrbExternalFunction;
@@ -34,6 +35,8 @@ public class PlayerMonster extends AbstractMonster {
 
     //球位管理器
     public OrbManager orbManager;
+    //玩家的卡牌管理器
+    public PlayerCardManager playerCardManager;
     //尾巴的数量
     public int tailNum;
     //用于实际被渲染的角色
@@ -55,7 +58,8 @@ public class PlayerMonster extends AbstractMonster {
     //玩家的tag
     public int playerTag;
 
-    public PlayerMonster(boolean pauseFlag,float x,float y,int playerTag,boolean sameTeam)
+    public PlayerMonster(boolean pauseFlag,float x,float y,int playerTag,boolean sameTeam,
+                         PlayerCardManager cardManager)
     {
         super("test","PlayerMonster",10,0, 0, 180.0F, 240.0F, (String)null,x,y);
         //随便载入一个贴图，用于演示基本的人物效果
@@ -66,6 +70,8 @@ public class PlayerMonster extends AbstractMonster {
             this.orbManager = new OrbManagerInvert();
         else
             this.orbManager = new OrbManager();
+        //初始化卡牌管理器
+        this.playerCardManager = cardManager;
         this.pauseFlag = pauseFlag;
         this.playerTag = playerTag;
         this.friendFlag = sameTeam;
@@ -214,6 +220,66 @@ public class PlayerMonster extends AbstractMonster {
             super.loseBlock();
     }
 
+    //判断是否需要根据buff改变伤害值
+    public static boolean isReceiveDamage()
+    {
+        return ActionNetworkPatches.stopSendAttack;
+    }
+
+    //根据各种信息改变damage
+    public int changeDamageInfo(DamageInfo info,int damageAmount)
+    {
+        Iterator var5;
+        AbstractRelic r;
+        if (info.owner == AbstractDungeon.player) {
+            for(var5 = AbstractDungeon.player.relics.iterator(); var5.hasNext(); damageAmount = r.onAttackToChangeDamage(info, damageAmount)) {
+                r = (AbstractRelic)var5.next();
+            }
+        }
+
+
+        AbstractPower p;
+        if (info.owner != null) {
+            for(var5 = info.owner.powers.iterator(); var5.hasNext(); damageAmount = p.onAttackToChangeDamage(info, damageAmount)) {
+                p = (AbstractPower)var5.next();
+            }
+        }
+
+        for(var5 = this.powers.iterator(); var5.hasNext(); damageAmount = p.onAttackedToChangeDamage(info, damageAmount)) {
+            p = (AbstractPower)var5.next();
+        }
+
+        if (info.owner == AbstractDungeon.player) {
+            var5 = AbstractDungeon.player.relics.iterator();
+
+            while(var5.hasNext()) {
+                r = (AbstractRelic)var5.next();
+                r.onAttack(info, damageAmount, this);
+            }
+        }
+
+        var5 = this.powers.iterator();
+
+        while(var5.hasNext()) {
+            p = (AbstractPower)var5.next();
+            p.wasHPLost(info, damageAmount);
+        }
+
+        if (info.owner != null) {
+            var5 = info.owner.powers.iterator();
+
+            while(var5.hasNext()) {
+                p = (AbstractPower)var5.next();
+                p.onAttack(info, damageAmount, this);
+            }
+        }
+
+        for(var5 = this.powers.iterator(); var5.hasNext(); damageAmount = p.onAttacked(info, damageAmount)) {
+            p = (AbstractPower)var5.next();
+        }
+        return damageAmount;
+    }
+
     @Override
     public void damage(DamageInfo info) {
         //允许打破护甲
@@ -224,7 +290,9 @@ public class PlayerMonster extends AbstractMonster {
             return;
         }
         //处理当前状态下的愤怒姿态
-        info.output = (int)this.stance.atDamageReceive(info.output,info.type);
+        //如果这是接收到的就没必要判断了
+        if(!isReceiveDamage())
+            info.output = (int)this.stance.atDamageReceive(info.output,info.type);
         if (info.output > 0 &&
                 (this.hasPower("Intangible") ||
                         this.hasPower("IntangiblePlayer"))
@@ -245,54 +313,9 @@ public class PlayerMonster extends AbstractMonster {
 
             boolean weakenedToZero = damageAmount == 0;
             damageAmount = this.decrementBlock(info, damageAmount);
-            Iterator var5;
-            AbstractRelic r;
-            if (info.owner == AbstractDungeon.player) {
-                for(var5 = AbstractDungeon.player.relics.iterator(); var5.hasNext(); damageAmount = r.onAttackToChangeDamage(info, damageAmount)) {
-                    r = (AbstractRelic)var5.next();
-                }
-            }
 
-
-            AbstractPower p;
-            if (info.owner != null) {
-                for(var5 = info.owner.powers.iterator(); var5.hasNext(); damageAmount = p.onAttackToChangeDamage(info, damageAmount)) {
-                    p = (AbstractPower)var5.next();
-                }
-            }
-
-            for(var5 = this.powers.iterator(); var5.hasNext(); damageAmount = p.onAttackedToChangeDamage(info, damageAmount)) {
-                p = (AbstractPower)var5.next();
-            }
-
-            if (info.owner == AbstractDungeon.player) {
-                var5 = AbstractDungeon.player.relics.iterator();
-
-                while(var5.hasNext()) {
-                    r = (AbstractRelic)var5.next();
-                    r.onAttack(info, damageAmount, this);
-                }
-            }
-
-            var5 = this.powers.iterator();
-
-            while(var5.hasNext()) {
-                p = (AbstractPower)var5.next();
-                p.wasHPLost(info, damageAmount);
-            }
-
-            if (info.owner != null) {
-                var5 = info.owner.powers.iterator();
-
-                while(var5.hasNext()) {
-                    p = (AbstractPower)var5.next();
-                    p.onAttack(info, damageAmount, this);
-                }
-            }
-
-            for(var5 = this.powers.iterator(); var5.hasNext(); damageAmount = p.onAttacked(info, damageAmount)) {
-                p = (AbstractPower)var5.next();
-            }
+            if(!isReceiveDamage())
+                damageAmount = changeDamageInfo(info,damageAmount);
 
             this.lastDamageTaken = Math.min(damageAmount, this.currentHealth);
             boolean probablyInstantKill = this.currentHealth == 0;
