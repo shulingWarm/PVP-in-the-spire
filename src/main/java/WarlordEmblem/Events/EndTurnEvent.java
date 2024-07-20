@@ -2,6 +2,7 @@ package WarlordEmblem.Events;
 
 import WarlordEmblem.GlobalManager;
 import WarlordEmblem.PVPApi.BaseEvent;
+import WarlordEmblem.character.PlayerMonster;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -17,27 +18,15 @@ public class EndTurnEvent extends BaseEvent {
 
     @Override
     public void encode(DataOutputStream streamHandle) {
-        //发送自己的tag
-        try
-        {
-            streamHandle.writeInt(GlobalManager.myPlayerTag);
-        }
-        catch (IOException e){
-            e.printStackTrace();
-        }
+        GlobalManager.playerManager.encodePlayer(streamHandle);
     }
 
     @Override
     public void decode(DataInputStream streamHandle) {
-        System.out.println("Receive end turn!!!");
-        try
+        PlayerMonster monster = GlobalManager.playerManager.decodePlayer(streamHandle);
+        if(monster != null)
         {
-            int playerTag = streamHandle.readInt();
-            GlobalManager.getBattleInfo().updateEndTurn(playerTag);
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
+            GlobalManager.getBattleInfo().updateEndTurn(monster);
         }
     }
 }

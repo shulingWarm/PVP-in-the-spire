@@ -21,6 +21,12 @@ public class MonsterGroupManager extends MonsterGroup {
         this.friendPlayerGroup = friendPlayerGroup;
     }
 
+    //这里什么都不做
+    @Override
+    public void applyPreTurnLogic() {
+
+    }
+
     @Override
     public void render(SpriteBatch sb) {
         super.render(sb);

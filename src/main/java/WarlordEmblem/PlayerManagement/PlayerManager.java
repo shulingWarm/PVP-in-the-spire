@@ -7,6 +7,7 @@ import WarlordEmblem.Events.BattleInfoEvent;
 import WarlordEmblem.Events.ExecuteAssignTeamEvent;
 import WarlordEmblem.GlobalManager;
 import WarlordEmblem.PVPApi.Communication;
+import WarlordEmblem.SocketServer;
 import WarlordEmblem.character.PlayerMonster;
 import WarlordEmblem.network.PlayerInfo;
 import WarlordEmblem.network.SelfPlayerInfo;
@@ -183,6 +184,7 @@ public class PlayerManager implements TeamCallback {
         PlayerTeam oppositeTeam = getOppositeTeam();
         //记录对方的玩家数量
         this.battleInfo.oppositeTeam = oppositeTeam;
+        this.battleInfo.selfTeam = selfTeam;
         MonsterGroupManager monsterGroupManager =
                 oppositeTeam.getMonsterGroup();
         //将添加monster group的友军信息
@@ -233,8 +235,10 @@ public class PlayerManager implements TeamCallback {
     //判断我方是否为先手
     public boolean isSelfFirstHand()
     {
-        return getSelfTeam().enterTime <
+        if(SocketServer.battleNum == 0)
+            return getSelfTeam().enterTime <
                 getOppositeTeam().enterTime;
+        return SocketServer.firstHandFlag;
     }
 
     //更新玩家进入的时间

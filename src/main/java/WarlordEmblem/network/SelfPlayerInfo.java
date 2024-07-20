@@ -39,4 +39,10 @@ public class SelfPlayerInfo extends PlayerInfo {
     public void resetPlayerTexture() {
 
     }
+
+    //不管什么时候都按照dead来算
+    @Override
+    public boolean isDead() {
+        return GlobalManager.getBattleInfo().selfDeadFlag;
+    }
 }

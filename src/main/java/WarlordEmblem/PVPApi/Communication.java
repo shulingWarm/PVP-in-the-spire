@@ -32,7 +32,6 @@ public class Communication {
     //发送event
     public static void sendEvent(BaseEvent event)
     {
-
         //如果是未注册过的事件，不做处理
         HashMap<String,BaseEvent> eventMap = GlobalManager.eventMap;
         if(!eventMap.containsKey(event.eventId))
@@ -40,6 +39,7 @@ public class Communication {
             System.out.printf("Unknown event: %s\n",event.eventId);
             return;
         }
+        System.out.printf("Sending event %s\n",event.eventId);
         //获取输入流
         AutomaticSocketServer server = AutomaticSocketServer.getServer();
         //写入用户事件的事件头

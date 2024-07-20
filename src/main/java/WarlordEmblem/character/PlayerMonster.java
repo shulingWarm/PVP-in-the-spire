@@ -57,6 +57,8 @@ public class PlayerMonster extends AbstractMonster {
 
     //玩家的tag
     public int playerTag;
+    //标记为回合结束时的状态
+    public boolean endTurnFlag = false;
 
     public PlayerMonster(boolean pauseFlag,float x,float y,int playerTag,boolean sameTeam,
                          PlayerCardManager cardManager)
@@ -132,12 +134,7 @@ public class PlayerMonster extends AbstractMonster {
             for (AbstractPower p : this.powers) {
                 p.onChannel((AbstractOrb) orb);
             }
-            AbstractPower power = this.getPower(FocusPower.POWER_ID);
-            if(power != null)
-            {
-                //对当前充能球应用集中
-                OrbExternalFunction.applyFocusAny(orb,power.amount);
-            }
+            orb.applyFocus();
         }
     }
 
@@ -167,10 +164,9 @@ public class PlayerMonster extends AbstractMonster {
         //如果自己是需要负责阻塞的，那就让它阻塞
         if(this.pauseFlag)
         {
-            MultiPauseAction.pauseStage = true;
             //准备开始阻塞
             AbstractDungeon.actionManager.addToBottom(
-                new MultiPauseAction()
+                new MultiPauseAction(this)
             );
         }
     }
@@ -201,7 +197,10 @@ public class PlayerMonster extends AbstractMonster {
     //这属于战斗结束时的操作了，最后再说
     public void makeItDie()
     {
-
+        //设置玩家死亡
+        this.isDead = true;
+        this.renderPlayer.playDeathAnimation();
+        this.die();
     }
 
     @Override
@@ -314,8 +313,7 @@ public class PlayerMonster extends AbstractMonster {
             boolean weakenedToZero = damageAmount == 0;
             damageAmount = this.decrementBlock(info, damageAmount);
 
-            if(!isReceiveDamage())
-                damageAmount = changeDamageInfo(info,damageAmount);
+            damageAmount = changeDamageInfo(info,damageAmount);
 
             this.lastDamageTaken = Math.min(damageAmount, this.currentHealth);
             boolean probablyInstantKill = this.currentHealth == 0;
@@ -354,7 +352,6 @@ public class PlayerMonster extends AbstractMonster {
             if (this.currentHealth <= 0) {
                 //临时把生命改成0
                 this.currentHealth = 0;
-                this.makeItDie();
             }
 
         }
@@ -372,6 +369,9 @@ public class PlayerMonster extends AbstractMonster {
     //处理回合结束时的buff更新
     public void endOfTurnTrigger()
     {
+        System.out.printf("%d end turn\n",this.playerTag);
+        //标记为回合结束时的状态
+        this.endTurnFlag = true;
         for(AbstractPower eachPower : powers)
         {
             eachPower.atEndOfTurnPreEndTurnCards(false);
@@ -384,6 +384,19 @@ public class PlayerMonster extends AbstractMonster {
         {
             eachPower.atEndOfRound();
         }
+    }
+
+    //回合开始时，标记为已经开始回合
+    @Override
+    public void applyStartOfTurnPowers() {
+        super.applyStartOfTurnPowers();
+        this.endTurnFlag = false;
+    }
+
+    //判断是否为回合结束时的状态
+    public boolean isEndTurn()
+    {
+        return this.isDead || this.endTurnFlag;
     }
 
     @Override

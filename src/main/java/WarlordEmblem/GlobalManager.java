@@ -17,6 +17,7 @@ import WarlordEmblem.patches.CardShowPatch.UseCardSend;
 import WarlordEmblem.patches.connection.MeunScreenFadeout;
 import WarlordEmblem.patches.steamConnect.SteamManager;
 import WarlordEmblem.relics.BlockGainer;
+import WarlordEmblem.relics.PVPTail;
 import basemod.DevConsole;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
@@ -118,6 +119,8 @@ public class GlobalManager {
         BlockGainer.gainedNum=0;
         //初始化球位映射
         OrbMapping.init();
+        //初始化尾巴的链表
+        PVPTail.initList();
         //初始化当前我方的tag
         myPlayerTag = randGenerator.nextInt();
         //如果没有默认选择的角色，就选择为战士

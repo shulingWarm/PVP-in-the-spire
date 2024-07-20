@@ -27,11 +27,7 @@ public class PlayerTurnBegin extends BaseEvent {
         //非战斗状态下不用管
         if(playerMonster == null)
             return;
-        //如果玩家和我方是同阵营的
-        if(playerMonster.friendFlag)
-        {
-            playerMonster.applyStartOfTurnPowers();
-        }
+        playerMonster.applyStartOfTurnPowers();
         //强制失去格挡
         playerMonster.forceLoseBlock();
     }

@@ -14,6 +14,7 @@ import WarlordEmblem.Screens.midExit.MidExitScreen;
 import WarlordEmblem.actions.AddFriendMonsterAction;
 import WarlordEmblem.actions.FightProtocol;
 import WarlordEmblem.actions.HealthSyncAction;
+import WarlordEmblem.actions.MultiPauseAction;
 import WarlordEmblem.card.*;
 import WarlordEmblem.patches.CardShowPatch.UseCardSend;
 import WarlordEmblem.powers.BlockablePoisonPower;
@@ -805,6 +806,8 @@ public class CharacterSelectScreenPatches
                     skipNextSend = false;
                     return;
                 }
+                //标记为阻塞状态
+                MultiPauseAction.pauseStage = true;
                 Communication.sendEvent(new EndTurnEvent());
                 //发送一个同步血量的操作信息
 //                AbstractDungeon.actionManager.addToBottom(
@@ -887,10 +890,17 @@ public class CharacterSelectScreenPatches
                     {
                         AbstractDungeon.player.gainGold(GlobalManager.startGold - AbstractDungeon.player.gold);
                     }
+                    //如果尾巴数量是零，那就添加一个无用的尾巴
+                    if(GlobalManager.beginTailNum == 0)
+                    {
+                        PVPTail tempTail = new PVPTail();
+                        tempTail.usedUp();
+                        tempTail.instantObtain();
+                    }
                     //根据设置获得对应数量的尾巴
                     for(int idTail = 0;idTail< GlobalManager.beginTailNum;++idTail)
                     {
-                        (new LizardTail()).instantObtain();
+                        (new PVPTail()).instantObtain();
                     }
                     //获得手链
                     (new JuzuBracelet()).instantObtain();
@@ -1373,68 +1383,57 @@ public class CharacterSelectScreenPatches
     @SpirePatch(clz = LizardTail.class, method = "onTrigger")
     public static class ChangeTailName
     {
-
         //触发之前禁止发送回血信息
         @SpirePrefixPatch
         public static SpireReturn<Void> fixPre(LizardTail __instance)
         {
             //禁止发送回血信息
-            ActionNetworkPatches.HealEventSend.disableSend = true;
-            //把最大生命值提高一倍 这个时候自动会有回血的效果
-            AbstractDungeon.player.increaseMaxHp(
-                AbstractDungeon.player.maxHealth,true);
-            //把这个遗物弄成灰色
-            __instance.flash();
-            __instance.setCounter(-2);
-            try
-            {
-                //触发过之后就给它改个名字，防止它重复触发
-                Field tempField = AbstractRelic.class.getDeclaredField("relicId");
-                tempField.setAccessible(true);
-                //强行修改字段的值
-                tempField.set((AbstractRelic)__instance,LizardTail.ID + "_used");
-                //获得一个格挡加倍的遗物
-                if(BlockGainer.blockGainRate > 0.01f)
-                    (new BlockGainer()).instantObtain();
-//                //清除玩家所有的debuff
-//                AbstractDungeon.actionManager.addToBottom(
-//                        new RemoveDebuffsAction(AbstractDungeon.player)
-//                );
-//                //增加能量上限
-//                AbstractDungeon.actionManager.addToBottom(
-//                    new ApplyPowerAction(AbstractDungeon.player,
-//                    AbstractDungeon.player,
-//                    new BerserkPower(AbstractDungeon.player, 1),
-//                1));
-                //只有当处于战斗房间时才会做这些事情，平常不用做
-                //有时候可能死在事件房间里
-                if(AbstractDungeon.getCurrRoom() instanceof MonsterRoom)
-                {
-                    //执行丢钱的动画
-                    ControlMoster monster = ControlMoster.instance;
-                    AbstractPlayer player = AbstractDungeon.player;
-                    //将要丢掉的钱
-                    int loseGold = (int)(player.gold * SocketServer.loseGoldRate);
-                    if(loseGold>0)
-                    {
-                        player.loseGold(loseGold);
-                    }
-                    //根据丢钱的数量执行动画
-                    for(int idLose=0;idLose<loseGold;++idLose)
-                    {
-                        AbstractDungeon.effectList.add(new GainPennyEffect(ControlMoster.instance,
-                                player.hb.cX, player.hb.cY, monster.hb.cX, monster.hb.cY, false));
-                    }
-                    //调用尾巴逻辑之后执行逃跑操作
-                    endCombatAsSmoke();
-                }
-            }
-            catch (NoSuchFieldException | IllegalAccessException e)
-            {
-                e.printStackTrace();
-            }
-            //恢复发送回血信息
-            ActionNetworkPatches.HealEventSend.disableSend = false;
+//            ActionNetworkPatches.HealEventSend.disableSend = true;
+//            //把最大生命值提高一倍 这个时候自动会有回血的效果
+//            AbstractDungeon.player.increaseMaxHp(
+//                AbstractDungeon.player.maxHealth,true);
+//            //把这个遗物弄成灰色
+//            __instance.flash();
+//            __instance.setCounter(-2);
+//            try
+//            {
+//                //触发过之后就给它改个名字，防止它重复触发
+//                Field tempField = AbstractRelic.class.getDeclaredField("relicId");
+//                tempField.setAccessible(true);
+//                //强行修改字段的值
+//                tempField.set((AbstractRelic)__instance,LizardTail.ID + "_used");
+//                //获得一个格挡加倍的遗物
+//                if(BlockGainer.blockGainRate > 0.01f)
+//                    (new BlockGainer()).instantObtain();
+//                //只有当处于战斗房间时才会做这些事情，平常不用做
+//                //有时候可能死在事件房间里
+//                if(AbstractDungeon.getCurrRoom() instanceof MonsterRoom)
+//                {
+//                    //执行丢钱的动画
+//                    ControlMoster monster = ControlMoster.instance;
+//                    AbstractPlayer player = AbstractDungeon.player;
+//                    //将要丢掉的钱
+//                    int loseGold = (int)(player.gold * SocketServer.loseGoldRate);
+//                    if(loseGold>0)
+//                    {
+//                        player.loseGold(loseGold);
+//                    }
+//                    //根据丢钱的数量执行动画
+//                    for(int idLose=0;idLose<loseGold;++idLose)
+//                    {
+//                        AbstractDungeon.effectList.add(new GainPennyEffect(ControlMoster.instance,
+//                                player.hb.cX, player.hb.cY, monster.hb.cX, monster.hb.cY, false));
+//                    }
+//                    //调用尾巴逻辑之后执行逃跑操作
+//                    endCombatAsSmoke();
+//                }
+//            }
+//            catch (NoSuchFieldException | IllegalAccessException e)
+//            {
+//                e.printStackTrace();
+//            }
+//            //恢复发送回血信息
+//            ActionNetworkPatches.HealEventSend.disableSend = false;
             //完全禁止使用原本的触发模式
             return SpireReturn.Return();
         }

@@ -1,5 +1,6 @@
 package WarlordEmblem.actions;
 
+import WarlordEmblem.character.PlayerMonster;
 import com.megacrit.cardcrawl.actions.AbstractGameAction;
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
 
@@ -12,29 +13,27 @@ public class MultiPauseAction extends AbstractGameAction {
     //全局的阻塞状态
     public static boolean pauseStage = false;
     //跳过下一次阻塞
-    public static boolean jumpNextPause = false;
+    public static int jumpNextPause = 0;
 
-    public MultiPauseAction()
+    //所属的player info
+    public PlayerMonster monster;
+
+    public MultiPauseAction(PlayerMonster monster)
     {
         this.duration = 0.1f;
         //设置为需要延时等待
         this.actionType = ActionType.WAIT;
-        //判断是否跳过阻塞
-        if(jumpNextPause)
-        {
-            jumpNextPause = false;
-            pauseStage = false;
-        }
+        this.monster = monster;
     }
 
     @Override
     public void update() {
         this.tickDuration();
-        if((!addedSonFlag) && this.isDone && pauseStage)
+        if(!addedSonFlag && pauseStage)
         {
             //向队列里面添加一个自身
             AbstractDungeon.actionManager.addToBottom(
-                new MultiPauseAction()
+                new MultiPauseAction(this.monster)
             );
             this.addedSonFlag = true;
         }

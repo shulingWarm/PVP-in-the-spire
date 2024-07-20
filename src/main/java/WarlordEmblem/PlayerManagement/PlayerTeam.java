@@ -3,6 +3,7 @@ package WarlordEmblem.PlayerManagement;
 import UI.GridPanel;
 import WarlordEmblem.Events.ExecuteAssignTeamEvent;
 import WarlordEmblem.PVPApi.Communication;
+import WarlordEmblem.actions.MultiPauseAction;
 import WarlordEmblem.network.PlayerInfo;
 import com.badlogic.gdx.graphics.Color;
 import com.megacrit.cardcrawl.monsters.AbstractMonster;
@@ -118,5 +119,40 @@ public class PlayerTeam {
     {
         if(this.enterTime < 0 || this.enterTime > enterTime)
             this.enterTime = enterTime;
+    }
+
+    //判断是不是所有玩家都死了
+    public boolean isAllDead()
+    {
+        for(PlayerInfo eachPlayer : playerInfos)
+        {
+            if(!eachPlayer.isDead())
+                return false;
+        }
+        return true;
+    }
+
+    //判断是否都结束回合了
+    public boolean isAllEndTurn()
+    {
+        for(PlayerInfo eachPlayer : playerInfos)
+        {
+            if(!eachPlayer.isEndTurn())
+            {
+                System.out.printf("%d not end turn\n",eachPlayer.playerTag);
+                return false;
+            }
+        }
+        System.out.println("All end turn!");
+        return true;
+    }
+
+    //把所有的角色标记为结束回合
+    public void setAllEndTurn()
+    {
+        for(PlayerInfo info : playerInfos)
+        {
+            info.playerMonster.endTurnFlag = true;
+        }
     }
 }

@@ -137,7 +137,7 @@ public class PlayerInfo {
     public AbstractMonster generateMonster(int idMonster)
     {
         //每次调用时都会生成一个新的monster
-        this.playerMonster = new PlayerMonster(idMonster == 0,
+        this.playerMonster = new PlayerMonster(true,
                 (260.f)*idMonster,100*idMonster,playerTag,false,cardManager);
         return playerMonster;
     }
@@ -173,5 +173,18 @@ public class PlayerInfo {
         CharacterBox.initPlayerAnimation(this.characterInfo.player);
     }
 
+    //判断是不是死亡状态
+    public boolean isDead()
+    {
+        return playerMonster.isDead;
+    }
+
+    //判断是不是回合结束了
+    public boolean isEndTurn()
+    {
+        if(this.playerMonster == null)
+            return false;
+        return this.playerMonster.isEndTurn();
+    }
 
 }
