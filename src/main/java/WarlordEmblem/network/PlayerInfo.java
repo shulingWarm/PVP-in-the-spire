@@ -170,7 +170,7 @@ public class PlayerInfo {
         AnimationRecorder.resetCreatureScale(
             this.characterInfo.player,1.f
         );
-        CharacterBox.initPlayerAnimation(this.characterInfo.player);
+        CharacterBox.initPlayerAnimation(this.characterInfo.player,this.characterInfo);
     }
 
     //判断是不是死亡状态

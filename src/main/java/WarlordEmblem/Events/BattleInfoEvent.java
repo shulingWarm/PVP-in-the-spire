@@ -45,7 +45,7 @@ public class BattleInfoEvent extends BaseEvent {
             for(AbstractRelic eachRelic : AbstractDungeon.player.relics)
             {
                 //判断是不是尾巴
-                if(eachRelic.relicId.equals(LizardTail.ID))
+                if(eachRelic.relicId.equals(LizardTail.ID) && !eachRelic.usedUp)
                 {
                     tailCount++;
                 }

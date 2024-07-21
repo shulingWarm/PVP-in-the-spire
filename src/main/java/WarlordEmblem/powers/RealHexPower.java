@@ -54,7 +54,7 @@ public class RealHexPower extends AbstractPower {
     }
 
     public void onUseCard(AbstractCard card, UseCardAction action) {
-        if (card.type != AbstractCard.CardType.ATTACK) {
+        if (card.type != AbstractCard.CardType.ATTACK && owner == AbstractDungeon.player) {
             this.flash();
             this.addToBot(new MakeTempCardInDrawPileAction(new Dazed(), 1, true, true));
         }

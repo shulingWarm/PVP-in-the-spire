@@ -80,6 +80,11 @@ public class BattleInfo {
     //战斗胜利的逻辑
     public void battleWin()
     {
+        //判断是不是完全胜利
+        if(oppositeTeam.isCompletelyDie())
+        {
+            GlobalManager.prepareWin = true;
+        }
         //判断自己是不是死亡过
         if(selfDeadFlag)
         {

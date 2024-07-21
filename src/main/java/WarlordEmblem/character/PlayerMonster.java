@@ -164,6 +164,7 @@ public class PlayerMonster extends AbstractMonster {
         //如果自己是需要负责阻塞的，那就让它阻塞
         if(this.pauseFlag)
         {
+            System.out.printf("%d take turn\n",playerTag);
             //准备开始阻塞
             AbstractDungeon.actionManager.addToBottom(
                 new MultiPauseAction()
@@ -352,6 +353,7 @@ public class PlayerMonster extends AbstractMonster {
             if (this.currentHealth <= 0) {
                 //临时把生命改成0
                 this.currentHealth = 0;
+                makeItDie();
             }
 
         }

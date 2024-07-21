@@ -5,6 +5,7 @@ import com.evacipated.cardcrawl.modthespire.lib.SpirePatch;
 import com.evacipated.cardcrawl.modthespire.lib.SpirePrefixPatch;
 import com.megacrit.cardcrawl.cards.AbstractCard;
 import com.megacrit.cardcrawl.characters.AbstractPlayer;
+import com.megacrit.cardcrawl.characters.Watcher;
 import com.megacrit.cardcrawl.core.AbstractCreature;
 
 import java.lang.reflect.InvocationTargetException;
@@ -17,8 +18,9 @@ public class AnimationRecorder {
     //骨骼文件的信息
     public static HashMap<AbstractPlayer.PlayerClass, Pair<String,String>> fileMap = new HashMap<>();
 
-    //设置卡牌透明度的反射工具
     public static Method loadMethod = null;
+    //设置观者眼睛的方法
+    public static Method watcherEyeMethod = null;
 
     public static void initReflectMethod()
     {
@@ -28,6 +30,8 @@ public class AnimationRecorder {
         {
             loadMethod = AbstractCreature.class.getDeclaredMethod("loadAnimation", String.class, String.class, float.class);
             loadMethod.setAccessible(true);
+            watcherEyeMethod = Watcher.class.getDeclaredMethod("loadEyeAnimation");
+            watcherEyeMethod.setAccessible(true);
         }
         catch (NoSuchMethodException e)
         {
@@ -71,6 +75,11 @@ public class AnimationRecorder {
             {
                 Pair<String,String> file = fileMap.get(player.chosenClass);
                 loadMethod.invoke(player,file.first,file.second,scale);
+                //判断是不是观者
+                if(player instanceof Watcher)
+                {
+                    watcherEyeMethod.invoke(player);
+                }
             }
             catch (IllegalAccessException | InvocationTargetException e)
             {

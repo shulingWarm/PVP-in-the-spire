@@ -816,6 +816,7 @@ public class CharacterSelectScreenPatches
                 //标记为阻塞状态
                 MultiPauseAction.pauseStage = true;
                 Communication.sendEvent(new EndTurnEvent());
+                AbstractDungeon.getCurrRoom().monsters.queueMonsters();
                 AbstractDungeon.actionManager.addToBottom(
                     new MultiPauseAction()
                 );

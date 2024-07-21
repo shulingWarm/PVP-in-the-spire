@@ -3,6 +3,7 @@ package UI;
 import WarlordEmblem.character.CharacterInfo;
 import WarlordEmblem.character.ControlMoster;
 import WarlordEmblem.character.PlayerForShow;
+import WarlordEmblem.helpers.FieldHelper;
 import WarlordEmblem.patches.AnimationRecorder;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -10,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.esotericsoftware.spine.*;
 import com.megacrit.cardcrawl.characters.AbstractPlayer;
+import com.megacrit.cardcrawl.characters.Watcher;
 import com.megacrit.cardcrawl.core.AbstractCreature;
 import com.megacrit.cardcrawl.core.CardCrawlGame;
 import com.megacrit.cardcrawl.core.Settings;
@@ -80,13 +82,17 @@ public class CharacterBox extends CreatureBox {
     }
 
     //初始化player的动画状态，必须调用这个它才能正常动
-    public static void initPlayerAnimation(AbstractPlayer player)
+    public static void initPlayerAnimation(AbstractPlayer player, CharacterInfo characterInfo)
     {
         if(player.state!=null)
         {
             try
             {
                 player.state.setAnimation(0, "Idle", true);
+                //读取骨架信息
+                Skeleton tempSkeleton = characterInfo.getSkeleton();
+                FieldHelper.setPrivateFieldValue(player,"eyeBone",
+                        tempSkeleton.findBone("eye_anchor"));
             }
             catch (IllegalArgumentException e)
             {
@@ -108,7 +114,7 @@ public class CharacterBox extends CreatureBox {
         this.player.drawY = this.y;
         if(this.resetScaleFlag)
             AnimationRecorder.resetCreatureScale(this.player,RESET_SCALE);
-        initPlayerAnimation(this.player);
+        initPlayerAnimation(this.player,newCharacter);
     }
 
     public CharacterBox(float x, float y, AbstractPlayer.PlayerClass selectedCharacter)
@@ -144,7 +150,7 @@ public class CharacterBox extends CreatureBox {
             AnimationRecorder.resetCreatureScale(this.player,1.3f);
         this.player.drawX = this.x;
         this.player.drawY = this.y;
-        initPlayerAnimation(this.player);
+        initPlayerAnimation(this.player,characterInfo);
 
     }
 

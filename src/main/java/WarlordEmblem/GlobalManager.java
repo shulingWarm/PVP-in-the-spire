@@ -37,7 +37,7 @@ public class GlobalManager {
     //用来记录当前是第几场游戏
     public static int idGame = 0;
     //初始化的尾巴数量
-    public static int beginTailNum = 2;
+    public static int beginTailNum = 1;
     //初始的坚不可摧比例
     public static int invincibleRate = 2;
     //版本号
@@ -138,7 +138,7 @@ public class GlobalManager {
         SteamManager.initManager();
         AutomaticSocketServer.initAutomatic();
         //初始的尾巴数量
-        beginTailNum = 2;
+        beginTailNum = 1;
         invincibleRate = 2;
         //初始化每张牌可以被使用的次数
         UseCardSend.CardUseManager.MAX_USE_TIME = 2;

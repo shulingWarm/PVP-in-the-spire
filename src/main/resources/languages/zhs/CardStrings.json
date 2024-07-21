@@ -17,21 +17,21 @@
   },
   "burnTransform": {
     "NAME": "燃烧转移",
-    "DESCRIPTION":"在本回合内，被消耗的 状态牌 会转移到敌方的弃牌堆中。",
-    "UPGRADE_DESCRIPTION":"在本回合内，被消耗的 状态牌 会转移到敌方的弃牌堆中。"
+    "DESCRIPTION":"在本回合内，被消耗的 状态牌 会转移到随机一名敌方的弃牌堆中。",
+    "UPGRADE_DESCRIPTION":"在本回合内，被消耗的 状态牌 会转移到随机一名敌方的弃牌堆中。"
   },
   "computeTransform": {
     "NAME": "计算转移",
-    "DESCRIPTION": "被丢弃的 状态牌 和未升级的白卡会转移到敌方的弃牌堆中。"
+    "DESCRIPTION": "被丢弃的 状态牌 和未升级的白卡会转移到随机一名敌方的弃牌堆中。"
   },
   "virusTransform": {
     "NAME": "病毒转移",
-    "DESCRIPTION": "当你打出能力牌时，你可以将抽牌堆中的前 !M! 张 状态牌 转移到敌方的弃牌堆中。",
-    "UPGRADE_DESCRIPTION":"当你打出能力牌时，你可以将抽牌堆中的前 !M! 张 状态牌 转移到敌方的弃牌堆中。 NL 固有 "
+    "DESCRIPTION": "当你打出能力牌时，你可以将抽牌堆中的前 !M! 张 状态牌 转移到随机一名敌方的弃牌堆中。",
+    "UPGRADE_DESCRIPTION":"当你打出能力牌时，你可以将抽牌堆中的前 !M! 张 状态牌 转移到随机一名敌方的弃牌堆中。 NL 固有 "
   },
   "fateTransform": {
     "NAME": "命运转移",
-    "DESCRIPTION": "你通过 预见 弃置的状态牌会转移到敌方的弃牌堆中。"
+    "DESCRIPTION": "你通过 预见 弃置的状态牌会转移到随机一名敌方的弃牌堆中。"
   },
   "doubleSword": {
     "NAME": "双刃剑",

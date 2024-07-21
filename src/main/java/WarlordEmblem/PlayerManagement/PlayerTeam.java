@@ -159,6 +159,17 @@ public class PlayerTeam {
         }
     }
 
+    //判断是不是完全死了 这里指的是没有尾巴了
+    public boolean isCompletelyDie()
+    {
+        for(PlayerInfo eachInfo : playerInfos)
+        {
+            if(eachInfo.tailNum > 0)
+                return false;
+        }
+        return true;
+    }
+
     //获取随机的monster
     public PlayerMonster getRandMonster()
     {
