@@ -1,7 +1,6 @@
 package WarlordEmblem.patches.CardShowPatch;
 
 import WarlordEmblem.SocketServer;
-import WarlordEmblem.character.ControlMoster;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.megacrit.cardcrawl.cards.AbstractCard;
 import com.megacrit.cardcrawl.monsters.AbstractMonster;
@@ -29,13 +28,25 @@ public class CardBox {
     //目前的攻击意图的值
     public int damageAmount = 0;
 
+    //当前的card box所属的monster
+    AbstractMonster belongMonster;
+
     public CardBox(float xCenter, float yCenter,
-       CardRecorder shownCards)
+       CardRecorder shownCards,AbstractMonster monster)
     {
         //记录传入的属性
         this.xCenter = xCenter;
         this.yCenter = yCenter;
         this.shownCards = shownCards;
+        //记录当前的box所属的monster
+        this.belongMonster = monster;
+    }
+
+    //默认的无monster的构造函数
+    public CardBox(float xCenter, float yCenter,
+                   CardRecorder shownCards)
+    {
+        this(xCenter,yCenter,shownCards,null);
     }
 
     //根据当前是第几个牌来计算当前的偏移量
@@ -110,17 +121,17 @@ public class CardBox {
             updateLocation = true;
             shownCards.justUpdateFlag = false;
             //更新意图
-            if(ControlMoster.instance!=null)
+            if(this.belongMonster!=null)
             {
                 AbstractMonster.Intent tempIntent = getIntent();
                 //如果是攻击意图，需要设置对应的伤害值
                 if(tempIntent== AbstractMonster.Intent.ATTACK)
                 {
-                    ControlMoster.instance.setMove((byte)1,tempIntent,
+                    this.belongMonster.setMove((byte)1,tempIntent,
                             this.damageAmount);
                 }
                 else {
-                    ControlMoster.instance.setMove((byte)1,tempIntent,-1);
+                    this.belongMonster.setMove((byte)1,tempIntent,-1);
                 }
             }
         }

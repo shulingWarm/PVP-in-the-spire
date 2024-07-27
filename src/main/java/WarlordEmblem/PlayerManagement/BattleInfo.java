@@ -80,6 +80,7 @@ public class BattleInfo {
     //战斗胜利的逻辑
     public void battleWin()
     {
+        ActionNetworkPatches.disableCombatTrigger = true;
         //判断是不是完全胜利
         if(oppositeTeam.isCompletelyDie())
         {
@@ -101,6 +102,7 @@ public class BattleInfo {
     //战斗失败的逻辑
     public void battleLose()
     {
+        ActionNetworkPatches.disableCombatTrigger = true;
         //记录下一场战斗为先手
         SocketServer.firstHandFlag = true;
         //执行尾巴回复操作

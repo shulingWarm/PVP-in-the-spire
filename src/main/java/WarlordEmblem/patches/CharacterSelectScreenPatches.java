@@ -40,6 +40,7 @@ import com.megacrit.cardcrawl.cards.AbstractCard;
 import com.megacrit.cardcrawl.cards.CardGroup;
 import com.megacrit.cardcrawl.cards.DamageInfo;
 import com.megacrit.cardcrawl.cards.blue.*;
+import com.megacrit.cardcrawl.cards.colorless.Apparition;
 import com.megacrit.cardcrawl.cards.colorless.Purity;
 import com.megacrit.cardcrawl.cards.curses.Necronomicurse;
 import com.megacrit.cardcrawl.cards.green.*;
@@ -58,6 +59,7 @@ import com.megacrit.cardcrawl.core.CardCrawlGame;
 import com.megacrit.cardcrawl.core.Settings;
 import com.megacrit.cardcrawl.daily.mods.SealedDeck;
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
+import com.megacrit.cardcrawl.events.city.Ghosts;
 import com.megacrit.cardcrawl.helpers.*;
 import com.megacrit.cardcrawl.helpers.controller.CInputActionSet;
 import com.megacrit.cardcrawl.helpers.input.InputHelper;
@@ -702,13 +704,16 @@ public class CharacterSelectScreenPatches
 //                            tempMonster));
 //                }
             }
-            //添加一个灭除之刃
-            Strike_Blue tempCard = new Strike_Blue();
-            tempCard.baseDamage = 999;
-            tempCard.damage = 999;
             AbstractDungeon.actionManager.addToBottom(
-                new MakeTempCardInHandAction(tempCard,1)
+                new MakeTempCardInHandAction(new Apparition(),1)
             );
+            //添加一个灭除之刃
+//            Strike_Blue tempCard = new Strike_Blue();
+//            tempCard.baseDamage = 999;
+//            tempCard.damage = 999;
+//            AbstractDungeon.actionManager.addToBottom(
+//                new MakeTempCardInHandAction(tempCard,1)
+//            );
             return SpireReturn.Continue();
         }
     }
@@ -808,18 +813,18 @@ public class CharacterSelectScreenPatches
         {
             if(SocketServer.USE_NETWORK && __instance.isDone)
             {
+                AbstractDungeon.getCurrRoom().monsters.queueMonsters();
+                //标记为阻塞状态
+                MultiPauseAction.pauseStage = true;
+                AbstractDungeon.actionManager.addToBottom(
+                    new MultiPauseAction()
+                );
                 if(skipNextSend)
                 {
                     skipNextSend = false;
                     return;
                 }
-                //标记为阻塞状态
-                MultiPauseAction.pauseStage = true;
                 Communication.sendEvent(new EndTurnEvent());
-                AbstractDungeon.getCurrRoom().monsters.queueMonsters();
-                AbstractDungeon.actionManager.addToBottom(
-                    new MultiPauseAction()
-                );
                 //发送一个同步血量的操作信息
 //                AbstractDungeon.actionManager.addToBottom(
 //                    new HealthSyncAction()

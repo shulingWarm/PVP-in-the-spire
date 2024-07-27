@@ -108,11 +108,7 @@ public class PowerMapping {
         @Override
         public AbstractPower make(AbstractCreature owner,int amount,boolean isSourceMonster) {
             //给敌人的情况下使用敌人版本的
-            if(owner instanceof AbstractPlayer)
-            {
-                return new IntangiblePlayerPower(owner,amount);
-            }
-            return new IntangiblePower(owner,amount);
+            return new IntangiblePlayerPower(owner,amount);
         }
     }
 

@@ -79,7 +79,6 @@ public class ClientHandle {
         //需要确保同一时刻只能有一个线程往这里面发送数据
         synchronized (this)
         {
-            System.out.printf("Sending bytes %s\n",byteData.length);
             //向output里面写入数据
             try
             {

@@ -1,5 +1,6 @@
 package WarlordEmblem.character;
 
+import UI.BattleUI.BattleCardPanel;
 import UI.BattleUI.OrbManager;
 import UI.BattleUI.OrbManagerInvert;
 import WarlordEmblem.PlayerManagement.PlayerCardManager;
@@ -41,6 +42,8 @@ public class PlayerMonster extends AbstractMonster {
     public int tailNum;
     //用于实际被渲染的角色
     public AbstractPlayer renderPlayer;
+    //用于渲染角色信息的卡片
+    public BattleCardPanel battleCardPanel;
     //是否为友军
     public boolean friendFlag;
 
@@ -61,7 +64,8 @@ public class PlayerMonster extends AbstractMonster {
     public boolean endTurnFlag = false;
 
     public PlayerMonster(boolean pauseFlag,float x,float y,int playerTag,boolean sameTeam,
-                         PlayerCardManager cardManager)
+         PlayerCardManager cardManager
+    )
     {
         super("test","PlayerMonster",10,0, 0, 180.0F, 240.0F, (String)null,x,y);
         //随便载入一个贴图，用于演示基本的人物效果
@@ -79,6 +83,9 @@ public class PlayerMonster extends AbstractMonster {
         this.friendFlag = sameTeam;
         //最开始时初始化为无姿态
         this.stance = new NeutralStance();
+        //初始化手牌信息
+        this.battleCardPanel = new BattleCardPanel(this.drawX,this.drawY+this.hb_h*1.5f,
+                this.playerCardManager.cardRecorder,this);
     }
 
     //根据角色信息初始化形象
@@ -193,6 +200,13 @@ public class PlayerMonster extends AbstractMonster {
         //渲染充能球
         this.orbManager.render(sb);
         this.stance.render(sb);
+    }
+
+    @Override
+    public void renderTip(SpriteBatch sb) {
+        super.renderTip(sb);
+        //渲染角色信息的panel
+        this.battleCardPanel.render(sb);
     }
 
     //这属于战斗结束时的操作了，最后再说
@@ -382,15 +396,22 @@ public class PlayerMonster extends AbstractMonster {
         {
             eachPower.atEndOfTurn(false);
         }
+    }
+
+    //大回合结束时的触发
+    public void endOfRoundTrigger()
+    {
         for(AbstractPower eachPower : powers)
         {
             eachPower.atEndOfRound();
         }
     }
 
+
     //回合开始时，标记为已经开始回合
     @Override
     public void applyStartOfTurnPowers() {
+        System.out.printf("%s start of turn\n",this.renderPlayer.chosenClass.name());
         super.applyStartOfTurnPowers();
         this.endTurnFlag = false;
     }

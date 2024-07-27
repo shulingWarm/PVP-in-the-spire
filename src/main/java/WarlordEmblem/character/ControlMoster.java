@@ -260,7 +260,7 @@ public class ControlMoster extends AbstractMonster {
         AnimationState.TrackEntry e = this.state.setAnimation(0, "Idle", true);
         e.setTime(e.getEndTime() * MathUtils.random());
         //初始化敌人的手牌显示框
-        cardBox = new CardBox(this.drawX,this.drawY+this.hb_h*1.5f, HandCardSend.monsterCardList);
+        cardBox = new CardBox(this.drawX,this.drawY+this.hb_h*1.5f, HandCardSend.monsterCardList,this);
     }
 
     public ControlMoster(float x, float y, boolean talk) {
