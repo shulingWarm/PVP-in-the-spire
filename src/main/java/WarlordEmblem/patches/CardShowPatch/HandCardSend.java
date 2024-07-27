@@ -1,6 +1,8 @@
 package WarlordEmblem.patches.CardShowPatch;
 
-import WarlordEmblem.AutomaticSocketServer;
+import WarlordEmblem.Events.UpdateHandCardEvent;
+import WarlordEmblem.GlobalManager;
+import WarlordEmblem.PVPApi.Communication;
 import WarlordEmblem.SocketServer;
 import WarlordEmblem.actions.FightProtocol;
 import com.evacipated.cardcrawl.modthespire.lib.SpirePatch;
@@ -80,11 +82,12 @@ public class HandCardSend {
         @SpirePrefixPatch
         public static void fix(CardGroup __instance)
         {
-            if(!SocketServer.USE_NETWORK)
+            //我方已经死亡的情况下就不需要做这些了
+            if(!SocketServer.USE_NETWORK ||
+                GlobalManager.getBattleInfo().selfDeadFlag)
             {
                 return;
             }
-            AutomaticSocketServer server = AutomaticSocketServer.getServer();
             //计算每个牌的列表
             ArrayList<Integer> cardIdList = new ArrayList<Integer>();
             //遍历每个牌，计算它的标号
@@ -94,12 +97,11 @@ public class HandCardSend {
                 //取出下一个位置的牌
                 AbstractCard tempCard = (AbstractCard) cardIter.next();
                 //计算这个牌的编码
-                int tempCode = UseCardSend.getCardCommunicationID(tempCard,server.streamHandle);
+                int tempCode = UseCardSend.getCardCommunicationID(tempCard);
                 cardIdList.add(tempCode);
             }
             //调用发送卡牌的编码信息
-            handCardEncode(cardIdList,server.streamHandle);
-            server.send();
+            Communication.sendEvent(new UpdateHandCardEvent(cardIdList));
             //更新即将抽到的牌的信息
             DrawPileSender.updateDrawingCards();
         }

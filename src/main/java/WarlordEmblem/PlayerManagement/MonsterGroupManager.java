@@ -47,10 +47,21 @@ public class MonsterGroupManager extends MonsterGroup {
         this.friendPlayerGroup.render(sb);
     }
 
+    //检查更新友军的hover
+    public void checkFriendHover()
+    {
+        //如果当前没有hover的敌人，从友军这里找一个
+        if(this.hoveredMonster == null)
+        {
+            this.hoveredMonster = friendPlayerGroup.getHoveredMonster();
+        }
+    }
+
     @Override
     public void update() {
         super.update();
         this.friendPlayerGroup.update();
+        this.checkFriendHover();
     }
 
     @Override

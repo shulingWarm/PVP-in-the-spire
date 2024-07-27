@@ -110,25 +110,25 @@ public class DrawPileSender {
     public static void updateDrawingCards()
     {
         //目前的抽牌堆
-//        ArrayList<AbstractCard> cardGroup = AbstractDungeon.player.drawPile.group;
-//        if(!compareCardRecord(cardGroup,drawingCards))
-//        {
-//            recordCards(cardGroup);
-//            //发送新的即将抽到的牌
-//            SocketServer server = AutomaticSocketServer.getServer();
-//            //准备每个牌的标号
-//            ArrayList<Integer> cardIdList = new ArrayList<>();
-//            for(AbstractCard eachCard : drawingCards)
-//            {
-//                //计算两边的通信哈希值
-//                int tempCode = UseCardSend.getCardCommunicationID(eachCard,server.streamHandle);
-//                //叠加升级过的字符位
-//                tempCode += eachCard.timesUpgraded*UPGRADE_LEVEL;
-//                cardIdList.add(tempCode);
-//            }
-//            drawCardEncode(server.streamHandle,cardIdList);
-//            server.send();
-//        }
+        ArrayList<AbstractCard> cardGroup = AbstractDungeon.player.drawPile.group;
+        if(!compareCardRecord(cardGroup,drawingCards))
+        {
+            recordCards(cardGroup);
+            //发送新的即将抽到的牌
+            SocketServer server = AutomaticSocketServer.getServer();
+            //准备每个牌的标号
+            ArrayList<Integer> cardIdList = new ArrayList<>();
+            for(AbstractCard eachCard : drawingCards)
+            {
+                //计算两边的通信哈希值
+                int tempCode = UseCardSend.getCardCommunicationID(eachCard);
+                //叠加升级过的字符位
+                tempCode += eachCard.timesUpgraded*UPGRADE_LEVEL;
+                cardIdList.add(tempCode);
+            }
+            drawCardEncode(server.streamHandle,cardIdList);
+            server.send();
+        }
     }
 
 }

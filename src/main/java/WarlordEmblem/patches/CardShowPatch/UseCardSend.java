@@ -1,6 +1,5 @@
 package WarlordEmblem.patches.CardShowPatch;
 
-import WarlordEmblem.AutomaticSocketServer;
 import WarlordEmblem.Events.CardInfoEvent;
 import WarlordEmblem.Events.UseCardEvent;
 import WarlordEmblem.PVPApi.Communication;
@@ -8,7 +7,6 @@ import WarlordEmblem.SocketServer;
 import WarlordEmblem.actions.FightProtocol;
 import com.evacipated.cardcrawl.modthespire.lib.SpirePatch;
 import com.evacipated.cardcrawl.modthespire.lib.SpirePostfixPatch;
-import com.evacipated.cardcrawl.modthespire.lib.SpirePrefixPatch;
 import com.megacrit.cardcrawl.cards.AbstractCard;
 import com.megacrit.cardcrawl.cards.tempCards.Expunger;
 import com.megacrit.cardcrawl.characters.AbstractPlayer;
@@ -17,7 +15,6 @@ import com.megacrit.cardcrawl.helpers.CardLibrary;
 import com.megacrit.cardcrawl.monsters.AbstractMonster;
 import com.megacrit.cardcrawl.vfx.cardManip.ShowCardBrieflyEffect;
 
-import javax.xml.crypto.Data;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -133,8 +130,7 @@ public class UseCardSend {
 
     //获得卡牌的编码，这里的特殊之处是如果卡牌是第一次发的话，顺便把卡牌的基本定义也发出去
     //这里特指的是发送用于通信的id
-    public static int getCardCommunicationID(AbstractCard card,
-         DataOutputStream streamHandle)
+    public static int getCardCommunicationID(AbstractCard card)
     {
         //判断是否已经记录过这个card
         if(!playerCardMap.containsKey(card))
@@ -157,7 +153,7 @@ public class UseCardSend {
         try
         {
             //获得卡牌的编码
-            int cardCode = getCardCommunicationID(card,streamHandle);
+            int cardCode = getCardCommunicationID(card);
             streamHandle.writeInt(FightProtocol.USE_CARD);
             //发送卡牌的编码
             streamHandle.writeInt(cardCode);
@@ -297,7 +293,7 @@ public class UseCardSend {
                 return;
             }
             //当发生卡牌使用时，把用牌的消息发送给对方
-            int cardCode = getCardCommunicationID(c,null);
+            int cardCode = getCardCommunicationID(c);
             Communication.sendEvent(new UseCardEvent(cardCode));
             updateUseTime(c);
         }

@@ -704,9 +704,6 @@ public class CharacterSelectScreenPatches
 //                            tempMonster));
 //                }
             }
-            AbstractDungeon.actionManager.addToBottom(
-                new MakeTempCardInHandAction(new Apparition(),1)
-            );
             //添加一个灭除之刃
 //            Strike_Blue tempCard = new Strike_Blue();
 //            tempCard.baseDamage = 999;

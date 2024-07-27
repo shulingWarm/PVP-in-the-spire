@@ -52,10 +52,11 @@ public class CardBox {
     //根据当前是第几个牌来计算当前的偏移量
     int getXOffsetById(int idCard)
     {
-        //如果是0的话直接返回0
-        if(idCard<3)
-            return 0;
-        return -(idCard-2);
+        //计算向左最多能放置的id
+        int maxSet = (int)(xCenter / (AbstractCard.IMG_WIDTH * SHOW_SCALE)) - 1;
+        if(maxSet > idCard)
+            return -idCard;
+        return -maxSet;
     }
 
     //获得接下来5张牌的攻击总数

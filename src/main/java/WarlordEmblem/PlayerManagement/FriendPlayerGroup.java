@@ -2,6 +2,7 @@ package WarlordEmblem.PlayerManagement;
 
 import WarlordEmblem.character.PlayerMonster;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
 
 import java.util.ArrayList;
 
@@ -30,6 +31,9 @@ public class FriendPlayerGroup {
     {
         for(PlayerMonster eachPlayer : playerList)
         {
+            eachPlayer.hb.update();
+            eachPlayer.intentHb.update();
+            eachPlayer.healthHb.update();
             eachPlayer.update();
         }
     }
@@ -41,6 +45,22 @@ public class FriendPlayerGroup {
         {
             eachPlayer.updatePowers();
         }
+    }
+
+    //获取当前正在选中的monster
+    public PlayerMonster getHoveredMonster()
+    {
+        if(AbstractDungeon.player.isDraggingCard)
+            return null;
+        for(PlayerMonster eachMonster : playerList)
+        {
+            if(eachMonster.intentHb.hovered ||
+                eachMonster.healthHb.hovered || eachMonster.hb.hovered)
+            {
+                return eachMonster;
+            }
+        }
+        return null;
     }
 
 
