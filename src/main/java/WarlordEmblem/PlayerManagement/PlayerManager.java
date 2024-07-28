@@ -4,6 +4,7 @@ import UI.ConfigPageModules.CharacterPanel;
 import UI.GridPanel;
 import WarlordEmblem.Events.AssignTeamEvent;
 import WarlordEmblem.Events.BattleInfoEvent;
+import WarlordEmblem.Events.ChangeTeamEvent;
 import WarlordEmblem.Events.ExecuteAssignTeamEvent;
 import WarlordEmblem.GlobalManager;
 import WarlordEmblem.PVPApi.Communication;
@@ -123,13 +124,32 @@ public class PlayerManager implements TeamCallback {
         if(info.isSelfPlayer() && info.idTeam < 0)
         {
             playerJoinInterface.setMainCharacter(info.configPage);
+            //发送加入房间的消息
+            Communication.sendEvent(new ExecuteAssignTeamEvent(team.idTeam));
         }
         //如果它已经在这个队伍里了，就不用操作了
         if(info.idTeam != team.idTeam)
         {
-            info.idTeam = team.idTeam;
+            //如果原来的team是合法的
+            if(info.idTeam >= 0)
+            {
+                teams[info.idTeam].removePlayer(info);
+            }
             team.addPlayer(info);
         }
+    }
+
+    //给自己更换队伍
+    public void changeTeam()
+    {
+        PlayerTeam currentTeam = getSelfTeam();
+        PlayerTeam oppositeTeam = getOppositeTeam();
+        //发送队伍换边的信号
+        Communication.sendEvent(new ChangeTeamEvent(oppositeTeam.idTeam));
+        //把自己从当前队伍中取出
+        currentTeam.removePlayer(selfPlayerInfo);
+        //加入到对面的队伍中
+        oppositeTeam.addPlayer(selfPlayerInfo);
     }
 
     //给当前的player安排队伍

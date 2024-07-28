@@ -68,6 +68,8 @@ implements ReadyButtonCallback, ChangeSideCallback {
 
     @Override
     public void pressReady(boolean readyFlag) {
+        //准备状态下禁止再换边
+        changeSideButton.disabled = readyFlag;
         //发送准备的消息
         Communication.sendEvent(new ConfigReadyEvent(readyFlag));
         //更新准备信息
@@ -78,6 +80,7 @@ implements ReadyButtonCallback, ChangeSideCallback {
 
     @Override
     public void changeSideTrigger() {
-
+        //调用global manager执行换边操作
+        GlobalManager.playerManager.changeTeam();
     }
 }

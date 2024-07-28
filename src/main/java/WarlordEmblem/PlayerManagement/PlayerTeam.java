@@ -38,7 +38,7 @@ public class PlayerTeam {
 
     public PlayerTeam(int idTeam,Color color,boolean isLeft,
                       TeamCallback teamCallback
-      )
+    )
     {
         this.idTeam = idTeam;
         this.teamColor = color;
@@ -94,12 +94,11 @@ public class PlayerTeam {
     //添加玩家
     public void addPlayer(PlayerInfo playerInfo)
     {
+        playerInfo.idTeam = this.idTeam;
         playerInfos.add(playerInfo);
         //判断这是不是本地玩家
         if(playerInfo.isSelfPlayer())
         {
-            //发送加入房间的消息
-            Communication.sendEvent(new ExecuteAssignTeamEvent(this.idTeam));
             //如果自己不是左边队伍，就交换两个grid
             if(!isLeft)
                 teamCallback.exchangeLayout();
@@ -111,6 +110,19 @@ public class PlayerTeam {
         }
         //把颜色设置成本地颜色
         playerInfo.configPage.setBoxColor(this.teamColor);
+    }
+
+    //移除玩家
+    public void removePlayer(PlayerInfo playerInfo)
+    {
+        //从set中移除
+        this.playerInfos.remove(playerInfo);
+        //判断是不是玩家
+        if(!playerInfo.isSelfPlayer())
+        {
+            //从角色的panel里面移除它
+            this.gridPanel.removePage(playerInfo.configPage);
+        }
     }
 
     public void setGridPanel(GridPanel gridPanel) {

@@ -60,6 +60,8 @@ public class GridPanel extends AbstractPage {
             //遍历每一列
             for(int idCol=0;idCol<gridWidth;++idCol)
             {
+                if(idPage >= this.pageList.size())
+                    break;
                 //给当前的page分配位置
                 allocatePageLocation(
                     this.pageList.get(idPage),idRow,idCol
@@ -78,6 +80,13 @@ public class GridPanel extends AbstractPage {
         this.pageList.add(page);
         //计算page的位置
         allocatePageLocation(page,idRow,idCol);
+    }
+
+    //移除特定的页面
+    public void removePage(AbstractPage page)
+    {
+        pageList.remove(page);
+        allocateLocation();
     }
 
     @Override
