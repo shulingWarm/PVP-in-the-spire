@@ -38,6 +38,8 @@ public class ExecuteAssignTeamEvent extends BaseEvent {
             streamHandle.writeUTF(playerInfo.getVersion());
             //发送选择玩家的类型
             streamHandle.writeUTF(playerInfo.getPlayerClass().name());
+            //发送自己的准备信息
+            streamHandle.writeBoolean(GlobalManager.playerManager.selfPlayerInfo.getReadyFlag());
         }
         catch (IOException e)
         {
@@ -65,6 +67,9 @@ public class ExecuteAssignTeamEvent extends BaseEvent {
             GlobalManager.playerManager.getPlayerInfo(tempTag).setCharacterInfo(
                 name,tempVersion, AbstractPlayer.PlayerClass.valueOf(character)
             );
+            //获取玩家的准备状态
+            boolean readyFlag = streamHandle.readBoolean();
+            GlobalManager.playerManager.updateReadyFlag(tempTag,readyFlag);
         }
         catch (IOException e)
         {

@@ -275,8 +275,6 @@ public class MultiplayerConfigPage extends AbstractPage
             currOption.setOptionId(idPage);
             //添加到panel里面
             configPanel.addNewPage(currOption);
-            //这里临时先禁止发送信息
-            currOption.sendConfigChangeFlag = false;
         }
     }
 
@@ -292,7 +290,6 @@ public class MultiplayerConfigPage extends AbstractPage
             //调用关闭页面
             this.closePageEvent.closePageEvent(this);
         }
-
     }
 
 
@@ -376,6 +373,7 @@ public class MultiplayerConfigPage extends AbstractPage
         );
         //注册回调信息
         GlobalManager.playerManager.playerJoinInterface = this;
+        GlobalManager.playerManager.selfPlayerInfo.setLobbyOwner(isOwner);
         //初始化渲染角色的控件
         this.characterPanel = new CharacterPanel();
         //给玩家管理器传递用于显示角色的两个grid
@@ -490,6 +488,10 @@ public class MultiplayerConfigPage extends AbstractPage
         if(this.ownerFlag)
         {
             GlobalManager.playerManager.assignTeam(player);
+            //发送自己的全部配置信息
+            AutomaticSocketServer server = AutomaticSocketServer.getServer();
+            sendMyConfig(server.streamHandle);
+            server.send();
         }
     }
 

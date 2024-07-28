@@ -94,11 +94,8 @@ public class MainMenuPatch {
                 PanelScreenPatch.lobbyFlag = true;
                 //初始化全局参数
                 GlobalManager.initGlobal();
-                //临时处理lobby的配置页面
-                LobbyConfig.instance = new LobbyConfig();
                 //初始化与房间相关的steam信息
                 LobbyManager.initManager();
-                LobbyScreen.instance = new LobbyScreen();
             }
             else{
                 PanelScreenPatch.lobbyFlag = false;

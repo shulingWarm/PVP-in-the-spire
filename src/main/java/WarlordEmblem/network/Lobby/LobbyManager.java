@@ -1,5 +1,6 @@
 package WarlordEmblem.network.Lobby;
 
+import UI.ConfigPageModules.MultiplayerConfigPage;
 import UI.Events.LobbyListCallback;
 import UI.Lobby.LobbyConfig;
 import WarlordEmblem.AutomaticSocketServer;

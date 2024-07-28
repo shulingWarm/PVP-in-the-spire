@@ -61,13 +61,18 @@ public class ReadyButton extends UserButton {
         }
     }
 
+    //手动设置准备的状态
+    public void setReadyFlag(boolean readyFlag)
+    {
+        this.readyFlag = readyFlag;
+        updateButtonText();
+    }
+
+
     //点击事件
     @Override
     public void clickEvent() {
-        //更新目前是否处于准备状态
-        readyFlag = !readyFlag;
-        //更新按钮上的字
-        updateButtonText();
+        setReadyFlag(!readyFlag);
         //如果有回调函数，就执行回调
         if(this.readyButtonCallback!=null)
         {

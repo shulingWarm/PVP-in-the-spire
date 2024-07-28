@@ -125,4 +125,21 @@ implements ReadyButtonCallback, ChangeSideCallback, ClickCallback {
             GlobalManager.playerManager.selfPlayerInfo.changeCharacter(1);
         }
     }
+
+    @Override
+    public void setOwnerUI(boolean isOwner) {
+        super.setOwnerUI(isOwner);
+        this.allowReady(!isOwner);
+    }
+
+    //设置为允许准备
+    public void allowReady(boolean allowFlag)
+    {
+        if(allowFlag)
+            this.readyButton.disabled = false;
+        else {
+            this.readyButton.setReadyFlag(false);
+            this.readyButton.disabled = true;
+        }
+    }
 }

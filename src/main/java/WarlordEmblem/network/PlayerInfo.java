@@ -30,6 +30,9 @@ public class PlayerInfo {
     //卡牌信息管理器
     public PlayerCardManager cardManager;
 
+    //是否为房主
+    public boolean isLobbyOwner = false;
+
     //对方的最大生命值，这是用来初始化敌人生命的
     public int maxHealth;
     public int currentHealth;
@@ -54,9 +57,6 @@ public class PlayerInfo {
 
     //进入房间的时间，用于判断谁是先手
     public long enterTime;
-
-    //用于判断对方是否已经准备好了
-    public boolean isReady;
 
     //能量上限
     public int maxEnergy;
@@ -112,6 +112,11 @@ public class PlayerInfo {
     {
         //指定config里面的ready状态
         configPage.setReady(readyFlag);
+    }
+
+    public boolean getReadyFlag()
+    {
+        return configPage.getReadyFlag();
     }
 
     //获得player的class
@@ -187,4 +192,11 @@ public class PlayerInfo {
         return this.playerMonster.isEndTurn();
     }
 
+    //设置是否为房主
+    public void setLobbyOwner(boolean ownerFlag)
+    {
+        this.isLobbyOwner = ownerFlag;
+        //设置config页面里面的房主信息
+        this.configPage.setOwnerUI(ownerFlag);
+    }
 }

@@ -159,6 +159,8 @@ public class PlayerManager implements TeamCallback {
         //获取人数最少的team
         PlayerTeam minTeam = getMinTeam();
         Communication.sendEvent(new AssignTeamEvent(info.playerTag, minTeam.idTeam));
+        //设置房主为不可准备
+        selfPlayerInfo.selfPlayerPage.allowReady(false);
     }
 
     @Override
@@ -224,6 +226,9 @@ public class PlayerManager implements TeamCallback {
     //更新我方player的准备状态
     public void updateReadyFlag(PlayerInfo info,boolean readyFlag)
     {
+        //如果准备状态没有发生变化就什么都不需要做
+        if(info.getReadyFlag() == readyFlag)
+            return;
         //设置准备状态
         info.setReadyFlag(readyFlag);
         if(readyFlag)
@@ -239,6 +244,12 @@ public class PlayerManager implements TeamCallback {
             playerJoinInterface.enterGame();
             this.readyNum = 0;
             resetPlayerTexture();
+        }
+        else if(selfPlayerInfo.isLobbyOwner)
+        {
+            //判断是否可以开启准备了
+            selfPlayerInfo.selfPlayerPage.allowReady(playerInfoMap.size() - 1 == readyNum &&
+                teams[0].getPlayerNum() > 0 && teams[1].getPlayerNum() > 0);
         }
     }
 

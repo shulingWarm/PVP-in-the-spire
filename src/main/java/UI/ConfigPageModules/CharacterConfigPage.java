@@ -229,4 +229,10 @@ public class CharacterConfigPage extends AbstractPage {
                 this.versionText.render(sb);
         }
     }
+
+    //设置owner的特殊ui
+    public void setOwnerUI(boolean isOwner)
+    {
+
+    }
 }

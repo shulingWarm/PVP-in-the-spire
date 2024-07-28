@@ -13,16 +13,20 @@ public class SelfPlayerInfo extends PlayerInfo {
 
     //当前选择的class id
     public int idClass = 0;
+    //自身的self player page
+    public SelfPlayerPage selfPlayerPage = null;
 
     //config页面改为使用玩家独立的渲染页面
     @Override
     public void initConfigPage() {
-        this.configPage = new SelfPlayerPage();
+        this.selfPlayerPage = new SelfPlayerPage();
+        this.configPage = this.selfPlayerPage;
     }
 
     public SelfPlayerInfo()
     {
         super(GlobalManager.myPlayerTag);
+        initConfigPage();
         //设置当前选择的class id
         CharacterManager.initArrayList();
         this.idClass = CharacterManager.getClassId(GlobalManager.defaultClass);
