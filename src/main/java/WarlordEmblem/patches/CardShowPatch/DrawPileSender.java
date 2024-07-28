@@ -1,6 +1,8 @@
 package WarlordEmblem.patches.CardShowPatch;
 
 import WarlordEmblem.AutomaticSocketServer;
+import WarlordEmblem.Events.DrawCardUpdateEvent;
+import WarlordEmblem.PVPApi.Communication;
 import WarlordEmblem.SocketServer;
 import WarlordEmblem.actions.FightProtocol;
 import com.megacrit.cardcrawl.cards.AbstractCard;
@@ -114,8 +116,6 @@ public class DrawPileSender {
         if(!compareCardRecord(cardGroup,drawingCards))
         {
             recordCards(cardGroup);
-            //发送新的即将抽到的牌
-            SocketServer server = AutomaticSocketServer.getServer();
             //准备每个牌的标号
             ArrayList<Integer> cardIdList = new ArrayList<>();
             for(AbstractCard eachCard : drawingCards)
@@ -126,8 +126,7 @@ public class DrawPileSender {
                 tempCode += eachCard.timesUpgraded*UPGRADE_LEVEL;
                 cardIdList.add(tempCode);
             }
-            drawCardEncode(server.streamHandle,cardIdList);
-            server.send();
+            Communication.sendEvent(new DrawCardUpdateEvent(cardIdList));
         }
     }
 

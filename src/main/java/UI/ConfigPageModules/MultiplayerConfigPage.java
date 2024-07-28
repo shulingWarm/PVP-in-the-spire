@@ -210,42 +210,10 @@ public class MultiplayerConfigPage extends AbstractPage
 
     }
 
-    //发送获取对方角色的请求
-    public void requestOppositeCharacter(DataOutputStream stream)
-    {
-        //发送请求信息的数据头
-        try
-        {
-            stream.writeInt(ConfigProtocol.REQUEST_CHARACTER);
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-    }
-
     //获取我方的名字
     public String getMyName()
     {
         return SteamManager.getMyName();
-    }
-
-    //给对方发送自己的形象
-    public void sendMyCharacter(DataOutputStream streamHandle,
-                                AbstractPlayer.PlayerClass playerClass)
-    {
-        try
-        {
-            //发送数据头
-            streamHandle.writeInt(ConfigProtocol.UPDATE_CHARACTER);
-            streamHandle.writeUTF(playerClass.name());
-            //发送自己的名字
-            streamHandle.writeUTF(this.getMyName());
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
     }
 
     //发送自己的配置信息

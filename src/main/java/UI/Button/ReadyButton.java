@@ -66,10 +66,6 @@ public class ReadyButton extends UserButton {
     public void clickEvent() {
         //更新目前是否处于准备状态
         readyFlag = !readyFlag;
-        //发送点击状态的更新
-        SocketServer server = AutomaticSocketServer.getServer();
-        sendReadyInfo(server.streamHandle);
-        server.send();
         //更新按钮上的字
         updateButtonText();
         //如果有回调函数，就执行回调

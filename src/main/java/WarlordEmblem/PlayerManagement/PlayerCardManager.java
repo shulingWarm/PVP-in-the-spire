@@ -58,4 +58,11 @@ public class PlayerCardManager {
         convertToCardList(cardIdList,this.cardRecorder.cardList);
         cardRecorder.justUpdateFlag = true;
     }
+
+    //更新即将抽到的牌
+    public void updateDrawPile(ArrayList<Integer> cardIdList)
+    {
+        convertToCardList(cardIdList,this.cardRecorder.drawingCards);
+        cardRecorder.justUpdateFlag = true;
+    }
 }

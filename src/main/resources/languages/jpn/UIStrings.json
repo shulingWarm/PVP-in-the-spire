@@ -32,6 +32,11 @@
       "キャンセル"
     ]
   },
+  "ChangeSideButton": {
+    "TEXT": [
+      "変化チーム"
+    ]
+  },
   "InvincibleRate": {
     "TEXT": [
       "無敵の値",

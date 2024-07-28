@@ -32,6 +32,11 @@
       "Cancel"
     ]
   },
+  "ChangeSideButton": {
+    "TEXT": [
+      "Change team"
+    ]
+  },
   "InvincibleRate": {
     "TEXT": [
       "Amount of Invincible",

@@ -32,6 +32,11 @@
       "取消准备"
     ]
   },
+  "ChangeSideButton": {
+    "TEXT": [
+      "换边"
+    ]
+  },
   "InvincibleRate": {
     "TEXT": [
       "坚不可摧层数",
