@@ -134,6 +134,7 @@ public class CharacterConfigPage extends AbstractPage {
         else {
             characterBox = new CharacterBox(this.x + this.width * 0.5f,
                     getCharacterBoxY(),characterInfo,resetScaleFlag);
+            characterInfo.playPlayerSound();
             characterBox.setFlipHorizontal(this.flipFlag);
             this.nameLabel = new TextLabel(this.x,this.y + this.height*0.98f,
                     this.width,Settings.HEIGHT*0.01f,
@@ -184,6 +185,7 @@ public class CharacterConfigPage extends AbstractPage {
                 this.x + this.width * 0.5f,
                 getCharacterBoxY(), characterInfo,resetScaleFlag
         );
+        characterInfo.playPlayerSound();
         this.characterBox.setFlipHorizontal(this.flipFlag);
     }
 

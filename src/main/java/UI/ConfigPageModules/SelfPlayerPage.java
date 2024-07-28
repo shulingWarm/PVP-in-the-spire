@@ -4,21 +4,27 @@ import UI.Button.ChangeSideButton;
 import UI.Button.ChangeSideCallback;
 import UI.Button.ReadyButton;
 import UI.Button.ReadyButtonCallback;
+import UI.Button.WithUpdate.BaseUpdateButton;
+import UI.Events.ClickCallback;
 import WarlordEmblem.Events.ConfigReadyEvent;
 import WarlordEmblem.GlobalManager;
 import WarlordEmblem.PVPApi.Communication;
 import WarlordEmblem.helpers.FontLibrary;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.megacrit.cardcrawl.core.Settings;
+import com.megacrit.cardcrawl.helpers.ImageMaster;
 
 //用来渲染本地玩家的界面
 public class SelfPlayerPage extends CharacterConfigPage
-implements ReadyButtonCallback, ChangeSideCallback {
+implements ReadyButtonCallback, ChangeSideCallback, ClickCallback {
 
     //用于更新准备状态的按钮
     public ReadyButton readyButton;
     //用于换边的按钮
     public ChangeSideButton changeSideButton;
+    //切换角色的按钮
+    public BaseUpdateButton leftButton;
+    public BaseUpdateButton rightButton;
 
     public SelfPlayerPage()
     {
@@ -37,6 +43,18 @@ implements ReadyButtonCallback, ChangeSideCallback {
             FontLibrary.getBaseFont(),this
         );
         this.readyButton.readyButtonCallback = this;
+        //初始化切换角色的按钮
+        this.leftButton = new BaseUpdateButton(
+            this.x + this.width * 0.05f,this.y + this.height * 0.83f,
+                this.width*0.25f,this.height*0.2f,
+                "",FontLibrary.getBaseFont(), ImageMaster.CF_LEFT_ARROW,this
+        );
+        this.rightButton = new BaseUpdateButton(
+            this.width - (leftButton.x - this.x) - leftButton.width + this.x,
+                leftButton.y,
+                leftButton.width, leftButton.height, leftButton.text,
+                FontLibrary.getBaseFont(),ImageMaster.CF_RIGHT_ARROW,this
+        );
     }
 
     @Override
@@ -57,6 +75,15 @@ implements ReadyButtonCallback, ChangeSideCallback {
         this.readyButton.render(sb);
         //渲染换边用的按钮
         this.changeSideButton.render(sb);
+        this.leftButton.render(sb);
+        this.rightButton.render(sb);
+    }
+
+    @Override
+    public void update() {
+        super.update();
+        this.leftButton.update();
+        this.rightButton.update();
     }
 
     @Override
@@ -64,6 +91,8 @@ implements ReadyButtonCallback, ChangeSideCallback {
         super.move(xChange, yChange);
         readyButton.move(xChange,yChange);
         changeSideButton.move(xChange,yChange);
+        this.leftButton.move(xChange,yChange);
+        this.rightButton.move(xChange,yChange);
     }
 
     @Override
@@ -82,5 +111,18 @@ implements ReadyButtonCallback, ChangeSideCallback {
     public void changeSideTrigger() {
         //调用global manager执行换边操作
         GlobalManager.playerManager.changeTeam();
+    }
+
+    @Override
+    public void clickEvent(BaseUpdateButton button) {
+        //判断是左边还是右边
+        if(button == leftButton)
+        {
+            GlobalManager.playerManager.selfPlayerInfo.changeCharacter(-1);
+        }
+        else if(button == rightButton)
+        {
+            GlobalManager.playerManager.selfPlayerInfo.changeCharacter(1);
+        }
     }
 }

@@ -276,6 +276,7 @@ public class WarlordEmblem implements
         Communication.registerEvent(new UpdateHandCardEvent(null));
         Communication.registerEvent(new DrawCardUpdateEvent(null));
         Communication.registerEvent(new ChangeTeamEvent(0));
+        Communication.registerEvent(new UpdateCharacterEvent(null));
 
         //初始化随机怪物的事件
         RandMonsterHelper.initMonsterList();
