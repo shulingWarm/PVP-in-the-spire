@@ -420,7 +420,6 @@ public class LobbyConfig extends AbstractPage
             //调用关闭页面
             this.closePageEvent.closePageEvent(this);
         }
-
     }
 
     //取消显示对方的角色信息

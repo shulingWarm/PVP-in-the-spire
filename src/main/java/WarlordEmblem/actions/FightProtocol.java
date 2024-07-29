@@ -38,6 +38,7 @@ public class FightProtocol extends AbstractActionProtocol
             if(eventId < eventList.size())
             {
                 BaseEvent event = eventList.get(eventId);
+                System.out.printf("Receive event: %s\n",event.eventId);
                 event.decode(stream);
             }
             else {

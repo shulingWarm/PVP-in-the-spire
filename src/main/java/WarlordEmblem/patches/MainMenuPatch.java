@@ -96,6 +96,7 @@ public class MainMenuPatch {
                 GlobalManager.initGlobal();
                 //初始化与房间相关的steam信息
                 LobbyManager.initManager();
+                LobbyScreen.instance = new LobbyScreen();
             }
             else{
                 PanelScreenPatch.lobbyFlag = false;

@@ -3,10 +3,14 @@ package WarlordEmblem.network.Lobby;
 import UI.ConfigPageModules.MultiplayerConfigPage;
 import UI.Events.LobbyListCallback;
 import UI.Lobby.LobbyConfig;
+import UI.Lobby.LobbyScreen;
 import WarlordEmblem.AutomaticSocketServer;
 import WarlordEmblem.GlobalManager;
+import WarlordEmblem.LobbyChatServer;
 import WarlordEmblem.SteamSocketServer;
+import WarlordEmblem.helpers.FieldHelper;
 import WarlordEmblem.patches.PanelScreenPatch;
+import WarlordEmblem.patches.steamConnect.SteamManager;
 import com.codedisaster.steamworks.SteamID;
 import com.codedisaster.steamworks.SteamMatchmaking;
 import com.megacrit.cardcrawl.core.CardCrawlGame;
@@ -80,13 +84,43 @@ public class LobbyManager {
         matchmaking.requestLobbyList();
     }
 
+    //获取房间中的所有玩家
+    //不包括自身
+    public static ArrayList<SteamID> getLobbyPlayers()
+    {
+        //自身的account
+        int selfAccount = SteamManager.getSelfSteamId().getAccountID();
+        ArrayList<SteamID> steamIdList = new ArrayList<>();
+        int playerNum = matchmaking.getNumLobbyMembers(currentLobby.lobbyId);
+        for(int idPlayer=0;idPlayer<playerNum;++idPlayer)
+        {
+            SteamID tempId = matchmaking.getLobbyMemberByIndex(currentLobby.lobbyId,idPlayer);
+            if(tempId.getAccountID() != selfAccount)
+            {
+                steamIdList.add(tempId);
+            }
+        }
+        return steamIdList;
+    }
+
     //成功进入到房间时的情况
     public static void onLobbyEnter(PVPLobby lobby)
     {
         //把已经进入的房间记为当前的房间
         currentLobby = lobby;
-        //初始化p2p连接
-        initP2PConnection();
+        initLobbyChatServer();
+        //从lobby中获取所有房间中已有的玩家
+        ArrayList<SteamID> steamIdList = getLobbyPlayers();
+        for(SteamID eachId : steamIdList)
+        {
+            LobbyChatServer.instance.registerPlayer(eachId);
+        }
+    }
+
+    //初始化lobby chat server
+    public static void initLobbyChatServer()
+    {
+        AutomaticSocketServer.globalServer = new LobbyChatServer();
     }
 
     //调用这个函数的时候已经在主界面了，这个时候直接强制回到lobby里面

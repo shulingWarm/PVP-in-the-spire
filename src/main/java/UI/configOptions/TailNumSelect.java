@@ -6,6 +6,7 @@ import UI.TextLabel;
 import WarlordEmblem.AutomaticSocketServer;
 import WarlordEmblem.GlobalManager;
 import WarlordEmblem.SocketServer;
+import WarlordEmblem.helpers.FontLibrary;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.megacrit.cardcrawl.core.CardCrawlGame;
@@ -37,7 +38,7 @@ public class TailNumSelect extends AbstractConfigOption implements DropdownMenuL
         this.height = Settings.HEIGHT * 0.06f;
         //初始化用于显示的文本
         textLabel=new TextLabel(x,y,this.width * 0.8f,this.height,
-            uiStrings.TEXT[0], AbstractConfigOption.getOptionFont());
+            uiStrings.TEXT[0], FontLibrary.getFontWithSize(24));
         //把文本设置成左对齐
         textLabel.isLeftAlign = true;
         initOptions();
@@ -49,7 +50,7 @@ public class TailNumSelect extends AbstractConfigOption implements DropdownMenuL
         ArrayList<String> options = new ArrayList<>();
         for(int idRow=0;idRow<=10;++idRow)
             options.add(String.valueOf(idRow));
-        dropdownMenu = new DropdownMenu(this,options,getOptionFont(), Color.WHITE);
+        dropdownMenu = new DropdownMenu(this,options,FontLibrary.getFontWithSize(24), Color.WHITE);
         this.sendConfigChangeFlag = false;
         dropdownMenu.setSelectedIndex(GlobalManager.beginTailNum);
         this.sendConfigChangeFlag = true;

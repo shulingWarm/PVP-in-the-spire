@@ -5,6 +5,7 @@ import UI.ConfigPage;
 import UI.Events.ConfigChangeEvent;
 import UI.PlainBox;
 import WarlordEmblem.actions.ConfigProtocol;
+import WarlordEmblem.helpers.FontLibrary;
 import WarlordEmblem.patches.connection.InputIpBox;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -47,7 +48,7 @@ public class AbstractConfigOption extends AbstractPage{
     {
         if(optionFont==null)
         {
-            optionFont = InputIpBox.generateFont(24);
+            optionFont = FontLibrary.getFontWithSize(24);
         }
         return optionFont;
     }

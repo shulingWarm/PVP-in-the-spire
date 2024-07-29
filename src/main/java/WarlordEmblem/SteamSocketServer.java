@@ -32,7 +32,7 @@ public class SteamSocketServer extends AutomaticSocketServer {
         return value;
     }
 
-    public void convertByteBufferToStream(ByteBuffer buffer,int byteSize)
+    public static DataInputStream convertByteBufferToStream(ByteBuffer buffer,int byteSize)
     {
         byte[] tempArray = new byte[byteSize];
         //把buffer数据转换到数组里
@@ -51,7 +51,7 @@ public class SteamSocketServer extends AutomaticSocketServer {
 //        }
         ByteArrayInputStream tempByteStream = new ByteArrayInputStream(tempArray);
         //初始化输入流
-        this.inputHandle = new DataInputStream(tempByteStream);
+        return new DataInputStream(tempByteStream);
     }
 
     //判断是否有数据可用于接收的重载，这里判断接收数据的时候，
@@ -71,7 +71,7 @@ public class SteamSocketServer extends AutomaticSocketServer {
         if(receiveBuffer.remaining()>0 && byteSize>0)
         {
             //把byteBuffer转换成inputStream
-            convertByteBufferToStream(receiveBuffer,byteSize);
+            this.inputHandle = convertByteBufferToStream(receiveBuffer,byteSize);
             return super.isDataAvailable();
         }
         return false;
@@ -84,10 +84,10 @@ public class SteamSocketServer extends AutomaticSocketServer {
         inputHandle = null;
     }
 
-    public void appendEmptyMessage()
+    public static void appendEmptyMessage(DataOutputStream stream)
     {
         try{
-            streamHandle.writeInt(0);
+            stream.writeInt(0);
         }
         catch (IOException e)
         {
@@ -100,7 +100,7 @@ public class SteamSocketServer extends AutomaticSocketServer {
     public void send()
     {
         //在数据最后面补足一个0,传字符串的时候它可能凑不够4个字节
-        appendEmptyMessage();
+        appendEmptyMessage(this.streamHandle);
         super.send();
         //把输入流里面的数据转换到ByteBuffer
         byte[] tempByteArray = byteSendStream.toByteArray();

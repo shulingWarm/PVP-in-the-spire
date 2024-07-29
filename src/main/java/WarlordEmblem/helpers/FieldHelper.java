@@ -7,6 +7,22 @@ import java.lang.reflect.Field;
 //要从类里面强行获取私有成员时用这个class
 public class FieldHelper {
 
+    //获得一个类的私有静态变量
+    public static <RetType> RetType getPrivateStaticValue(Class<?> clazz,
+                  String fieldName)
+    {
+        try
+        {
+            Field field = clazz.getDeclaredField(fieldName);
+            field.setAccessible(true);
+            return (RetType) field.get(null);
+        }
+        catch (NoSuchFieldException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     /**
      * 模板函数，通过反射获取指定对象的（包括父类）私有成员变量的值
      * @param obj 需要获取成员变量的对象实例
@@ -29,7 +45,6 @@ public class FieldHelper {
                 field.setAccessible(true);
 
                 // 获取并转换为指定的泛型类型
-                @SuppressWarnings("unchecked")
                 RetType fieldValue = (RetType) field.get(obj);
 
                 return fieldValue;

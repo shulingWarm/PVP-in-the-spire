@@ -1,5 +1,6 @@
 package WarlordEmblem.patches.steamConnect;
 
+import WarlordEmblem.helpers.FieldHelper;
 import com.codedisaster.steamworks.*;
 import com.megacrit.cardcrawl.integrations.steam.SFCallback;
 import com.megacrit.cardcrawl.integrations.steam.SUCallback;
@@ -25,6 +26,10 @@ public class SteamManager {
     public static SteamNetworking steamNetworking=null;
     //目标好友的id
     public static SteamID targetId = null;
+    //自身的steam user
+    public static SteamUser steamUser;
+    //自身的steam id
+    public static SteamID selfSteamId;
     //固定使用的steamChannel
     public static final int STEAM_CHANNEL = 10500;
 
@@ -94,12 +99,21 @@ public class SteamManager {
         if(steamFriends==null)
         {
             steamFriends = new SteamFriends(new SFCallback());
-        }
-        if(steamNetworking==null)
-        {
             steamNetworking = new SteamNetworking(new SteamCallback());
+            //初始化自身的steam user
+            steamUser = FieldHelper.getPrivateStaticValue(
+                SteamIntegration.class,"steamUser"
+            );
+            selfSteamId = steamUser.getSteamID();
         }
     }
+
+    //获取自身的steam id
+    public static SteamID getSelfSteamId()
+    {
+        return selfSteamId;
+    }
+
 
     //初始化接收者的steamID
     public static void initReceiverID()

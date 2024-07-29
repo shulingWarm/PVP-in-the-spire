@@ -3,7 +3,10 @@ package UI.Lobby;
 import UI.*;
 import UI.Button.WithUpdate.BaseUpdateButton;
 import UI.Button.WithUpdate.LobbyButton;
+import UI.ConfigPageModules.MultiplayerConfigPage;
 import UI.Events.*;
+import WarlordEmblem.AutomaticSocketServer;
+import WarlordEmblem.LobbyChatServer;
 import WarlordEmblem.helpers.FontLibrary;
 import WarlordEmblem.network.Lobby.LobbyManager;
 import WarlordEmblem.network.Lobby.PVPLobby;
@@ -54,6 +57,9 @@ public class LobbyScreen extends AbstractPage
     //当前正想加入的房间
     public PVPLobby goingLobby = null;
 
+    //当前的配置页面
+    public MultiplayerConfigPage configPage = null;
+
     public LobbyScreen()
     {
         //初始化返回按钮
@@ -91,6 +97,8 @@ public class LobbyScreen extends AbstractPage
         this.initPanelButtons();
         //初始化steam连接 后面转换为p2p连接的时候也会用到
         SteamManager.prepareNetworking();
+        //初始化config page
+        this.configPage = new MultiplayerConfigPage(false);
     }
 
     //初始化按钮，这里的按钮仅仅是用来测试按钮UI的
@@ -121,9 +129,11 @@ public class LobbyScreen extends AbstractPage
     public void createSuccessEvent(int infoFlag) {
         System.out.println("getting success message!!");
         //把覆盖页面改成配置页面
-        this.overlapPage = LobbyConfig.instance;
-        //初始化页面的网络状态
-        LobbyConfig.instance.initNetworkStage(true,this);
+        this.configPage.initNetworkStage(true,this);
+        this.overlapPage = configPage;
+        //初始化通信协议
+        LobbyManager.initLobbyChatServer();
+        configPage.open();
     }
 
     //准备进入目标房间
@@ -212,12 +222,12 @@ public class LobbyScreen extends AbstractPage
             System.out.println("Enter room init p2p");
             //调用初始化加入房间的函数
             LobbyManager.onLobbyEnter(this.goingLobby);
-            //初始化界面，进入游戏配置界面
-            this.overlapPage = LobbyConfig.instance;
-            //初始化房间的网络状态，这里属于是刚刚进入一个新房间，一进去就可以发送打招呼信息
-            LobbyConfig.instance.initNetworkStage(false,this);
+            this.overlapPage = this.configPage;
             //删除当前正在进入的房间
             this.goingLobby = null;
+            //调用open操作
+            configPage.initNetworkStage(false,this);
+            configPage.open();
         }
     }
 

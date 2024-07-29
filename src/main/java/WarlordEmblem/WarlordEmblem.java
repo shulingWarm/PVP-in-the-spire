@@ -10,6 +10,7 @@ import WarlordEmblem.EffectTransport.XYTransporter;
 import WarlordEmblem.Events.*;
 import WarlordEmblem.PVPApi.Communication;
 import WarlordEmblem.card.*;
+import WarlordEmblem.helpers.FontLibrary;
 import WarlordEmblem.helpers.RandMonsterHelper;
 import WarlordEmblem.relics.BlockGainer;
 import WarlordEmblem.relics.OrangePelletsChange;
@@ -277,6 +278,9 @@ public class WarlordEmblem implements
         Communication.registerEvent(new DrawCardUpdateEvent(null));
         Communication.registerEvent(new ChangeTeamEvent(0));
         Communication.registerEvent(new UpdateCharacterEvent(null));
+
+        FontLibrary.getBaseFont();
+        FontLibrary.getFontWithSize(24);
 
         //初始化随机怪物的事件
         RandMonsterHelper.initMonsterList();

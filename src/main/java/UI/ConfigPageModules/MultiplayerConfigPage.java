@@ -7,15 +7,13 @@ import UI.Button.WithUpdate.BaseUpdateButton;
 import UI.Chat.ChatFoldPage;
 import UI.Events.*;
 import UI.configOptions.*;
-import WarlordEmblem.AutomaticSocketServer;
+import WarlordEmblem.*;
 import WarlordEmblem.Events.RegisterPlayerEvent;
-import WarlordEmblem.GameManager;
-import WarlordEmblem.GlobalManager;
 import WarlordEmblem.PVPApi.Communication;
 import WarlordEmblem.PlayerManagement.PlayerJoinInterface;
 import WarlordEmblem.Room.FriendManager;
-import WarlordEmblem.SocketServer;
 import WarlordEmblem.actions.ConfigProtocol;
+import WarlordEmblem.actions.FightProtocol;
 import WarlordEmblem.character.CharacterInfo;
 import WarlordEmblem.helpers.FontLibrary;
 import WarlordEmblem.network.Lobby.LobbyManager;
@@ -185,6 +183,8 @@ public class MultiplayerConfigPage extends AbstractPage
         {
             LobbyManager.destroyRoom(LobbyManager.currentLobby.lobbyId);
         }
+        //准备战斗相关的协议
+        GlobalManager.messageTriggerInterface = new FightProtocol();
         //准备进入游戏
         GameManager.prepareEnterGame();
     }
@@ -301,23 +301,17 @@ public class MultiplayerConfigPage extends AbstractPage
     //处理房间人员变化的回调
     @Override
     public void onMemberChanged(SteamID personId, SteamMatchmaking.ChatMemberStateChange memberStage) {
-        //判断现在的状态是不是-1
-        if(this.networkStage == -1 &&
-                memberStage == SteamMatchmaking.ChatMemberStateChange.Entered)
-        {
-            System.out.println("member enter!!");
-            //更新pvp的连接状态
-            LobbyManager.initP2PConnection(personId);
-            //把当前的状态更新成零，后面开始准备初始化pvp了
-            this.networkStage = 0;
-        }
         //如果是有玩家退出了，就移交房主
-        else if(memberStage != SteamMatchmaking.ChatMemberStateChange.Entered)
+        if(memberStage != SteamMatchmaking.ChatMemberStateChange.Entered)
         {
             //回退到刚加入房间的状态
             this.initNetworkStage(true,this.closePageEvent);
             //关闭准备按钮
             resetReadyButton();
+        }
+        else {
+            //在通信内容里面注册这个玩家
+            LobbyChatServer.instance.registerPlayer(personId);
         }
     }
 
@@ -382,7 +376,14 @@ public class MultiplayerConfigPage extends AbstractPage
             this.characterPanel.rightCharacters
         );
         initConfigOption();
+    }
+
+    //刚刚打开页面时的操作
+    @Override
+    public void open() {
         InputHelper.initialize();
+        //登记config信息的处理
+        GlobalManager.messageTriggerInterface = new ConfigProtocol();
         //给本地玩家申请座位，或者说是直接注册座位
         requestSait();
     }
@@ -392,16 +393,8 @@ public class MultiplayerConfigPage extends AbstractPage
                                  ClosePageEvent closeCallback
     )
     {
-        //如果是房主的话，一开始是不发送hello信息的
-        if(isOwner)
-            this.networkStage = -1;
-        else
-        {
-            this.networkStage = 0;
-        }
         //记录关闭页面的回调函数
         this.closePageEvent = closeCallback;
-        SocketServer.oppositeCharacter = null;
         //记录是否为房主
         this.ownerFlag = isOwner;
         //在steam的回调函数里注册人员变化时的操作
@@ -411,48 +404,8 @@ public class MultiplayerConfigPage extends AbstractPage
     //网络状态更新
     public void networkUpdate()
     {
-        --sendHelloFrame;
-        //判断现在是不是等待打招呼的状态
-        if(networkStage == 0 && sendHelloFrame <= 0)
-        {
-            sendHelloFrame = 50;
-            //判断是否需要发送hello
-            if(SteamConnector.sendSteamHello())
-            {
-                //将网络状态置为下一个状态，也就是监听状态
-                this.networkStage = 1;
-                //加快加载角色数据的过程
-                this.sendHelloFrame = 10;
-                //把自己的信息置为配置页面的回调
-                ConfigProtocol.configChangeCallback = this;
-                ConfigProtocol.characterCallback = this;
-                System.out.println("sending my character");
-                //发送我方角色
-                AutomaticSocketServer server = AutomaticSocketServer.getServer();
-                server.send();
-                //判断自己是不是房主，如果是房主的话就同步给对方自己的所有配置信息
-                if(this.ownerFlag)
-                {
-                    this.sendMyConfig(server.streamHandle);
-                    server.send();
-                }
-            }
-        }
-        //判断网络状态是不是监听状态
-        else if(this.networkStage == 1)
-        {
-            //调用config阶段的监听工作
-            ConfigProtocol.readData(AutomaticSocketServer.getServer());
-            //判断是不是到了一个重复发送hello的周期
-            if(sendHelloFrame <= 0)
-            {
-                sendHelloFrame = 100;
-                //发送一次hello信息，防止始终没有初始化连接成功
-                SteamConnector.onlySendHello();
-            }
-        }
+        ConfigProtocol.readData(AutomaticSocketServer.getServer());
     }
-
 
     @Override
     public void update() {

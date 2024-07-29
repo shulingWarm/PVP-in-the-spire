@@ -73,7 +73,7 @@ public class LobbyCallback implements SteamMatchmakingCallback {
 
     @Override
     public void onLobbyChatMessage(SteamID steamID, SteamID steamID1, SteamMatchmaking.ChatEntryType chatEntryType, int i) {
-
+        System.out.printf("Receive chat message %d\n",i);
     }
 
     @Override
