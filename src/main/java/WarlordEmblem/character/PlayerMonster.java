@@ -46,6 +46,8 @@ public class PlayerMonster extends AbstractMonster {
     public BattleCardPanel battleCardPanel;
     //是否为友军
     public boolean friendFlag;
+    //判断是否需要渲染手牌
+    public boolean renderCardFlag = false;
 
     //用于判断当前的monster是否负责做pause操作
     //它是在敌方回合阻塞玩家的出牌的
@@ -186,6 +188,11 @@ public class PlayerMonster extends AbstractMonster {
 
     @Override
     public void render(SpriteBatch sb) {
+        //判断是否需要渲染卡牌信息
+        if(this.renderCardFlag)
+        {
+            this.battleCardPanel.render(sb);
+        }
         super.render(sb);
         //判断是否有人物需要渲染
         if(this.renderPlayer!=null)
@@ -200,13 +207,6 @@ public class PlayerMonster extends AbstractMonster {
         //渲染充能球
         this.orbManager.render(sb);
         this.stance.render(sb);
-    }
-
-    @Override
-    public void renderTip(SpriteBatch sb) {
-        super.renderTip(sb);
-        //渲染角色信息的panel
-        this.battleCardPanel.render(sb);
     }
 
     //这属于战斗结束时的操作了，最后再说
@@ -414,6 +414,12 @@ public class PlayerMonster extends AbstractMonster {
         System.out.printf("%s start of turn\n",this.renderPlayer.chosenClass.name());
         super.applyStartOfTurnPowers();
         this.endTurnFlag = false;
+    }
+
+    //标记为显示手牌
+    public void setRenderCard(boolean renderFlag)
+    {
+        this.renderCardFlag = renderFlag;
     }
 
     //判断是否为回合结束时的状态

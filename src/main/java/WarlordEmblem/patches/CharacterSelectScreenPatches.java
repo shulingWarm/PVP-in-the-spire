@@ -372,9 +372,6 @@ public class CharacterSelectScreenPatches
             {
                 return;
             }
-            //刚刚进入房间的时候，执行清除我方小怪
-            //正式代码中不需要有这一句，这里仅仅是为了做节目效果
-            FriendManager.instance.battleBeginInit();
 
             System.out.println("player entry!!!");
             //记录自己是否有符文圆顶，这决定了自己是不是能看见对面的牌

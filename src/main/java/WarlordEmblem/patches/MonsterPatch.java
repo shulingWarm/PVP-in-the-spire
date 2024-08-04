@@ -14,28 +14,28 @@ import com.megacrit.cardcrawl.monsters.exordium.Cultist;
 public class MonsterPatch {
 
     //截取monster更改意图的事件
-    @SpirePatch(clz = AbstractMonster.class,method = "setMove",
-        paramtypez = {String.class,byte.class, AbstractMonster.Intent.class,
-        int.class,int.class,boolean.class})
-    public static class MonsterSetMovePatch
-    {
-        @SpirePrefixPatch
-        public static void fix(AbstractMonster __instance,
-           String moveName, byte nextMove, AbstractMonster.Intent intent, int baseDamage, int multiplier, boolean isMultiDamage)
-        {
-            int idMonster = FriendManager.instance.getIdByMonster(__instance);
-            //判断敌人是否有映射关系
-            if(idMonster >= 0)
-            {
-                if(!isMultiDamage)
-                    multiplier = 1;
-                //发送意图更改的事件
-                Communication.sendEvent(
-                    new MonsterIntentChangeEvent(idMonster,baseDamage,multiplier,intent)
-                );
-            }
-        }
-    }
+//    @SpirePatch(clz = AbstractMonster.class,method = "setMove",
+//        paramtypez = {String.class,byte.class, AbstractMonster.Intent.class,
+//        int.class,int.class,boolean.class})
+//    public static class MonsterSetMovePatch
+//    {
+//        @SpirePrefixPatch
+//        public static void fix(AbstractMonster __instance,
+//           String moveName, byte nextMove, AbstractMonster.Intent intent, int baseDamage, int multiplier, boolean isMultiDamage)
+//        {
+//            int idMonster = FriendManager.instance.getIdByMonster(__instance);
+//            //判断敌人是否有映射关系
+//            if(idMonster >= 0)
+//            {
+//                if(!isMultiDamage)
+//                    multiplier = 1;
+//                //发送意图更改的事件
+//                Communication.sendEvent(
+//                    new MonsterIntentChangeEvent(idMonster,baseDamage,multiplier,intent)
+//                );
+//            }
+//        }
+//    }
 
     //触发monster伤害的事件，怪物受到伤害时，通知敌方友军执行伤害事件
     @SpirePatch(clz = AbstractMonster.class, method = "damage")
@@ -46,8 +46,7 @@ public class MonsterPatch {
            DamageInfo info)
         {
             //判断现在是否需要传导伤害
-            if(ActionNetworkPatches.stopSendAttack ||
-                !FriendManager.instance.judgeOppositeFriend(__instance))
+            if(ActionNetworkPatches.stopSendAttack)
                 return;
             //发送伤害事件
             Communication.sendEvent(new DamageOnMonsterEvent(__instance,info));

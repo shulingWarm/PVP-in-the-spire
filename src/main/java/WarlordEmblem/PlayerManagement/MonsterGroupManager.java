@@ -2,6 +2,7 @@ package WarlordEmblem.PlayerManagement;
 
 import WarlordEmblem.Events.EndOfRoundEvent;
 import WarlordEmblem.PVPApi.Communication;
+import WarlordEmblem.character.PlayerMonster;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
 import com.megacrit.cardcrawl.monsters.AbstractMonster;
@@ -14,10 +15,23 @@ public class MonsterGroupManager extends MonsterGroup {
 
     //友军的管理信息
     FriendPlayerGroup friendPlayerGroup = null;
+    //目前正在渲染手牌的player
+    public PlayerMonster currentRenderCardPlayer = null;
 
     public MonsterGroupManager(AbstractMonster[] input)
     {
         super(input);
+        //遍历每个monster
+        for(AbstractMonster monster : input)
+        {
+            //寻找第一个player monster
+            if(monster instanceof PlayerMonster)
+            {
+                this.currentRenderCardPlayer = (PlayerMonster) monster;
+                this.currentRenderCardPlayer.setRenderCard(true);
+                break;
+            }
+        }
     }
 
     public void setFriendPlayerGroup(FriendPlayerGroup friendPlayerGroup)
@@ -62,6 +76,14 @@ public class MonsterGroupManager extends MonsterGroup {
         super.update();
         this.friendPlayerGroup.update();
         this.checkFriendHover();
+        //判断是否需要更新渲染的monster
+        if(this.hoveredMonster != this.currentRenderCardPlayer &&
+                this.hoveredMonster instanceof PlayerMonster)
+        {
+            this.currentRenderCardPlayer.setRenderCard(false);
+            this.currentRenderCardPlayer = (PlayerMonster) this.hoveredMonster;
+            this.currentRenderCardPlayer.setRenderCard(true);
+        }
     }
 
     @Override

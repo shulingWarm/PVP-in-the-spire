@@ -242,8 +242,6 @@ public class MultiplayerConfigPage extends AbstractPage
         optionList.add(new CardPoolOption(optionWidth));
         //设置地图资源层数
         optionList.add(new MapRowNumConfig(optionWidth));
-        //注册添加小怪的选项
-        optionList.add(new FriendMonsterConfig(optionWidth));
         //添加败者奖励配置
         optionList.add((new LoserRewardOption(optionWidth)));
         //遍历每个需要被添加的page

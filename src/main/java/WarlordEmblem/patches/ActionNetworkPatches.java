@@ -237,16 +237,8 @@ public class ActionNetworkPatches {
             {
                 return;
             }
-            //判断造成伤害的是不是敌方友军
-            if(FriendManager.instance.judgeOppositeFriend(info.owner))
-            {
-                //发送敌方友军对自己的伤害
-                Communication.sendEvent(new MonsterDamageEvent(info));
-            }
-            else {
-                //调用发送伤害信息，到底用不用发送，那里会判定
-                onAttackSend(info,__instance);
-            }
+            //调用发送伤害信息，到底用不用发送，那里会判定
+            onAttackSend(info,__instance);
         }
     }
 
