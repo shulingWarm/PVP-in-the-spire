@@ -45,7 +45,7 @@ public class DrawCardUpdateEvent extends BaseEvent {
         //解码对应的player info
         PlayerInfo info = GlobalManager.playerManager.decodePlayerInfo(streamHandle);
         //如果是和自己同阵营的就不必处理了
-        if(info.idTeam == GlobalManager.playerManager.selfPlayerInfo.idTeam)
+        if(info == null || info.idTeam == GlobalManager.playerManager.selfPlayerInfo.idTeam)
             return;
         //依次读取手牌
         try

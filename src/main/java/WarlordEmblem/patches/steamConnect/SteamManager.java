@@ -1,15 +1,13 @@
 package WarlordEmblem.patches.steamConnect;
 
+import WarlordEmblem.Other.Pair;
+import WarlordEmblem.SteamSocketServer;
 import WarlordEmblem.helpers.FieldHelper;
 import com.codedisaster.steamworks.*;
 import com.megacrit.cardcrawl.integrations.steam.SFCallback;
-import com.megacrit.cardcrawl.integrations.steam.SUCallback;
 import com.megacrit.cardcrawl.integrations.steam.SteamIntegration;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.nio.ByteBuffer;
 
 //steam的连接管理器，但最开始的时候只是读取一个文本来判断一下需要查找哪个玩家
@@ -31,7 +29,9 @@ public class SteamManager {
     //自身的steam id
     public static SteamID selfSteamId;
     //固定使用的steamChannel
-    public static final int STEAM_CHANNEL = 10500;
+    public static final int STEAM_CHANNEL = 0;
+    //仅仅用来接收消息的id,消息是谁发来的根本不重要
+    public static SteamID receiverId = null;
 
     //初始化steam相关的全局变量
     public static void initManager()
@@ -59,12 +59,40 @@ public class SteamManager {
         }
     }
 
-    //从指定的steamid里面接收数据，存储到指定的buffer里面
-    public static int readDataToByteBuffer(SteamID id, ByteBuffer dstBuffer)
+    //直接读取数据，生成byte buffer
+    public static Pair<DataInputStream, SteamID> directReadData()
     {
+        //判断是否有消息可以接收
+        int [] bufferSize = new int[1];
+        steamNetworking.isP2PPacketAvailable(STEAM_CHANNEL,bufferSize);
         try
         {
-            return steamNetworking.readP2PPacket(id,dstBuffer,STEAM_CHANNEL);
+            if(bufferSize[0] != 0)
+            {
+                //动态创建byte buffer数据
+                ByteBuffer dstBuffer = ByteBuffer.allocateDirect(bufferSize[0]);
+                bufferSize[0] = steamNetworking.readP2PPacket(receiverId,dstBuffer,STEAM_CHANNEL);
+                return new Pair<>(SteamSocketServer.convertByteBufferToStream(dstBuffer,bufferSize[0]),
+                        receiverId);
+            }
+        }
+        catch (SteamException e)
+        {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    //从指定的steamid里面接收数据，存储到指定的buffer里面
+    public static int readDataToByteBuffer(ByteBuffer dstBuffer)
+    {
+        //判断是否有消息可以接收
+        int [] bufferSize = new int[1];
+        steamNetworking.isP2PPacketAvailable(STEAM_CHANNEL,bufferSize);
+        try
+        {
+            if(bufferSize[0] != 0)
+                return steamNetworking.readP2PPacket(receiverId,dstBuffer,STEAM_CHANNEL);
         }
         catch (SteamException e)
         {
@@ -105,6 +133,7 @@ public class SteamManager {
                 SteamIntegration.class,"steamUser"
             );
             selfSteamId = steamUser.getSteamID();
+            receiverId = new SteamID();
         }
     }
 

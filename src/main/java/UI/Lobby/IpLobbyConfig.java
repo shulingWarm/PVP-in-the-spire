@@ -39,8 +39,6 @@ public class IpLobbyConfig extends MultiplayerConfigPage {
         MeunScreenFadeout.connectOk = true;
         //准备正常的游戏协议
         GlobalManager.messageTriggerInterface = new FightProtocol();
-        //初始化友军管理器
-        FriendManager.initGlobalManager();
         //这次是真的可以了，准备进入游戏
         //RenderPatch.delayBox = new DelayBox();
     }

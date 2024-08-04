@@ -108,6 +108,14 @@ implements ReadyButtonCallback, ChangeSideCallback, ClickCallback {
     }
 
     @Override
+    public void setReady(boolean newStage) {
+        super.setReady(newStage);
+        System.out.println("Self player page setReady!!");
+        this.readyButton.setReadyFlag(newStage);
+        changeSideButton.disabled = newStage;
+    }
+
+    @Override
     public void changeSideTrigger() {
         //调用global manager执行换边操作
         GlobalManager.playerManager.changeTeam();

@@ -63,11 +63,11 @@ public class PlayerMonster extends AbstractMonster {
     //标记为回合结束时的状态
     public boolean endTurnFlag = false;
 
-    public PlayerMonster(boolean pauseFlag,float x,float y,int playerTag,boolean sameTeam,
+    public PlayerMonster(String name,boolean pauseFlag,float x,float y,int playerTag,boolean sameTeam,
          PlayerCardManager cardManager
     )
     {
-        super("test","PlayerMonster",10,0, 0, 180.0F, 240.0F, (String)null,x,y);
+        super(name,"PlayerMonster",10,0, 0, 180.0F, 240.0F, (String)null,x,y);
         //随便载入一个贴图，用于演示基本的人物效果
         //这是为了确保渲染父类的时候不报错
         this.loadAnimation("images/characters/watcher/idle/skeleton.atlas", "images/characters/watcher/idle/skeleton.json", 0.0F);

@@ -21,6 +21,7 @@ import WarlordEmblem.relics.PVPTail;
 import basemod.DevConsole;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.codedisaster.steamworks.SteamAPI;
 import com.evacipated.cardcrawl.modthespire.lib.SpirePatch;
 import com.evacipated.cardcrawl.modthespire.lib.SpirePrefixPatch;
 import com.megacrit.cardcrawl.characters.AbstractPlayer;
@@ -41,9 +42,9 @@ public class GlobalManager {
     //初始的坚不可摧比例
     public static int invincibleRate = 2;
     //版本号
-    public static final String VERSION = "v0.4.12";
+    public static final String VERSION = "v0.5.0";
     //玩家的名字，如果选用steam渠道的话就会通过这里个性
-    public static final String myName = "user";
+    public static String myName = "user";
     //是否启用customMOD,例如现开套牌
     public static boolean useModFlag = false;
     //最后决定使用的mod
@@ -122,20 +123,25 @@ public class GlobalManager {
         //初始化尾巴的链表
         PVPTail.initList();
         //初始化当前我方的tag
-        myPlayerTag = randGenerator.nextInt();
+        if(SteamAPI.isSteamRunning())
+        {
+            SteamManager.prepareNetworking();
+            myPlayerTag = SteamManager.getSelfSteamId().getAccountID();
+            myName = SteamManager.getMyName();
+        }
+        else
+            myPlayerTag = randGenerator.nextInt();
         //如果没有默认选择的角色，就选择为战士
         if(defaultClass == null)
         {
             defaultClass = AbstractPlayer.PlayerClass.IRONCLAD;
         }
-        //初始化玩家管理器
-        playerManager = new PlayerManager();
     }
 
     public static void initGlobal()
     {
         //初始化steam管理器相关的全局变量
-        SteamManager.initManager();
+        // SteamManager.initManager();
         AutomaticSocketServer.initAutomatic();
         //初始的尾巴数量
         beginTailNum = 1;
@@ -159,6 +165,8 @@ public class GlobalManager {
         loserRewardFlag = 0;
         //以下是与网络无关的设置
         initGameGlobal();
+        //初始化玩家管理器
+        playerManager = new PlayerManager();
     }
 
     //选择人物时点击启程的操作，点击的时候会确定游戏即将开始

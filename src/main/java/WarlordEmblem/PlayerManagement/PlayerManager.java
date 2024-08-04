@@ -64,6 +64,7 @@ public class PlayerManager implements TeamCallback {
     {
         if(!playerInfoMap.containsKey(playerTag))
         {
+            System.out.printf("Register new player %d\n",playerTag);
             PlayerInfo tempInfo = new PlayerInfo(playerTag);
             playerInfoMap.put(playerTag,tempInfo);
             //调用config页面
@@ -226,15 +227,20 @@ public class PlayerManager implements TeamCallback {
     //更新我方player的准备状态
     public void updateReadyFlag(PlayerInfo info,boolean readyFlag)
     {
+        System.out.printf("Update %s ready %b",info.getName(),readyFlag);
         //如果准备状态没有发生变化就什么都不需要做
         if(info.getReadyFlag() == readyFlag)
+        {
+            System.out.println("Update failed");
             return;
+        }
         //设置准备状态
         info.setReadyFlag(readyFlag);
         if(readyFlag)
             readyNum++;
         else
             readyNum--;
+        System.out.printf("Player num: %d %d\n",playerInfoMap.size(),readyNum);
         if(readyNum == playerInfoMap.size() && teams[0].getPlayerNum() > 0
                 && teams[1].getPlayerNum() > 0
         )
@@ -291,6 +297,33 @@ public class PlayerManager implements TeamCallback {
         }
     }
 
+    //自己离开房间
+    public void selfLeave()
+    {
+        //移除除了自己之外的所有玩家
+        playerInfoMap.clear();
+        playerInfoMap.put(GlobalManager.myPlayerTag,selfPlayerInfo);
+        //把两个队伍的内容都清空
+        teams[0].removeAllPlayer();
+        teams[1].removeAllPlayer();
+        //把自己的team设置成待定
+        selfPlayerInfo.idTeam = -1;
+        selfPlayerInfo.setReadyFlag(false);
+        this.readyNum = 0;
+    }
+
+    //玩家离开时的操作
+    public void onPlayerLeave(int playerTag)
+    {
+        PlayerInfo info = getPlayerInfo(playerTag);
+        if(info == null)
+            return;
+        updateReadyFlag(info,false);
+        if(info.idTeam >= 0)
+            teams[info.idTeam].removePlayer(info);
+        playerInfoMap.remove(playerTag);
+    }
+
     //编码player
     public void encodePlayer(DataOutputStream stream)
     {
@@ -327,6 +360,18 @@ public class PlayerManager implements TeamCallback {
             return info.playerMonster;
         return null;
     }
+
+    //重新设置每个player在config里面的位置
+    public void resetPlayerConfigLocation(){
+        //遍历每个player info
+        for(PlayerInfo eachInfo : playerInfoMap.values())
+        {
+            eachInfo.resetPlayerLocation();
+        }
+        //重置当前的准备状态
+        this.readyNum = 0;
+    }
+
 
 
 }

@@ -69,4 +69,15 @@ public class SelfPlayerInfo extends PlayerInfo {
     public boolean isDead() {
         return GlobalManager.getBattleInfo().selfDeadFlag;
     }
+
+    //对于自身的玩家什么都不需要做
+    @Override
+    public void resetPlayerLocation() {
+        if(this.configPage != null)
+        {
+            this.configPage.resetReadyStage();
+            //同时还要设置一下房主的状态
+            this.configPage.setOwnerUI(this.isLobbyOwner);
+        }
+    }
 }

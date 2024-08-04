@@ -128,12 +128,11 @@ public class LobbyScreen extends AbstractPage
     @Override
     public void createSuccessEvent(int infoFlag) {
         System.out.println("getting success message!!");
-        //把覆盖页面改成配置页面
-        this.configPage.initNetworkStage(true,this);
-        this.overlapPage = configPage;
         //初始化通信协议
         LobbyManager.initLobbyChatServer();
+        this.configPage.initNetworkStage(true,this);
         configPage.open();
+        this.overlapPage = configPage;
     }
 
     //准备进入目标房间

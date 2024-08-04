@@ -92,6 +92,7 @@ public class PlayerInfo {
                                  AbstractPlayer.PlayerClass playerClass
     )
     {
+        System.out.printf("Set player name %s\n",name);
         //用玩家类型初始化角色信息
         this.characterInfo = new CharacterInfo(playerClass);
         this.configPage.setPlayerInfo(characterInfo,name,version);
@@ -127,10 +128,11 @@ public class PlayerInfo {
 
 
     //更新角色信息
-    public void updateCharacter(AbstractPlayer.PlayerClass playerClass)
+    //正常情况下，都需要检查新的角色类别是否和之前相同，防止频繁更新
+    public void updateCharacter(AbstractPlayer.PlayerClass playerClass,boolean checkEqual)
     {
         //判断是否需要更新
-        if(characterInfo!= null && characterInfo.getPlayerClass() != playerClass)
+        if(characterInfo!= null && ((!checkEqual) || characterInfo.getPlayerClass() != playerClass))
         {
             characterInfo = new CharacterInfo(playerClass);
             //更新config页面里面的角色数据
@@ -138,11 +140,17 @@ public class PlayerInfo {
         }
     }
 
+    public void updateCharacter(AbstractPlayer.PlayerClass playerClass)
+    {
+        this.updateCharacter(playerClass,true);
+    }
+
+
     //将当前player的信息打包成monster
     public AbstractMonster generateMonster(int idMonster)
     {
         //每次调用时都会生成一个新的monster
-        this.playerMonster = new PlayerMonster(true,
+        this.playerMonster = new PlayerMonster(this.getName(),true,
                 (260.f)*idMonster,100*idMonster,playerTag,false,cardManager);
         return playerMonster;
     }
@@ -151,7 +159,7 @@ public class PlayerInfo {
     //目前的过程基本和敌方的monster是一致的，等有需要改变的地方再说
     public PlayerMonster getFriendMonster()
     {
-        this.playerMonster = new PlayerMonster(false,-1170,100,playerTag,
+        this.playerMonster = new PlayerMonster(this.getName(),false,-1170,100,playerTag,
                 true,cardManager);
         return playerMonster;
     }
@@ -198,5 +206,19 @@ public class PlayerInfo {
         this.isLobbyOwner = ownerFlag;
         //设置config页面里面的房主信息
         this.configPage.setOwnerUI(ownerFlag);
+    }
+
+    //重置player贴图的位置
+    //这包括了重置准备按钮
+    public void resetPlayerLocation()
+    {
+        //重置角色贴图的位置
+        this.updateCharacter(this.getPlayerClass(),false);
+        if(this.configPage != null)
+        {
+            this.configPage.resetReadyStage();
+            //同时还要设置一下房主的状态
+            this.configPage.setOwnerUI(this.isLobbyOwner);
+        }
     }
 }

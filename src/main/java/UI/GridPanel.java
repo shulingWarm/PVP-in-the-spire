@@ -89,6 +89,12 @@ public class GridPanel extends AbstractPage {
         allocateLocation();
     }
 
+    //移除所有的page
+    public void removeAllPages()
+    {
+        this.pageList.clear();
+    }
+
     @Override
     public void render(SpriteBatch sb) {
         //依次渲染每个page

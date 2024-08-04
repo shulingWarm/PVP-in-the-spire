@@ -38,6 +38,8 @@ public class UpdateCharacterEvent extends BaseEvent {
     @Override
     public void decode(DataInputStream streamHandle) {
         PlayerInfo info = GlobalManager.playerManager.decodePlayerInfo(streamHandle);
+        if(info == null)
+            return;
         try
         {
             String className = streamHandle.readUTF();

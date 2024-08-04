@@ -11,6 +11,7 @@ import WarlordEmblem.*;
 import WarlordEmblem.Events.RegisterPlayerEvent;
 import WarlordEmblem.PVPApi.Communication;
 import WarlordEmblem.PlayerManagement.PlayerJoinInterface;
+import WarlordEmblem.PlayerManagement.PlayerManager;
 import WarlordEmblem.Room.FriendManager;
 import WarlordEmblem.actions.ConfigProtocol;
 import WarlordEmblem.actions.FightProtocol;
@@ -42,9 +43,8 @@ import java.util.ArrayList;
 
 //有多个玩家的config页面
 public class MultiplayerConfigPage extends AbstractPage
-        implements UpdateCharacter,
+        implements
         ConfigChangeEvent,
-        ReadyButtonCallback,
         ClickCallback,
         MemberChangeEvent,
         PlayerJoinInterface
@@ -91,15 +91,6 @@ public class MultiplayerConfigPage extends AbstractPage
     public boolean ownerFlag = false;
     //发送hello信息的计数，每过一段时间再发送一次
     public int sendHelloFrame = 10;
-
-    @Override
-    public void updateCharacter(AbstractPlayer.PlayerClass playerClass,String versionInfo) {
-        System.out.printf("update: %s\n",playerClass.name());
-        //记录敌方的角色信息
-        SocketServer.oppositeCharacter = new CharacterInfo(playerClass);
-        //播放选择角色时的音效
-        SocketServer.oppositeCharacter.playPlayerSound();
-    }
 
     public void receiveConfigChange(DataInputStream streamHandle)
     {
@@ -174,10 +165,10 @@ public class MultiplayerConfigPage extends AbstractPage
         //判断是否有mod需要使用
         this.checkGlobalMods();
         MeunScreenFadeout.connectOk = true;
+        //指定当前选中的角色
+        CardCrawlGame.chosenCharacter = GlobalManager.playerManager.selfPlayerInfo.getPlayerClass();
         //初始化友军管理器
         FriendManager.initGlobalManager();
-        //这次是真的可以了，准备进入游戏
-        RenderPatch.delayBox = new DelayBox();
         //判断自己是不是房主，如果是房主的话，就把房间标记成消失
         if(this.ownerFlag)
         {
@@ -192,17 +183,6 @@ public class MultiplayerConfigPage extends AbstractPage
     //判断是否两边都准备了
     public void judgeAllReady()
     {
-    }
-
-    //点击准备按钮时的回调函数
-    public void pressReady(boolean readyFlag)
-    {
-        //遍历所有的option,把它设置成可交互或不可交互
-        for(AbstractConfigOption eachOption : optionList)
-        {
-            eachOption.setEnable(!readyFlag);
-        }
-        judgeAllReady();
     }
 
     @Override
@@ -305,20 +285,18 @@ public class MultiplayerConfigPage extends AbstractPage
         if(memberStage != SteamMatchmaking.ChatMemberStateChange.Entered)
         {
             //回退到刚加入房间的状态
-            this.initNetworkStage(true,this.closePageEvent);
+            this.initNetworkStage(LobbyManager.amIOwner(),this.closePageEvent);
+            //移除这个玩家
+            LobbyChatServer.instance.removePlayer(personId);
             //关闭准备按钮
             resetReadyButton();
+            //移除该玩家
+            GlobalManager.playerManager.onPlayerLeave(personId.getAccountID());
         }
         else {
             //在通信内容里面注册这个玩家
             LobbyChatServer.instance.registerPlayer(personId);
         }
-    }
-
-    //初始化所有角色的列表
-    public void initPlayerClassList()
-    {
-
     }
 
     //申请team座位的逻辑
@@ -340,8 +318,6 @@ public class MultiplayerConfigPage extends AbstractPage
     public MultiplayerConfigPage(boolean isOwner)
     {
         this.ownerFlag = isOwner;
-        //初始化所有角色的列表
-        initPlayerClassList();
         configPanel = new BasePanel(
                 Settings.WIDTH*0.3F,Settings.HEIGHT*0.1f,
                 Settings.WIDTH*0.4F,Settings.HEIGHT*0.8f
@@ -351,8 +327,6 @@ public class MultiplayerConfigPage extends AbstractPage
         panelBackground.x = configPanel.x;
         panelBackground.y = configPanel.y;
         panelBackground.texture = ImageMaster.WHITE_SQUARE_IMG;
-        //设置自己的回调结果
-        ConfigProtocol.characterCallback = this;
         ConfigProtocol.configChangeCallback = this;
         //初始化返回按钮
         this.backButton = new BaseUpdateButton(
@@ -395,6 +369,8 @@ public class MultiplayerConfigPage extends AbstractPage
     {
         //记录关闭页面的回调函数
         this.closePageEvent = closeCallback;
+        //把自身设置为owner
+        GlobalManager.playerManager.selfPlayerInfo.setLobbyOwner(isOwner);
         //记录是否为房主
         this.ownerFlag = isOwner;
         //在steam的回调函数里注册人员变化时的操作

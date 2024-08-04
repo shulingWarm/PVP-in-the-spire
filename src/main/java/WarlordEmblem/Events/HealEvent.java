@@ -36,7 +36,8 @@ public class HealEvent extends BaseEvent {
         {
             PlayerMonster playerMonster = GlobalManager.playerManager.decodePlayer(streamHandle);
             int tempAmount = streamHandle.readInt();
-            playerMonster.heal(tempAmount);
+            if(playerMonster != null)
+                playerMonster.heal(tempAmount);
         }
         catch (IOException e)
         {

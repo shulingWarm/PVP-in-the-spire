@@ -1,7 +1,6 @@
 package WarlordEmblem;
 
 import WarlordEmblem.patches.steamConnect.SteamManager;
-import com.badlogic.gdx.utils.DataInput;
 import com.codedisaster.steamworks.SteamID;
 
 import java.io.*;
@@ -66,7 +65,7 @@ public class SteamSocketServer extends AutomaticSocketServer {
         }
         //从steam端接收数据，如果有数据就存储到inputHandle里面
         receiveBuffer.clear();
-        int byteSize = SteamManager.readDataToByteBuffer(receiver,receiveBuffer);
+        int byteSize = SteamManager.readDataToByteBuffer(receiveBuffer);
         //如果读取到了数据，说明有可用的数据
         if(receiveBuffer.remaining()>0 && byteSize>0)
         {

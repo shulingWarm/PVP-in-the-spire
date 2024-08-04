@@ -198,4 +198,13 @@ public class PlayerTeam {
             return null;
         return monsterList.get(MathUtils.random(0,monsterList.size()-1));
     }
+
+    //移除所有玩家
+    public void removeAllPlayer()
+    {
+        this.playerInfos.clear();
+        //移除显示界面里面的玩家
+        this.gridPanel.removeAllPages();
+    }
+
 }

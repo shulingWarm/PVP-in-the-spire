@@ -159,7 +159,7 @@ public class CreateLobbyPage extends AbstractPage
             WaitPage.getInstance().init(uiStrings.TEXT[5],this);
             this.overlapPage = WaitPage.getInstance();
             //如果点击的是创建房间，那么就执行创建房间的逻辑
-            LobbyManager.matchmaking.createLobby(SteamMatchmaking.LobbyType.Public,2);
+            LobbyManager.matchmaking.createLobby(SteamMatchmaking.LobbyType.Public,4);
         }
 
     }

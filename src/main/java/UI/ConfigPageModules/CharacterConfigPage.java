@@ -148,6 +148,8 @@ public class CharacterConfigPage extends AbstractPage {
     //获取名字
     public String getName()
     {
+        if(nameLabel == null)
+            return "null";
         return nameLabel.text;
     }
 
@@ -234,5 +236,12 @@ public class CharacterConfigPage extends AbstractPage {
     public void setOwnerUI(boolean isOwner)
     {
 
+    }
+
+    //重置准备状态
+    public void resetReadyStage()
+    {
+        //设置为未准备的状态
+        this.setReady(false);
     }
 }
