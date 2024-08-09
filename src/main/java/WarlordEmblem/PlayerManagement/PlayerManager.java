@@ -100,7 +100,9 @@ public class PlayerManager implements TeamCallback {
     //获取指定的player info
     public PlayerInfo getPlayerInfo(int playerTag)
     {
-        return playerInfoMap.get(playerTag);
+        if(playerInfoMap.containsKey(playerTag))
+            return playerInfoMap.get(playerTag);
+        return null;
     }
 
     //这是真的在执行分配操作

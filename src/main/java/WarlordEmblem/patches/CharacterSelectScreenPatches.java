@@ -701,7 +701,7 @@ public class CharacterSelectScreenPatches
 //                            tempMonster));
 //                }
             }
-            //添加一个灭除之刃
+//            //添加一个灭除之刃
 //            Strike_Blue tempCard = new Strike_Blue();
 //            tempCard.baseDamage = 999;
 //            tempCard.damage = 999;
@@ -1101,7 +1101,7 @@ public class CharacterSelectScreenPatches
             }
             saveNodeY = AbstractDungeon.getCurrMapNode().y;
             //debug的时候打开这里，这样可以直接进入boss房间
-            AbstractDungeon.getCurrMapNode().y = 2;
+            //AbstractDungeon.getCurrMapNode().y = 2;
             //如果当前到了3层说明可以进boss房间了
             if(saveNodeY>=FakeEnding.ROW_NUM-1)
             {

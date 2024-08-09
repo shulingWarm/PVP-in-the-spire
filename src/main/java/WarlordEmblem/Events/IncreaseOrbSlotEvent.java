@@ -37,6 +37,8 @@ public class IncreaseOrbSlotEvent extends BaseEvent {
         try
         {
             PlayerMonster playerMonster = GlobalManager.playerManager.decodePlayer(streamHandle);
+            if(playerMonster == null)
+                return;
             int slotNum = streamHandle.readInt();
             if(slotNum == -1)
                 playerMonster.decreaseOrbSlot();

@@ -38,6 +38,8 @@ public class ChangeTeamEvent extends BaseEvent {
     public void decode(DataInputStream streamHandle) {
         //解码对应的player
         PlayerInfo info = GlobalManager.playerManager.decodePlayerInfo(streamHandle);
+        if(info == null)
+            return;
         try
         {
             int tempTeamId = streamHandle.readInt();

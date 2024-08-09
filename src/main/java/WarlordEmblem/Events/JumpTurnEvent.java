@@ -23,6 +23,8 @@ public class JumpTurnEvent extends BaseEvent {
     @Override
     public void decode(DataInputStream streamHandle) {
         PlayerMonster monster = GlobalManager.playerManager.decodePlayer(streamHandle);
+        if(monster == null)
+            return;
         if(!monster.hasPower("Barricade"))
         {
             if(monster.hasCaliper)

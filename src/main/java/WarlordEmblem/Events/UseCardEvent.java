@@ -41,6 +41,10 @@ public class UseCardEvent extends BaseEvent {
         try
         {
             PlayerMonster monster = GlobalManager.playerManager.decodePlayer(streamHandle);
+            if(monster == null)
+            {
+                return;
+            }
             int cardCode = streamHandle.readInt();
             AbstractCard tempCard = monster.playerCardManager.getCard(cardCode);
             if(tempCard != null)

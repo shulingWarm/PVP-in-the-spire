@@ -23,6 +23,8 @@ public class DeadEvent extends BaseEvent {
     @Override
     public void decode(DataInputStream streamHandle) {
         PlayerInfo info = GlobalManager.playerManager.decodePlayerInfo(streamHandle);
+        if(info == null)
+            return;
         //在battle信息里面记录角色死亡
         GlobalManager.getBattleInfo().updateDeadInfo(info);
     }

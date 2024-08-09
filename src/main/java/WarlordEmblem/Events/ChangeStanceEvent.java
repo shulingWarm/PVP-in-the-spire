@@ -66,6 +66,8 @@ public class ChangeStanceEvent extends BaseEvent {
         try
         {
             PlayerMonster playerMonster = GlobalManager.playerManager.decodePlayer(streamHandle);
+            if(playerMonster == null)
+                return;
             String tempId = streamHandle.readUTF();
             playerMonster.changeStance(generateStance(tempId,playerMonster));
         }

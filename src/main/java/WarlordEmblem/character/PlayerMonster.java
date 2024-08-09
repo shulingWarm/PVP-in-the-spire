@@ -411,7 +411,6 @@ public class PlayerMonster extends AbstractMonster {
     //回合开始时，标记为已经开始回合
     @Override
     public void applyStartOfTurnPowers() {
-        System.out.printf("%s start of turn\n",this.renderPlayer.chosenClass.name());
         super.applyStartOfTurnPowers();
         this.endTurnFlag = false;
     }

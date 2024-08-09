@@ -44,6 +44,8 @@ public class UpdateHandCardEvent extends BaseEvent {
     public void decode(DataInputStream streamHandle) {
         //解码对应的player info
         PlayerInfo info = GlobalManager.playerManager.decodePlayerInfo(streamHandle);
+        if(info == null)
+            return;
         //依次读取手牌
         try
         {

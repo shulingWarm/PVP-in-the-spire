@@ -26,6 +26,7 @@ public class EndOfRoundEvent extends BaseEvent {
     @Override
     public void decode(DataInputStream streamHandle) {
         PlayerMonster monster = GlobalManager.playerManager.decodePlayer(streamHandle);
-        monster.endOfRoundTrigger();
+        if(monster != null)
+            monster.endOfRoundTrigger();
     }
 }

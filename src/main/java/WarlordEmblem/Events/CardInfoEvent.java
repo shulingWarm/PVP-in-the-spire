@@ -53,6 +53,8 @@ public class CardInfoEvent extends BaseEvent {
         {
             //解码出对应的玩家
             PlayerInfo info = GlobalManager.playerManager.decodePlayerInfo(streamHandle);
+            if(info == null)
+                return;
             //接收卡牌的名称
             String cardName = streamHandle.readUTF();
             //接收卡牌升级过的次数
