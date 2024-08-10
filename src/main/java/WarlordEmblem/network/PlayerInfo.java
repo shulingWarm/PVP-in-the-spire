@@ -173,6 +173,7 @@ public class PlayerInfo {
                 characterInfo,
                 this.tailNum,
                 this.beginOrbNum,
+                this.maxEnergy,
                 this.hasCaliper > 0
         );
     }

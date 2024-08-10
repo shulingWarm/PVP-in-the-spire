@@ -109,6 +109,7 @@ public class PlayerMonster extends AbstractMonster {
        CharacterInfo characterInfo,
        int tailNum, //尾巴的数量
        int maxOrbNum, //初始的球位数量
+       int maxEnergy, //最大能量
        boolean hasCaliper
     )
     {
@@ -129,6 +130,8 @@ public class PlayerMonster extends AbstractMonster {
         }
         this.showHealthBar();
         this.healthBarUpdatedEvent();
+        //初始化角色的能量信息
+        this.battleCardPanel.energyPanel.init(this.renderPlayer,maxEnergy);
     }
 
     //生成球位
@@ -407,6 +410,11 @@ public class PlayerMonster extends AbstractMonster {
         }
     }
 
+    //设置当前的能量
+    public void setCurrEnergy(int currEnergy)
+    {
+        this.battleCardPanel.setEnergy(currEnergy);
+    }
 
     //回合开始时，标记为已经开始回合
     @Override
@@ -433,5 +441,8 @@ public class PlayerMonster extends AbstractMonster {
         //对充能球位置的更新
         this.orbManager.update(animX,animY);
         this.stance.update();
+        //对能量框相关的更新
+        if(renderCardFlag)
+            this.battleCardPanel.update();
     }
 }

@@ -1,6 +1,7 @@
 package WarlordEmblem.patches;
 
 import UI.Chat.ChatFoldPage;
+import WarlordEmblem.patches.CardShowPatch.EnergyUpdateSender;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.evacipated.cardcrawl.modthespire.lib.SpirePatch;
 import com.evacipated.cardcrawl.modthespire.lib.SpirePostfixPatch;
@@ -30,6 +31,8 @@ public class DungeonPatch {
         {
             //更新聊天框
             ChatFoldPage.getInstance().update();
+            //检查当前的能量信息
+            EnergyUpdateSender.updatePlayerEnergy();
         }
 
     }
