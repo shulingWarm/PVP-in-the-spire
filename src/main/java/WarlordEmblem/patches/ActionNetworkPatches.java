@@ -1400,26 +1400,26 @@ public class ActionNetworkPatches {
         );
     }
 
-    //移除所有格挡的操作
-    @SpirePatch(clz = RemoveAllBlockAction.class, method = SpirePatch.CONSTRUCTOR)
-    public static class RemoveAllBlockSend
-    {
-        @SpirePostfixPatch
-        public static void fix(RemoveAllBlockAction __instance,AbstractCreature target, AbstractCreature source)
-        {
-            //触发的时候发送相关的信息
-            if(SocketServer.USE_NETWORK)
-            {
-                //这个只需要单方面发就行，不然就死循环了
-                if(FightProtocol.endReadFlag)
-                {
-                    AutomaticSocketServer server = AutomaticSocketServer.getServer();
-                    removeAllBlockEncode(server.streamHandle,target,source);
-                    server.send();
-                }
-            }
-        }
-    }
+//    //移除所有格挡的操作
+//    @SpirePatch(clz = RemoveAllBlockAction.class, method = SpirePatch.CONSTRUCTOR)
+//    public static class RemoveAllBlockSend
+//    {
+//        @SpirePostfixPatch
+//        public static void fix(RemoveAllBlockAction __instance,AbstractCreature target, AbstractCreature source)
+//        {
+//            //触发的时候发送相关的信息
+//            if(SocketServer.USE_NETWORK)
+//            {
+//                //这个只需要单方面发就行，不然就死循环了
+//                if(FightProtocol.endReadFlag)
+//                {
+//                    AutomaticSocketServer server = AutomaticSocketServer.getServer();
+//                    removeAllBlockEncode(server.streamHandle,target,source);
+//                    server.send();
+//                }
+//            }
+//        }
+//    }
 
     //对姿态转变信息的编码
     public static void changeStanceEncode(DataOutputStream streamHandle,

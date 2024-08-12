@@ -57,8 +57,8 @@
   },
   "electronicInterference": {
     "NAME": "Electronic Interference",
-    "DESCRIPTION":  "In the next X turns, the enemy lose [B].",
-    "UPGRADE_DESCRIPTION":"In the next X+1 turns, the enemy lose [B]."
+    "DESCRIPTION":  "In the next X turns, the enemy lose [B]. NL Exhaust.",
+    "UPGRADE_DESCRIPTION":"In the next X+1 turns, the enemy lose [B]. NL Exhaust."
   },
   "ChangeOffering": {
     "NAME": "Offering",

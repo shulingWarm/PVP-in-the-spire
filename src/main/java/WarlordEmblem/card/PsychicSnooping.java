@@ -1,8 +1,10 @@
 package WarlordEmblem.card;
 
 import WarlordEmblem.actions.PsychicSnoopingAction;
+import WarlordEmblem.character.PlayerMonster;
 import WarlordEmblem.powers.FakeHexPower;
 import basemod.abstracts.CustomCard;
+import com.brashmonkey.spriter.Player;
 import com.megacrit.cardcrawl.actions.common.ApplyPowerAction;
 import com.megacrit.cardcrawl.cards.AbstractCard;
 import com.megacrit.cardcrawl.characters.AbstractPlayer;
@@ -27,7 +29,7 @@ public class PsychicSnooping extends CustomCard {
     public static final AbstractCard.CardType TYPE = AbstractCard.CardType.SKILL;
     private static final AbstractCard.CardColor COLOR = AbstractCard.CardColor.COLORLESS;
     private static final AbstractCard.CardRarity RARITY = AbstractCard.CardRarity.RARE;
-    private static final AbstractCard.CardTarget TARGET = CardTarget.ALL_ENEMY;
+    private static final AbstractCard.CardTarget TARGET = CardTarget.ENEMY;
 
     public PsychicSnooping()
     {
@@ -72,7 +74,12 @@ public class PsychicSnooping extends CustomCard {
 
     //给目标施加一层邪咒
     public void use(AbstractPlayer p, AbstractMonster m) {
-        this.addToBot(new PsychicSnoopingAction(this.timesUpgraded>0,this.timesUpgraded>1));
+        if(m instanceof PlayerMonster)
+        {
+            this.addToBot(new PsychicSnoopingAction((PlayerMonster) m,
+                    this.timesUpgraded>0,this.timesUpgraded>1));
+        }
+
     }
 
     public AbstractCard makeCopy() {

@@ -44,8 +44,8 @@
   },
   "electronicInterference": {
     "NAME": "电磁干扰",
-    "DESCRIPTION":  "令敌方在回合开始时失去 [B] NL 持续X回合。",
-    "UPGRADE_DESCRIPTION":"令敌方在回合开始时失去 [B] NL 持续X+1回合。"
+    "DESCRIPTION":  "令敌方在回合开始时失去 [B] NL 持续X回合。 NL 消耗 ",
+    "UPGRADE_DESCRIPTION":"令敌方在回合开始时失去 [B] NL 持续X+1回合。 NL 消耗 "
   },
   "godPunishment": {
     "NAME": "天罚形态",

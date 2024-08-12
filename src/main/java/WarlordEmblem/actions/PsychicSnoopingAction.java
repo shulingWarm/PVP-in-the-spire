@@ -1,7 +1,10 @@
 package WarlordEmblem.actions;
 
 import WarlordEmblem.AutomaticSocketServer;
+import WarlordEmblem.Events.RemoveCardEvent;
+import WarlordEmblem.PVPApi.Communication;
 import WarlordEmblem.SocketServer;
+import WarlordEmblem.character.PlayerMonster;
 import WarlordEmblem.patches.CardShowPatch.HandCardSend;
 import WarlordEmblem.patches.CardShowPatch.UseCardSend;
 import com.megacrit.cardcrawl.actions.AbstractGameAction;
@@ -24,6 +27,7 @@ import com.megacrit.cardcrawl.vfx.cardManip.ShowCardAndAddToDrawPileEffect;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 
 //心灵窥探的具体操作，弹出五张牌让玩家选
 public class PsychicSnoopingAction extends AbstractGameAction {
@@ -34,13 +38,16 @@ public class PsychicSnoopingAction extends AbstractGameAction {
     //是否自动打出那张牌
     public boolean getCardFlag;
     public boolean noCostFlag;
+    //准备偷的目标牌
+    public PlayerMonster targetMonster;
 
-    public PsychicSnoopingAction(boolean getCard,boolean noCostGet)
+    public PsychicSnoopingAction(PlayerMonster targetMonster, boolean getCard, boolean noCostGet)
     {
         this.actionType = ActionType.CARD_MANIPULATION;
         this.duration = Settings.ACTION_DUR_FAST;
         this.getCardFlag = getCard;
         this.noCostFlag = noCostGet;
+        this.targetMonster = targetMonster;
     }
 
     //消耗某张牌的指令编码
@@ -88,8 +95,9 @@ public class PsychicSnoopingAction extends AbstractGameAction {
             this.isDone = true;
             return;
         }
+        ArrayList<AbstractCard> drawingCards = targetMonster.getDrawingCards();
         //如果抽牌堆中没有牌就直接结束
-        if(HandCardSend.monsterCardList.drawingCards.isEmpty())
+        if(drawingCards.isEmpty())
         {
             this.isDone=true;
             return;
@@ -98,11 +106,11 @@ public class PsychicSnoopingAction extends AbstractGameAction {
         if (this.duration == Settings.ACTION_DUR_FAST)
         {
             //遍历每个牌，让它们正常显示
-            for(AbstractCard eachCard : HandCardSend.monsterCardList.drawingCards)
+            for(AbstractCard eachCard : drawingCards)
             {
                 eachCard.unfadeOut();
             }
-            AbstractDungeon.cardRewardScreen.customCombatOpen(HandCardSend.monsterCardList.drawingCards, CardRewardScreen.TEXT[1], true);
+            AbstractDungeon.cardRewardScreen.customCombatOpen(drawingCards, CardRewardScreen.TEXT[1], true);
             this.tickDuration();
             return;
         }
@@ -113,13 +121,11 @@ public class PsychicSnoopingAction extends AbstractGameAction {
                 //记录选到的牌
                 AbstractCard selectCard = AbstractDungeon.cardRewardScreen.discoveryCard;
                 //获得这个牌的id
-                int idCard = UseCardSend.getMonsterCardId(selectCard);
+                int idCard = targetMonster.playerCardManager.getCardId(selectCard);
                 //如果是一个合法的id的话，就把它发给对方，告诉它消耗这张牌
                 if(idCard>=0)
                 {
-                    SocketServer server = AutomaticSocketServer.getServer();
-                    exhaustCardEncode(server.streamHandle,idCard);
-                    server.send();
+                    Communication.sendEvent(new RemoveCardEvent(idCard,targetMonster.playerTag));
                 }
                 //取消选牌的记录
                 AbstractDungeon.cardRewardScreen.discoveryCard=null;
@@ -137,7 +143,7 @@ public class PsychicSnoopingAction extends AbstractGameAction {
             }
             selectedFlag=true;
             //重新整理手牌位置
-            HandCardSend.monsterCardList.justUpdateFlag = true;
+            targetMonster.battleCardPanel.cardBox.shownCards.justUpdateFlag = true;
         }
         this.tickDuration();
     }

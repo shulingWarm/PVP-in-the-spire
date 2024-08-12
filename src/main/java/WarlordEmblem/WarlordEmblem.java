@@ -188,7 +188,7 @@ public class WarlordEmblem implements
         cards.add(new DoubleSword());
         cards.add(new PainSword());
         cards.add(new ElectronicInterference());
-        // cards.add(new PsychicSnooping());
+        cards.add(new PsychicSnooping());
 
         for (CustomCard card : cards) {
             BaseMod.addCard(card);
@@ -279,6 +279,8 @@ public class WarlordEmblem implements
         Communication.registerEvent(new ChangeTeamEvent(0));
         Communication.registerEvent(new UpdateCharacterEvent(null));
         Communication.registerEvent(new UpdateEnergyEvent(0));
+        Communication.registerEvent(new RemoveCardEvent(0,0));
+        Communication.registerEvent(new MelterEvent(null));
 
         FontLibrary.getBaseFont();
         FontLibrary.getFontWithSize(24);

@@ -42,7 +42,7 @@ public class GlobalManager {
     //初始的坚不可摧比例
     public static int invincibleRate = 2;
     //版本号
-    public static final String VERSION = "v0.5.2";
+    public static final String VERSION = "v0.5.3";
     //玩家的名字，如果选用steam渠道的话就会通过这里个性
     public static String myName = "user";
     //是否启用customMOD,例如现开套牌
@@ -144,7 +144,7 @@ public class GlobalManager {
         // SteamManager.initManager();
         AutomaticSocketServer.initAutomatic();
         //初始的尾巴数量
-        beginTailNum = 1;
+        beginTailNum = 2;
         invincibleRate = 2;
         //初始化每张牌可以被使用的次数
         UseCardSend.CardUseManager.MAX_USE_TIME = 2;

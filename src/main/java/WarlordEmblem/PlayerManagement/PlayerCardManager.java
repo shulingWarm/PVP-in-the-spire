@@ -5,6 +5,7 @@ import com.megacrit.cardcrawl.cards.AbstractCard;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 //玩家的卡牌管理器
 //这是用于更新显示玩家的卡牌的
@@ -35,6 +36,18 @@ public class PlayerCardManager {
         if(cardMap.containsKey(idCard))
             return cardMap.get(idCard);
         return null;
+    }
+
+    //根据卡牌获取对应的id
+    public int getCardId(AbstractCard card)
+    {
+        for(Map.Entry<Integer,AbstractCard> eachCard : cardMap.entrySet())
+        {
+            //判断是否为要找的牌
+            if(eachCard.getValue()==card)
+                return eachCard.getKey();
+        }
+        return -1;
     }
 
     //把id list转换成card list

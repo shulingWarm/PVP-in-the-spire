@@ -12,6 +12,7 @@ import basemod.abstracts.CustomMonster;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
 import com.esotericsoftware.spine.AnimationState;
+import com.megacrit.cardcrawl.cards.AbstractCard;
 import com.megacrit.cardcrawl.cards.DamageInfo;
 import com.megacrit.cardcrawl.characters.AbstractPlayer;
 import com.megacrit.cardcrawl.core.CardCrawlGame;
@@ -27,6 +28,7 @@ import com.megacrit.cardcrawl.stances.NeutralStance;
 import com.megacrit.cardcrawl.vfx.combat.BlockedWordEffect;
 import com.megacrit.cardcrawl.vfx.combat.StrikeEffect;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 
 //新时代的control monster
@@ -228,10 +230,10 @@ public class PlayerMonster extends AbstractMonster {
     }
 
     //强制失去block
-    public void forceLoseBlock()
+    public void forceLoseBlock(boolean checkCaliper)
     {
         //判断是否有外卡钳
-        if(this.hasCaliper)
+        if(this.hasCaliper && checkCaliper)
             super.loseBlock(15);
         else
             super.loseBlock();
@@ -421,6 +423,12 @@ public class PlayerMonster extends AbstractMonster {
     public void applyStartOfTurnPowers() {
         super.applyStartOfTurnPowers();
         this.endTurnFlag = false;
+    }
+
+    //获取即将抽到的牌的列表
+    public ArrayList<AbstractCard> getDrawingCards()
+    {
+        return this.battleCardPanel.cardBox.shownCards.drawingCards;
     }
 
     //标记为显示手牌

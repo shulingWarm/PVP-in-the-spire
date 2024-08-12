@@ -75,7 +75,7 @@ public class FightProtocol extends AbstractActionProtocol
     //减少球位的操作
     public static final int DECREASE_SLOT = 10010; //废弃
     //移除所有的格挡
-    public static final int REMOVE_ALL_BLOCK = 10011;
+    public static final int REMOVE_ALL_BLOCK = 10011; //废弃
     //改变姿态的操作
     public static final int CHANGE_STANCE = 10012; //废弃
     //发送自己的健康状态

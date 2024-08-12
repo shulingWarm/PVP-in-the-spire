@@ -29,6 +29,6 @@ public class PlayerTurnBegin extends BaseEvent {
             return;
         playerMonster.applyStartOfTurnPowers();
         //强制失去格挡
-        playerMonster.forceLoseBlock();
+        playerMonster.forceLoseBlock(true);
     }
 }
