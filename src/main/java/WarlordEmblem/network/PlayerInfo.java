@@ -9,10 +9,12 @@ import WarlordEmblem.character.PlayerMonster;
 import WarlordEmblem.patches.AnimationRecorder;
 import com.megacrit.cardcrawl.characters.AbstractPlayer;
 import com.megacrit.cardcrawl.monsters.AbstractMonster;
+import com.megacrit.cardcrawl.relics.AbstractRelic;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 
 //玩家的信息
 //以前的这乱七八槽的都是在socketserver里面放着，后面这些东西要改地方了
@@ -29,6 +31,9 @@ public class PlayerInfo {
 
     //卡牌信息管理器
     public PlayerCardManager cardManager;
+
+    //玩家掌管的遗物列表
+    public ArrayList<AbstractRelic> relicList;
 
     //是否为房主
     public boolean isLobbyOwner = false;
@@ -78,6 +83,8 @@ public class PlayerInfo {
         this.playerTag = playerTag;
         initConfigPage();
         this.cardManager = new PlayerCardManager();
+        //准备遗物列表
+        this.relicList = new ArrayList<>();
     }
 
     //判断是不是本地Player
@@ -174,6 +181,7 @@ public class PlayerInfo {
                 this.tailNum,
                 this.beginOrbNum,
                 this.maxEnergy,
+                this.relicList,
                 this.hasCaliper > 0
         );
     }

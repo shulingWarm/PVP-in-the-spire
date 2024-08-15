@@ -5,6 +5,7 @@ import UI.RelicPanel;
 import WarlordEmblem.Dungeon.FakeEnding;
 import WarlordEmblem.Events.BattleInfoEvent;
 import WarlordEmblem.Events.EndTurnEvent;
+import WarlordEmblem.Events.PlayerRelicEvent;
 import WarlordEmblem.GlobalManager;
 import WarlordEmblem.PVPApi.Communication;
 import WarlordEmblem.PlayerManagement.PlayerManager;
@@ -54,6 +55,7 @@ import com.megacrit.cardcrawl.cards.tempCards.Expunger;
 import com.megacrit.cardcrawl.cards.tempCards.Insight;
 import com.megacrit.cardcrawl.cards.tempCards.Miracle;
 import com.megacrit.cardcrawl.characters.AbstractPlayer;
+import com.megacrit.cardcrawl.characters.Watcher;
 import com.megacrit.cardcrawl.core.AbstractCreature;
 import com.megacrit.cardcrawl.core.CardCrawlGame;
 import com.megacrit.cardcrawl.core.Settings;
@@ -72,6 +74,7 @@ import com.megacrit.cardcrawl.orbs.AbstractOrb;
 import com.megacrit.cardcrawl.potions.AbstractPotion;
 import com.megacrit.cardcrawl.potions.SmokeBomb;
 import com.megacrit.cardcrawl.powers.*;
+import com.megacrit.cardcrawl.powers.watcher.RushdownPower;
 import com.megacrit.cardcrawl.relics.*;
 import com.megacrit.cardcrawl.rooms.AbstractRoom;
 import com.megacrit.cardcrawl.rooms.MonsterRoom;
@@ -361,6 +364,8 @@ public class CharacterSelectScreenPatches
         //告诉对面我方已经进入了
         public static void entrySend()
         {
+            //在这里发送我方的遗物信息
+            Communication.sendEvent(new PlayerRelicEvent());
             //发送我方角色信息
             Communication.sendEvent(new BattleInfoEvent());
         }

@@ -36,7 +36,7 @@ public class BasePanel extends AbstractPage implements ScrollBarListener {
     public float scrollPercent = 0.F;
 
     //目前已经添加的page的列表
-    ArrayList<AbstractPage> pageList = new ArrayList<>();
+    public ArrayList<AbstractPage> pageList = new ArrayList<>();
 
     //滚动条的初始位置
     public float scrollInitLocation = 0;

@@ -112,6 +112,7 @@ public class PlayerMonster extends AbstractMonster {
        int tailNum, //尾巴的数量
        int maxOrbNum, //初始的球位数量
        int maxEnergy, //最大能量
+       ArrayList<AbstractRelic> relicList, //玩家的遗物列表
        boolean hasCaliper
     )
     {
@@ -134,6 +135,8 @@ public class PlayerMonster extends AbstractMonster {
         this.healthBarUpdatedEvent();
         //初始化角色的能量信息
         this.battleCardPanel.energyPanel.init(this.renderPlayer,maxEnergy);
+        //初始化玩家的遗物列表
+        this.battleCardPanel.initRelicList(relicList);
     }
 
     //生成球位
