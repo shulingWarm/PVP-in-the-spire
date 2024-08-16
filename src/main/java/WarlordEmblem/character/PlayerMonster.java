@@ -20,6 +20,7 @@ import com.megacrit.cardcrawl.core.Settings;
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
 import com.megacrit.cardcrawl.monsters.AbstractMonster;
 import com.megacrit.cardcrawl.orbs.AbstractOrb;
+import com.megacrit.cardcrawl.potions.AbstractPotion;
 import com.megacrit.cardcrawl.powers.AbstractPower;
 import com.megacrit.cardcrawl.powers.FocusPower;
 import com.megacrit.cardcrawl.relics.AbstractRelic;
@@ -426,6 +427,11 @@ public class PlayerMonster extends AbstractMonster {
     public void applyStartOfTurnPowers() {
         super.applyStartOfTurnPowers();
         this.endTurnFlag = false;
+    }
+
+    public void updatePotionList(ArrayList<AbstractPotion> potionList)
+    {
+        this.battleCardPanel.potionPanel.updatePotion(potionList);
     }
 
     //获取即将抽到的牌的列表

@@ -5,6 +5,7 @@ import UI.RelicPanel;
 import WarlordEmblem.Dungeon.FakeEnding;
 import WarlordEmblem.Events.BattleInfoEvent;
 import WarlordEmblem.Events.EndTurnEvent;
+import WarlordEmblem.Events.PlayerPotionEvent;
 import WarlordEmblem.Events.PlayerRelicEvent;
 import WarlordEmblem.GlobalManager;
 import WarlordEmblem.PVPApi.Communication;
@@ -366,6 +367,8 @@ public class CharacterSelectScreenPatches
         {
             //在这里发送我方的遗物信息
             Communication.sendEvent(new PlayerRelicEvent());
+            //在这里发送我方的药水信息
+            Communication.sendEvent(new PlayerPotionEvent());
             //发送我方角色信息
             Communication.sendEvent(new BattleInfoEvent());
         }
@@ -1105,7 +1108,7 @@ public class CharacterSelectScreenPatches
             }
             saveNodeY = AbstractDungeon.getCurrMapNode().y;
             //debug的时候打开这里，这样可以直接进入boss房间
-            AbstractDungeon.getCurrMapNode().y = 2;
+            //AbstractDungeon.getCurrMapNode().y = 2;
             //如果当前到了3层说明可以进boss房间了
             if(saveNodeY>=FakeEnding.ROW_NUM-1)
             {

@@ -1,6 +1,7 @@
 package WarlordEmblem.patches;
 
 import UI.Chat.ChatFoldPage;
+import UI.PotionPanel;
 import WarlordEmblem.patches.CardShowPatch.EnergyUpdateSender;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.evacipated.cardcrawl.modthespire.lib.SpirePatch;
@@ -8,6 +9,7 @@ import com.evacipated.cardcrawl.modthespire.lib.SpirePostfixPatch;
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
 import com.megacrit.cardcrawl.helpers.ImageMaster;
 import com.megacrit.cardcrawl.map.DungeonMap;
+import com.megacrit.cardcrawl.rooms.MonsterRoom;
 
 //对于游戏地图相关的patch 这其实是为了聊天框的渲染和更新
 public class DungeonPatch {
@@ -31,8 +33,14 @@ public class DungeonPatch {
         {
             //更新聊天框
             ChatFoldPage.getInstance().update();
-            //检查当前的能量信息
-            EnergyUpdateSender.updatePlayerEnergy();
+            //需要判断当前是不是战斗房间
+            if(AbstractDungeon.getCurrRoom() instanceof MonsterRoom)
+            {
+                //检查当前的能量信息
+                EnergyUpdateSender.updatePlayerEnergy();
+                //检查药水是否需要更新
+                PotionPanel.checkNeedSend();
+            }
         }
 
     }

@@ -1,6 +1,8 @@
 package UI;
 
 import WarlordEmblem.AutomaticSocketServer;
+import WarlordEmblem.Events.PlayerPotionEvent;
+import WarlordEmblem.PVPApi.Communication;
 import WarlordEmblem.SocketServer;
 import WarlordEmblem.actions.FightProtocol;
 import WarlordEmblem.character.ControlMoster;
@@ -169,9 +171,8 @@ public class PotionPanel {
         ArrayList<AbstractPotion> realPotions = AbstractDungeon.player.potions;
         if(!checkListEqual(lastPotion,realPotions))
         {
-            System.out.println("sending potion");
             lastPotion = (ArrayList<AbstractPotion>) realPotions.clone();
-            sendMyPotion();
+            Communication.sendEvent(new PlayerPotionEvent());
         }
     }
 

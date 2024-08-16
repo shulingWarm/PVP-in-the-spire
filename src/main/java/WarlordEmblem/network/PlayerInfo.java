@@ -9,6 +9,7 @@ import WarlordEmblem.character.PlayerMonster;
 import WarlordEmblem.patches.AnimationRecorder;
 import com.megacrit.cardcrawl.characters.AbstractPlayer;
 import com.megacrit.cardcrawl.monsters.AbstractMonster;
+import com.megacrit.cardcrawl.potions.AbstractPotion;
 import com.megacrit.cardcrawl.relics.AbstractRelic;
 
 import java.io.DataInputStream;
@@ -34,6 +35,9 @@ public class PlayerInfo {
 
     //玩家掌管的遗物列表
     public ArrayList<AbstractRelic> relicList;
+
+    //当前玩家的药水
+    public ArrayList<AbstractPotion> potionList;
 
     //是否为房主
     public boolean isLobbyOwner = false;
@@ -83,6 +87,8 @@ public class PlayerInfo {
         this.playerTag = playerTag;
         initConfigPage();
         this.cardManager = new PlayerCardManager();
+        //初始化玩家的药水列表
+        this.potionList = new ArrayList<>();
         //准备遗物列表
         this.relicList = new ArrayList<>();
     }
@@ -184,6 +190,8 @@ public class PlayerInfo {
                 this.relicList,
                 this.hasCaliper > 0
         );
+        //更新monster的药水
+        this.playerMonster.updatePotionList(this.potionList);
     }
 
     //重置角色大小
@@ -230,4 +238,15 @@ public class PlayerInfo {
             this.configPage.setOwnerUI(this.isLobbyOwner);
         }
     }
+
+    //更新药水列表
+    public void updatePotionList()
+    {
+        //判断是否有monster
+        if(playerMonster != null)
+        {
+            playerMonster.updatePotionList(this.potionList);
+        }
+    }
+
 }

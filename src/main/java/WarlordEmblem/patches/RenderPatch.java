@@ -1,5 +1,6 @@
 package WarlordEmblem.patches;
 
+import UI.BattleUI.MonsterPotionPanel;
 import UI.DelayBox;
 import WarlordEmblem.patches.connection.MeunScreenFadeout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -16,6 +17,9 @@ public class RenderPatch {
     //延迟信息框
     public static DelayBox delayBox=null;
 
+    //敌方的药水列表 在这里渲染是为了放在tip栏上面
+    public static MonsterPotionPanel potionPanel = null;
+
     public static void receiveDelayInfo(DataInputStream streamHandle)
     {
         if(delayBox!=null)
@@ -31,12 +35,11 @@ public class RenderPatch {
         @SpirePostfixPatch
         public static void fix(SpriteBatch sb)
         {
-            //判断是否已经连接完成
-            if(!MeunScreenFadeout.connectOk)
-                return;
-            //渲染延迟信息
-            if(delayBox!=null)
-                delayBox.render(sb);
+            if(potionPanel != null)
+            {
+                potionPanel.tipRender(sb);
+                potionPanel = null;
+            }
         }
     }
 

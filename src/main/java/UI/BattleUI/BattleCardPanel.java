@@ -1,5 +1,6 @@
 package UI.BattleUI;
 
+import UI.PotionPanel;
 import WarlordEmblem.patches.CardShowPatch.CardBox;
 import WarlordEmblem.patches.CardShowPatch.CardRecorder;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -18,6 +19,8 @@ public class BattleCardPanel {
     public MonsterEnergyPanel energyPanel;
     //遗物列表
     public MonsterRelicPanel monsterRelicPanel;
+    //玩家的药水列表
+    public MonsterPotionPanel potionPanel;
 
     public BattleCardPanel(float xCenter,
         float yCenter, CardRecorder shownCards, AbstractMonster monster
@@ -29,6 +32,8 @@ public class BattleCardPanel {
             yCenter - Settings.HEIGHT*0.15f);
         //初始化遗物列表
         this.monsterRelicPanel = new MonsterRelicPanel();
+        //更新玩家的药水列表
+        this.potionPanel = new MonsterPotionPanel();
     }
 
     public void render(SpriteBatch sb)
@@ -37,12 +42,14 @@ public class BattleCardPanel {
         this.cardBox.render(sb);
         this.energyPanel.render(sb);
         this.monsterRelicPanel.render(sb);
+        this.potionPanel.render(sb);
     }
 
     public void update()
     {
         this.energyPanel.update();
         this.monsterRelicPanel.update();
+        this.potionPanel.update();
     }
 
     //设置能量
