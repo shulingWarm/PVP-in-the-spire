@@ -138,6 +138,15 @@
       "Creating..."
     ]
   },
+  "InputPassword": {
+    "TEXT": [
+      "Password:",
+      "Please input password",
+      "Confirm",
+      "Cancel",
+      "Wrong password"
+    ]
+  },
   "WarlordEmblem:UtilizeAction": {
     "TEXT": [
       "选择丢弃一张手牌并获得其耗能等量的能量"
