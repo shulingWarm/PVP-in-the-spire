@@ -13,6 +13,7 @@ import WarlordEmblem.character.PlayerMonster;
 import WarlordEmblem.network.PlayerInfo;
 import WarlordEmblem.network.SelfPlayerInfo;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.MathUtils;
 import com.megacrit.cardcrawl.monsters.MonsterGroup;
 
 import java.io.DataInputStream;
@@ -374,6 +375,21 @@ public class PlayerManager implements TeamCallback {
         this.readyNum = 0;
     }
 
-
+    //获取某一个随机的player
+    public PlayerInfo getRandPlayer()
+    {
+        //生成一个随机数
+        int idPlayer = MathUtils.random(0,this.playerInfoMap.size()-2);
+        for(PlayerInfo info : this.playerInfoMap.values())
+        {
+            if(!info.isSelfPlayer())
+            {
+                if(idPlayer == 0)
+                    return info;
+                --idPlayer;
+            }
+        }
+        return null;
+    }
 
 }

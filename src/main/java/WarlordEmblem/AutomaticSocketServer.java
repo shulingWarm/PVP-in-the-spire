@@ -96,4 +96,10 @@ public class AutomaticSocketServer extends SocketServer {
         return serverFlag;
     }
 
+    //发送给指定玩家的操作
+    public void targetSend(int playerTag)
+    {
+        this.send();
+    }
+
 }

@@ -27,6 +27,7 @@ public class DrawCardUpdateEvent extends BaseEvent {
         GlobalManager.playerManager.encodePlayer(streamHandle);
         try
         {
+            System.out.printf("Sending draw pile num %d\n",cardIdList.size());
             //依次写入每个手牌
             streamHandle.writeInt(cardIdList.size());
             for(int eachCard : cardIdList)

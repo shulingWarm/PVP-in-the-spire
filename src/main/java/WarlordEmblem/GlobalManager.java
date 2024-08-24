@@ -42,7 +42,7 @@ public class GlobalManager {
     //初始的坚不可摧比例
     public static int invincibleRate = 2;
     //版本号
-    public static final String VERSION = "v0.5.5";
+    public static final String VERSION = "v0.5.6";
     //玩家的名字，如果选用steam渠道的话就会通过这里个性
     public static String myName = "user";
     //是否启用customMOD,例如现开套牌
@@ -130,7 +130,10 @@ public class GlobalManager {
             myName = SteamManager.getMyName();
         }
         else
+        {
             myPlayerTag = randGenerator.nextInt();
+            myName = "user_" + (myPlayerTag % 100);
+        }
         //如果没有默认选择的角色，就选择为战士
         if(defaultClass == null)
         {

@@ -79,6 +79,26 @@ public class LobbyChatServer extends AutomaticSocketServer {
     }
 
     @Override
+    public void targetSend(int playerTag) {
+        //把发送序列补齐4字节
+        SteamSocketServer.appendEmptyMessage(this.streamHandle);
+        super.send();
+        //把里面的数据转换成byte数组
+        byte[] tempByteArray = this.byteSendStream.toByteArray();
+        sendBuffer.put(tempByteArray);
+        sendBuffer.position(0);
+        sendBuffer.limit(tempByteArray.length);
+        //把消息发送给目标玩家
+        if(this.playerMap.containsKey(playerTag))
+        {
+            SteamManager.sendDataFromByteBuffer(this.playerMap.get(playerTag),
+                sendBuffer);
+        }
+        sendBuffer.clear();
+        byteSendStream.reset();
+    }
+
+    @Override
     public boolean isDataAvailable() {
         //先判断下是否输入流里面还有东西
         if(inputHandle!=null && super.isDataAvailable())

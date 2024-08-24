@@ -1,22 +1,17 @@
 package WarlordEmblem.patches.connection;
 
 
+import UI.LocalConnectPage;
 import WarlordEmblem.GlobalManager;
 import WarlordEmblem.SocketServer;
 import WarlordEmblem.network.Lobby.LobbyManager;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.evacipated.cardcrawl.modthespire.lib.SpirePatch;
 import com.evacipated.cardcrawl.modthespire.lib.SpirePostfixPatch;
 import com.evacipated.cardcrawl.modthespire.lib.SpirePrefixPatch;
 import com.evacipated.cardcrawl.modthespire.lib.SpireReturn;
-import com.megacrit.cardcrawl.core.CardCrawlGame;
-import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
-import com.megacrit.cardcrawl.helpers.TypeHelper;
 import com.megacrit.cardcrawl.helpers.input.InputHelper;
 import com.megacrit.cardcrawl.screens.mainMenu.MainMenuScreen;
-import com.megacrit.cardcrawl.ui.panels.RenamePopup;
 
 public class MeunScreenFadeout {
 
@@ -28,7 +23,7 @@ public class MeunScreenFadeout {
     //是否使用房间式的连接界面
     public static final boolean useGameRoomMode=true;
     //游戏连接的房间的界面
-    public static GameRoomUI gameRoom = null;
+    public static LocalConnectPage localConnectPage = null;
 
     //是否已经连接成功的标志 当连接成功的时候需要修改这个位置的标志
     public static boolean connectOk = false;
@@ -43,7 +38,7 @@ public class MeunScreenFadeout {
         ipBox = new InputIpBox();
         beginInputIp=false;
         connectOk=false;
-        gameRoom = null;
+        localConnectPage = null;
         allowForExit = false;
     }
 
@@ -73,7 +68,7 @@ public class MeunScreenFadeout {
                     //判断是不是使用新式的游戏连接规则
                     if(useGameRoomMode)
                     {
-                        gameRoom = new GameRoomUI();
+                        localConnectPage = new LocalConnectPage();
                     }
                     else {
                         ipBox.open();
@@ -125,9 +120,9 @@ public class MeunScreenFadeout {
                 //判断是不是使用的新式的连接规则
                 if(useGameRoomMode)
                 {
-                    if(gameRoom!=null)
+                    if(localConnectPage !=null)
                     {
-                        gameRoom.update();
+                        localConnectPage.update();
                     }
                 }
             }
@@ -157,9 +152,9 @@ public class MeunScreenFadeout {
                 //判断是不是使用的新式的连接规则
                 if(useGameRoomMode)
                 {
-                    if(gameRoom!=null)
+                    if(localConnectPage !=null)
                     {
-                        gameRoom.render(sb);
+                        localConnectPage.render(sb);
                     }
                 }
                 else

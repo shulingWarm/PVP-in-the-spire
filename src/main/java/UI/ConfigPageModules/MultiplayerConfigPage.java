@@ -178,6 +178,7 @@ public class MultiplayerConfigPage extends AbstractPage
         GlobalManager.messageTriggerInterface = new FightProtocol();
         //准备进入游戏
         GameManager.prepareEnterGame();
+        RenderPatch.delayBox = new DelayBox();
     }
 
     //判断是否两边都准备了

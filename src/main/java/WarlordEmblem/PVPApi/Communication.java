@@ -30,7 +30,7 @@ public class Communication {
     }
 
     //发送event
-    public static void sendEvent(BaseEvent event)
+    public static void advanceSendEvent(BaseEvent event,int playerTag)
     {
         //如果是未注册过的事件，不做处理
         HashMap<String,BaseEvent> eventMap = GlobalManager.eventMap;
@@ -39,7 +39,6 @@ public class Communication {
             System.out.printf("Unknown event: %s\n",event.eventId);
             return;
         }
-        System.out.printf("Sending event %s\n",event.eventId);
         //获取输入流
         AutomaticSocketServer server = AutomaticSocketServer.getServer();
         //写入用户事件的事件头
@@ -52,12 +51,21 @@ public class Communication {
             //调用事件信息进行编码
             event.encode(stream);
             //发送消息
-            server.send();
+            if(playerTag == -1)
+                server.send();
+            else
+                server.targetSend(playerTag);
         }
         catch (IOException e)
         {
             e.printStackTrace();
         }
+    }
+
+    //发送event
+    public static void sendEvent(BaseEvent event)
+    {
+        advanceSendEvent(event,-1);
     }
 
     //注册power映射

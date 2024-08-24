@@ -6,8 +6,11 @@ import WarlordEmblem.patches.connection.MeunScreenFadeout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.evacipated.cardcrawl.modthespire.lib.SpirePatch;
 import com.evacipated.cardcrawl.modthespire.lib.SpirePostfixPatch;
+import com.evacipated.cardcrawl.modthespire.lib.SpirePrefixPatch;
+import com.evacipated.cardcrawl.modthespire.lib.SpireReturn;
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
 import com.megacrit.cardcrawl.helpers.TipHelper;
+import com.megacrit.cardcrawl.ui.panels.TopPanel;
 
 import java.io.DataInputStream;
 
@@ -40,6 +43,21 @@ public class RenderPatch {
                 potionPanel.tipRender(sb);
                 potionPanel = null;
             }
+            if(delayBox != null)
+            {
+                delayBox.render(sb);
+            }
+        }
+    }
+
+    //取消渲染楼层信息
+    @SpirePatch(clz = TopPanel.class, method = "renderDungeonInfo")
+    public static class StopFloorPatch
+    {
+        @SpirePrefixPatch
+        public static SpireReturn<Void> fix()
+        {
+            return SpireReturn.Return();
         }
     }
 

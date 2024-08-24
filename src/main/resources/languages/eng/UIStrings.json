@@ -123,8 +123,8 @@
   },
   "MenuScreen": {
     "TEXT": [
-      "Online Lobby(Testing)",
-      "Begin PVP",
+      "Online Lobby",
+      "Local connect in LAN",
       "(Please abandon it)"
     ]
   },

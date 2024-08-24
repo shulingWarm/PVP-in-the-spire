@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.megacrit.cardcrawl.core.Settings;
+import com.megacrit.cardcrawl.helpers.FontHelper;
 import com.megacrit.cardcrawl.localization.LocalizedStrings;
 
 import java.util.HashMap;
@@ -80,5 +81,13 @@ public class FontLibrary {
         }
         return fontSizeMap.get(targetSize);
     }
+
+    //获取文本的宽度
+    public static float getTextWidth(String str,BitmapFont font)
+    {
+        FontHelper.layout.setText(font,str);
+        return FontHelper.layout.width;
+    }
+
 
 }

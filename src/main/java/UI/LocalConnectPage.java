@@ -11,11 +11,13 @@ import WarlordEmblem.Screens.Buttons.MultiServerButton;
 import WarlordEmblem.actions.ConfigProtocol;
 import WarlordEmblem.patches.connection.InputIpBox;
 import WarlordEmblem.patches.connection.IpInputProcessor;
+import WarlordEmblem.patches.connection.MeunScreenFadeout;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.MathUtils;
+import com.megacrit.cardcrawl.core.CardCrawlGame;
 import com.megacrit.cardcrawl.core.Settings;
 import com.megacrit.cardcrawl.helpers.FontHelper;
 import com.megacrit.cardcrawl.helpers.ImageMaster;
@@ -41,6 +43,9 @@ public class LocalConnectPage extends AbstractPage implements ConnectOkEvent {
     public BackButton backButton;
     //下一层的自定义面板
     public AbstractPage configPage = null;
+
+    //完整的黑色背景
+    public PlainBox plainBackground = new PlainBox();
 
     public LocalConnectPage()
     {
@@ -121,6 +126,7 @@ public class LocalConnectPage extends AbstractPage implements ConnectOkEvent {
 
     @Override
     public void render(SpriteBatch sb) {
+        this.plainBackground.render(sb);
         //如果有下一层的自定义面板，就渲染面板，不用再渲染这个了
         if(configPage!=null)
         {
@@ -148,5 +154,12 @@ public class LocalConnectPage extends AbstractPage implements ConnectOkEvent {
         buttonForConnection.render(sb);
         //对返回按钮的渲染
         backButton.render(sb);
+        //判断返回是不是刚刚被点击过
+        if(backButton.isJustClicked())
+        {
+            CardCrawlGame.startOver = true;
+            CardCrawlGame.fadeToBlack(0.5f);
+            MeunScreenFadeout.allowForExit = true;
+        }
     }
 }

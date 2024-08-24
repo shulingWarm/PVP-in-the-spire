@@ -1,6 +1,7 @@
 package WarlordEmblem.PlayerManagement;
 
 import WarlordEmblem.patches.CardShowPatch.CardRecorder;
+import WarlordEmblem.patches.CardShowPatch.DrawPileSender;
 import com.megacrit.cardcrawl.cards.AbstractCard;
 
 import java.util.ArrayList;
@@ -33,8 +34,18 @@ public class PlayerCardManager {
     //根据code获取card
     public AbstractCard getCard(int idCard)
     {
+        //解码升级次数
+        int upgradeTime = idCard/ DrawPileSender.UPGRADE_LEVEL;
+        idCard = idCard%DrawPileSender.UPGRADE_LEVEL;
         if(cardMap.containsKey(idCard))
-            return cardMap.get(idCard);
+        {
+            AbstractCard tempCard = cardMap.get(idCard);
+            //判断是否需要补充升级次数
+            upgradeTime -= tempCard.timesUpgraded;
+            for(int idUp=0;idUp<upgradeTime;++idUp)
+                tempCard.upgrade();
+            return tempCard;
+        }
         return null;
     }
 
