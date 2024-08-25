@@ -378,6 +378,9 @@ public class PlayerManager implements TeamCallback {
     //获取某一个随机的player
     public PlayerInfo getRandPlayer()
     {
+        //如果当前的玩家数里面不到2个，那就直接返回null
+        if(this.playerInfoMap.size() < 2)
+            return null;
         //生成一个随机数
         int idPlayer = MathUtils.random(0,this.playerInfoMap.size()-2);
         for(PlayerInfo info : this.playerInfoMap.values())
