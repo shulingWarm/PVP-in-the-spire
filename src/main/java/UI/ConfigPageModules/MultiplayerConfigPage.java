@@ -245,6 +245,7 @@ public class MultiplayerConfigPage extends AbstractPage
         optionList.add(new MapRowNumConfig(optionWidth));
         //添加败者奖励配置
         optionList.add((new LoserRewardOption(optionWidth)));
+        optionList.add((new TurnStrategyOption(optionWidth)));
         //遍历每个需要被添加的page
         for(int idPage=0;idPage<optionList.size();++idPage)
         {

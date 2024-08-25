@@ -107,6 +107,13 @@
       "Ordinary BOSS relic"
     ]
   },
+  "TurnStrategyOption": {
+    "TEXT": [
+      "Turn style:",
+      "Player by player",
+      "Team by team"
+    ]
+  },
   "LobbyScreen": {
     "TEXT": [
       "Back",

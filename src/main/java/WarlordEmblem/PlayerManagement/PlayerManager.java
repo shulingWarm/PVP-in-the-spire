@@ -230,7 +230,10 @@ public class PlayerManager implements TeamCallback {
     //初始化用于下次战斗的轮次管理器
     public void initTurnManager()
     {
-        this.turnManager = new PersonTurnManager(this.playerInfoMap.size());
+        if(GlobalManager.turnStrategy == 0)
+            this.turnManager = new PersonTurnManager(this.playerInfoMap.size());
+        else
+            this.turnManager = new TurnManager(2);
     }
 
     //更新我方player的准备状态

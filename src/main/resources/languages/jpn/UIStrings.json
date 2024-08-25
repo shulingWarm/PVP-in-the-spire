@@ -102,6 +102,13 @@
       "一般BOSS遺物"
     ]
   },
+  "TurnStrategyOption": {
+    "TEXT": [
+      "ターンスタイル:",
+      "「ウォンカされ",
+      "チームチーム"
+    ]
+  },
   "StartGoldConfig": {
     "TEXT": [
       "開始時のゴールド:"

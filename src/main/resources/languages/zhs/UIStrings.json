@@ -107,6 +107,13 @@
       "BOSS遗物三选一"
     ]
   },
+  "TurnStrategyOption": {
+    "TEXT": [
+      "轮次方案:",
+      "逐个玩家出牌",
+      "和队友同时出牌"
+    ]
+  },
   "LobbyScreen": {
     "TEXT": [
       "返回",
