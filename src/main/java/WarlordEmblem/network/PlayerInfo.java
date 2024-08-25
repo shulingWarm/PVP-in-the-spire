@@ -76,6 +76,9 @@ public class PlayerInfo {
     //目前所属的team id
     public int idTeam = -1;
 
+    //玩家所在的座次
+    public int idSeat = -1;
+
     public void initConfigPage()
     {
         //初始化config页面，虽然最开始可能会是空的
@@ -249,4 +252,21 @@ public class PlayerInfo {
         }
     }
 
+    //获取当前玩家所在的座次
+    public int getIdSeat() {
+        return this.idSeat;
+    }
+
+    //设置当前玩家的座位
+    public void setIdSeat(int idSeat) {
+        this.idSeat = idSeat;
+    }
+
+    //获取这个玩家当前的轮次
+    public int getIdTurn()
+    {
+        if(this.playerMonster == null)
+            return -1;
+        return this.playerMonster.getIdTurn();
+    }
 }

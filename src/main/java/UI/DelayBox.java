@@ -162,7 +162,6 @@ public class DelayBox extends AbstractPage {
             System.out.println("Target is null");
             return;
         }
-        System.out.printf("Setting delay target %s\n",info.getName());
         targetPlayerTag = info.playerTag;
         //设置玩家的名字
         this.targetName.text = info.getName() + ": ";

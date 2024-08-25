@@ -3,6 +3,7 @@ package WarlordEmblem.Events;
 import WarlordEmblem.GlobalManager;
 import WarlordEmblem.PVPApi.BaseEvent;
 import WarlordEmblem.character.PlayerMonster;
+import WarlordEmblem.network.PlayerInfo;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -23,10 +24,10 @@ public class EndTurnEvent extends BaseEvent {
 
     @Override
     public void decode(DataInputStream streamHandle) {
-        PlayerMonster monster = GlobalManager.playerManager.decodePlayer(streamHandle);
-        if(monster != null)
+        PlayerInfo info = GlobalManager.playerManager.decodePlayerInfo(streamHandle);
+        if(info != null)
         {
-            GlobalManager.getBattleInfo().updateEndTurn(monster);
+            GlobalManager.getBattleInfo().updateEndTurn(info);
         }
     }
 }

@@ -67,6 +67,8 @@ public class PlayerMonster extends AbstractMonster {
     public int playerTag;
     //标记为回合结束时的状态
     public boolean endTurnFlag = false;
+    //玩家的轮次 这表示这个玩家已经完成了几个轮次
+    public int idTurn = 0;
 
     public PlayerMonster(String name,boolean pauseFlag,float x,float y,int playerTag,boolean sameTeam,
          PlayerCardManager cardManager
@@ -395,6 +397,8 @@ public class PlayerMonster extends AbstractMonster {
     public void endOfTurnTrigger()
     {
         System.out.printf("%d end turn\n",this.playerTag);
+        //增加已经完成的回合计数
+        ++idTurn;
         //标记为回合结束时的状态
         this.endTurnFlag = true;
         for(AbstractPower eachPower : powers)
@@ -450,6 +454,14 @@ public class PlayerMonster extends AbstractMonster {
     public boolean isEndTurn()
     {
         return this.isDead || this.endTurnFlag;
+    }
+
+    //获取当前玩家的 id turn
+    public int getIdTurn() {
+        //如果玩家已经死了，那就返回-1,这种情况下是不用判断的
+        if(this.isDead)
+            return -1;
+        return idTurn;
     }
 
     @Override

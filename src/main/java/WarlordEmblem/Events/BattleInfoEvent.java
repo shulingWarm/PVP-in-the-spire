@@ -116,6 +116,8 @@ public class BattleInfoEvent extends BaseEvent {
             //每回合能量数
             playerInfo.maxEnergy = streamHandle.readInt();
             long enterTime = streamHandle.readLong();
+            //给新进入战斗房间的玩家分配座次
+            GlobalManager.playerManager.assignSeatOfPlayer(playerInfo);
             //进入游戏的时间
             GlobalManager.playerManager.updateEnterTime(
                 playerInfo,enterTime

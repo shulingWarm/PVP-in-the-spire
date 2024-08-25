@@ -1,0 +1,32 @@
+package WarlordEmblem.PlayerManagement;
+
+import WarlordEmblem.network.PlayerInfo;
+
+//人与人的轮流管理器
+public class PersonTurnManager extends TurnManager {
+
+    public PersonTurnManager(int seatNum)
+    {
+        super(seatNum);
+    }
+
+    @Override
+    public int assignPlayerSeat(PlayerInfo info) {
+        int idTeam = super.assignPlayerSeat(info);
+        //判断目标是否为空
+        if(this.seatList.get(idTeam).isEmpty())
+            return idTeam;
+        for(int i=this.seatList.size() - 1;i>idTeam;--i)
+        {
+            if(this.seatList.get(i).isEmpty())
+                return i;
+        }
+        for(int i=idTeam + 1;i<seatList.size();++i)
+        {
+            if(this.seatList.get(i).isEmpty())
+                return i;
+        }
+        System.out.println("Warning: Invalid assignment!!");
+        return -1;
+    }
+}

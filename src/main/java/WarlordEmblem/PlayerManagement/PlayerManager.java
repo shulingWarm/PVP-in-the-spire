@@ -2,10 +2,7 @@ package WarlordEmblem.PlayerManagement;
 
 import UI.ConfigPageModules.CharacterPanel;
 import UI.GridPanel;
-import WarlordEmblem.Events.AssignTeamEvent;
-import WarlordEmblem.Events.BattleInfoEvent;
-import WarlordEmblem.Events.ChangeTeamEvent;
-import WarlordEmblem.Events.ExecuteAssignTeamEvent;
+import WarlordEmblem.Events.*;
 import WarlordEmblem.GlobalManager;
 import WarlordEmblem.PVPApi.Communication;
 import WarlordEmblem.SocketServer;
@@ -39,6 +36,9 @@ public class PlayerManager implements TeamCallback {
 
     //与战斗有关的信息
     public BattleInfo battleInfo;
+
+    //轮次管理器
+    public TurnManager turnManager = null;
 
     //目前总共的统计数量
     //目前进入到战斗房间的数量用的也是这个
@@ -227,6 +227,12 @@ public class PlayerManager implements TeamCallback {
         }
     }
 
+    //初始化用于下次战斗的轮次管理器
+    public void initTurnManager()
+    {
+        this.turnManager = new PersonTurnManager(this.playerInfoMap.size());
+    }
+
     //更新我方player的准备状态
     public void updateReadyFlag(PlayerInfo info,boolean readyFlag)
     {
@@ -253,6 +259,8 @@ public class PlayerManager implements TeamCallback {
             playerJoinInterface.enterGame();
             this.readyNum = 0;
             resetPlayerTexture();
+            //初始化轮次管理器
+            initTurnManager();
         }
         else if(selfPlayerInfo.isLobbyOwner)
         {
@@ -281,6 +289,48 @@ public class PlayerManager implements TeamCallback {
         return SocketServer.firstHandFlag;
     }
 
+    //设置player所在的座位
+    public void setPlayerSeat(PlayerInfo info,int idSeat) {
+        this.turnManager.setPlayerSeat(info,idSeat);
+    }
+
+    //设置player所在的座位
+    public void setPlayerSeat(int playerTag,int idSeat)
+    {
+        PlayerInfo info = getPlayerInfo(playerTag);
+        if(info == null)
+        {
+            System.out.println("Warning: Invalid player tag");
+            return;
+        }
+        setPlayerSeat(info,idSeat);
+    }
+
+    //给新来的玩家分配座位
+    public void assignSeatOfPlayer(PlayerInfo playerInfo)
+    {
+        //判断自己是不是房主
+        if(selfPlayerInfo.isLobbyOwner)
+        {
+            //给玩家分配座位
+            int tempSeat = this.turnManager.assignPlayerSeat(playerInfo);
+            //调用分配座位的执行
+            this.turnManager.setPlayerSeat(playerInfo,tempSeat);
+            //广播这个玩家的位置信息
+            Communication.sendEvent(new PlayerSeatEvent(playerInfo,tempSeat));
+        }
+    }
+
+    //真正进入战斗的操作
+    public void enterBattle()
+    {
+        loadInfoToMonster();
+        this.battleInfo.enterBattle(this.turnManager);
+        //重新初始化下次的轮次管理器
+        initTurnManager();
+        this.readyNum = 0;
+    }
+
     //更新玩家进入的时间
     public void updateEnterTime(PlayerInfo playerInfo,long enterTime)
     {
@@ -292,11 +342,11 @@ public class PlayerManager implements TeamCallback {
         ++this.readyNum;
         System.out.printf("ready update: %d\n",this.readyNum);
         //如果进入到战斗房间的总数达标了，就调用进入战斗的流程
-        if(this.readyNum == this.playerInfoMap.size())
+        if(this.readyNum == this.playerInfoMap.size() && selfPlayerInfo.isLobbyOwner)
         {
-            loadInfoToMonster();
-            this.battleInfo.enterBattle(isSelfFirstHand());
-            this.readyNum = 0;
+            //发送进入战斗的事件
+            Communication.sendEvent(new EnterBattleEvent());
+            this.enterBattle();
         }
     }
 

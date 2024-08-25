@@ -369,6 +369,10 @@ public class CharacterSelectScreenPatches
             Communication.sendEvent(new PlayerRelicEvent());
             //在这里发送我方的药水信息
             Communication.sendEvent(new PlayerPotionEvent());
+            //先看看自己是不是房主，如果自己是房主的话就自己给自己分配房间
+            GlobalManager.playerManager.assignSeatOfPlayer(
+                GlobalManager.playerManager.selfPlayerInfo
+            );
             //发送我方角色信息
             Communication.sendEvent(new BattleInfoEvent());
         }
@@ -1108,7 +1112,7 @@ public class CharacterSelectScreenPatches
             }
             saveNodeY = AbstractDungeon.getCurrMapNode().y;
             //debug的时候打开这里，这样可以直接进入boss房间
-            //AbstractDungeon.getCurrMapNode().y = 2;
+            AbstractDungeon.getCurrMapNode().y = 2;
             //如果当前到了3层说明可以进boss房间了
             if(saveNodeY>=FakeEnding.ROW_NUM-1)
             {

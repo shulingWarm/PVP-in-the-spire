@@ -34,6 +34,8 @@ public class BattleInfo {
     public boolean selfDeadFlag = false;
     //本地玩家活着时的贴图
     public Texture aliveImg = null;
+    //轮次管理器
+    public TurnManager turnManager;
 
     //重新把player设置成活着的状态
     public void resetPlayerToAlive()
@@ -42,15 +44,16 @@ public class BattleInfo {
         FieldHelper.setPrivateFieldValue(AbstractDungeon.player,"renderCorpse",false);
     }
 
-    //进入战斗的逻辑，主要是处理一些战斗前的等待
-    public void enterBattle(boolean isFirstHand)
+    //进入战斗的准备
+    public void enterBattle(TurnManager turnManager)
     {
+        this.turnManager = turnManager;
         //标记先后手
-        SocketServer.firstHandFlag = isFirstHand;
-        //直接在这里调用旧版的结束等待状态的内容
+        SocketServer.firstHandFlag = (GlobalManager.playerManager.selfPlayerInfo.getIdSeat() == 0);
+        System.out.printf("First hand flag %b\n",SocketServer.firstHandFlag);
         CharacterSelectScreenPatches.TestUpdateFading.endWaitStage(true);
         resetBattleInfo();
-        MultiPauseAction.pauseStage = !isFirstHand;
+        MultiPauseAction.pauseStage = !SocketServer.firstHandFlag;
     }
 
     //初始化战斗信息
@@ -67,13 +70,17 @@ public class BattleInfo {
     }
 
     //更新玩家结束回合的信息
-    public void updateEndTurn(PlayerMonster monster)
+    public void updateEndTurn(PlayerInfo info)
     {
+        if(info.playerMonster == null)
+            return;
         //更新回合结束时的状态
-        monster.endOfTurnTrigger();
-        if(!monster.friendFlag && !selfDeadFlag && oppositeTeam.isAllEndTurn())
+        info.playerMonster.endOfTurnTrigger();
+        if(info.getIdSeat() != GlobalManager.playerManager.selfPlayerInfo.getIdSeat())
         {
-            MultiPauseAction.pauseStage = false;
+            //判断能不能进行下回合
+            if(turnManager.canBeginTurn())
+                MultiPauseAction.pauseStage = false;
         }
     }
 
