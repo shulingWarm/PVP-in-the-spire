@@ -76,7 +76,7 @@ public class TurnManager {
     public void setPlayerSeat(PlayerInfo info,int idSeat)
     {
         System.out.printf("Set %s at %d !!!\n",info.getName(),idSeat);
-        if(idSeat >= this.seatList.size())
+        if(idSeat < 0 || idSeat >= this.seatList.size())
         {
             System.out.println("Seat out of range");
             return;

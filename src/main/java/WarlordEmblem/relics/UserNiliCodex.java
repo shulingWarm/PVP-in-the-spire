@@ -1,5 +1,6 @@
 package WarlordEmblem.relics;
 
+import WarlordEmblem.actions.MultiPauseAction;
 import WarlordEmblem.actions.UserCodeAction;
 import com.megacrit.cardcrawl.actions.common.RelicAboveCreatureAction;
 import com.megacrit.cardcrawl.actions.unique.CodexAction;
@@ -23,6 +24,8 @@ public class UserNiliCodex extends AbstractRelic {
     public void onPlayerEndTurn() {
         this.addToBot(new RelicAboveCreatureAction(AbstractDungeon.player, this));
         this.addToBot(new UserCodeAction());
+        //禁止提前开始下回合
+        MultiPauseAction.pauseStage = true;
     }
 
     public AbstractRelic makeCopy() {

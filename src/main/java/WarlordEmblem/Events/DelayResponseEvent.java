@@ -51,7 +51,8 @@ public class DelayResponseEvent extends BaseEvent {
             int sender = streamHandle.readInt();
             //接收请求的tag
             int tempTag = streamHandle.readInt();
-            RenderPatch.delayBox.receiveResponse(sender,tempTag);
+            if(RenderPatch.delayBox != null)
+                RenderPatch.delayBox.receiveResponse(sender,tempTag);
         }
         catch (IOException e)
         {

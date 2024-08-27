@@ -32,6 +32,8 @@ public class Communication {
     //发送event
     public static void advanceSendEvent(BaseEvent event,int playerTag)
     {
+        if(AutomaticSocketServer.globalServer == null)
+            return;
         //如果是未注册过的事件，不做处理
         HashMap<String,BaseEvent> eventMap = GlobalManager.eventMap;
         if(!eventMap.containsKey(event.eventId))
