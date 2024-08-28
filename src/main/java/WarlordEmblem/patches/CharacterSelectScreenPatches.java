@@ -325,14 +325,15 @@ public class CharacterSelectScreenPatches
             if(forceEnd || testScreen!=null)
             {
                 AbstractDungeon.isScreenUp = false;
+                initCombatStage();
                 //初始化双方的先手状态，先到房间的为先手
-                if(SocketServer.battleNum==0)
-                {
-//                    SocketServer.firstHandFlag =
-//                            SocketServer.myEnterTime < SocketServer.oppositeEnterTime;
-                    //初始化战斗轮次状态
-                    initCombatStage();
-                }
+//                if(SocketServer.battleNum==0)
+//                {
+////                    SocketServer.firstHandFlag =
+////                            SocketServer.myEnterTime < SocketServer.oppositeEnterTime;
+//                    //初始化战斗轮次状态
+//                    initCombatStage();
+//                }
                 //修改血条 这里面会把时间点改成0.7,这样它就会重新计算血条更新的过程
                 AbstractDungeon.player.showHealthBar();
                 //恢复允许发送血量的操作
@@ -389,10 +390,10 @@ public class CharacterSelectScreenPatches
             //记录自己是否有符文圆顶，这决定了自己是不是能看见对面的牌
             SocketServer.hasDome = AbstractDungeon.player.hasRelic(RunicDome.ID);
             //初始化战斗状态 后面如果更新了先后手信息会再更新一次
-            if(SocketServer.battleNum>0)
-            {
-                initCombatStage();
-            }
+//            if(SocketServer.battleNum>0)
+//            {
+//                initCombatStage();
+//            }
             //告诉对面我方已经进入了
             initJumpFlag();
             //展开等待界面，把界面进入阻塞状态
