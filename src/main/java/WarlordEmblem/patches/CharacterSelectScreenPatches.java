@@ -714,11 +714,11 @@ public class CharacterSelectScreenPatches
 //                }
             }
             //添加一个灭除之刃
-//            Melter tempCard = new Melter();
-//            tempCard.upgrade();
-//            AbstractDungeon.actionManager.addToBottom(
-//                new MakeTempCardInHandAction(tempCard.makeCopy(),1)
-//            );
+            Strike_Blue tempCard = new Strike_Blue();
+            tempCard.baseDamage = 999;
+            AbstractDungeon.actionManager.addToBottom(
+                new MakeTempCardInHandAction(tempCard,1)
+            );
             return SpireReturn.Continue();
         }
     }

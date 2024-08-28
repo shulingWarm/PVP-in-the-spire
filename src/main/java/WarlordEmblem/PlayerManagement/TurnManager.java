@@ -6,6 +6,7 @@ import WarlordEmblem.network.PlayerInfo;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
 
 //轮次管理器
 public class TurnManager {
@@ -50,12 +51,30 @@ public class TurnManager {
     //判断某个位置的前置轮次是大于后置轮次的
     public boolean isPreTurnBigger(int idSeat)
     {
-        if(idSeat == 0 || idSeat == (seatList.size() - 1))
+        int preTurn = -1;
+        int postTurn = -1;
+        for(int i=idSeat-1;i>=0;--i)
         {
-            return true;
+            for (PlayerInfo playerInfo : seatList.get(i)) {
+                preTurn = playerInfo.getIdTurn();
+                if (preTurn != -1)
+                    break;
+            }
+            if(preTurn != -1)
+                break;
         }
-        int preTurn = seatList.get(idSeat - 1).iterator().next().getIdTurn();
-        int postTurn = seatList.get(idSeat + 1).iterator().next().getIdTurn();
+        for(int i=idSeat+1;i<seatList.size();++i)
+        {
+            for (PlayerInfo playerInfo : seatList.get(i)) {
+                postTurn = playerInfo.getIdTurn();
+                if (postTurn != -1)
+                    break;
+            }
+            if(postTurn != -1)
+                break;
+        }
+        if(postTurn == -1 || preTurn == -1)
+            return true;
         return preTurn > postTurn;
     }
 
@@ -110,7 +129,7 @@ public class TurnManager {
     //第二场战斗之后的分配
     public int secondAssignment(PlayerInfo info)
     {
-        boolean teamSame = info.idTeam == GlobalManager.playerManager.selfPlayerInfo.idSeat;
+        boolean teamSame = info.idTeam == GlobalManager.playerManager.selfPlayerInfo.idTeam;
         boolean firstHand = SocketServer.firstHandFlag;
         if(teamSame == firstHand) return 0;
         return 1;

@@ -79,7 +79,7 @@ public class BattleInfo {
         if(info.getIdSeat() != GlobalManager.playerManager.selfPlayerInfo.getIdSeat())
         {
             //判断能不能进行下回合
-            if(turnManager.canBeginTurn())
+            if(!(selfDeadFlag) && turnManager.canBeginTurn())
                 MultiPauseAction.pauseStage = false;
         }
     }
