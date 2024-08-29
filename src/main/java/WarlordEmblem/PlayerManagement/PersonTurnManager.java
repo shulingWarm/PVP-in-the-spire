@@ -16,15 +16,21 @@ public class PersonTurnManager extends TurnManager {
         //判断目标是否为空
         if(this.seatList.get(idTeam).isEmpty())
             return idTeam;
-        for(int i=this.seatList.size() - 1;i>idTeam;--i)
+        if(idTeam == 0)
         {
-            if(this.seatList.get(i).isEmpty())
-                return i;
+            for(int i=this.seatList.size() - 1;i>idTeam;--i)
+            {
+                if(this.seatList.get(i).isEmpty())
+                    return i;
+            }
         }
-        for(int i=idTeam + 1;i<seatList.size();++i)
+        else if(idTeam == 1)
         {
-            if(this.seatList.get(i).isEmpty())
-                return i;
+            for(int i=idTeam + 1;i<seatList.size();++i)
+            {
+                if(this.seatList.get(i).isEmpty())
+                    return i;
+            }
         }
         System.out.println("Warning: Invalid assignment!!");
         return -1;
