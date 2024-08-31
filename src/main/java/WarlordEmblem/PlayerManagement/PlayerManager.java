@@ -239,6 +239,11 @@ public class PlayerManager implements TeamCallback {
     //更新我方player的准备状态
     public void updateReadyFlag(PlayerInfo info,boolean readyFlag)
     {
+        if(info == null)
+        {
+            System.out.println("Receive ready info player null");
+            return;
+        }
         System.out.printf("Update %s ready %b",info.getName(),readyFlag);
         //如果准备状态没有发生变化就什么都不需要做
         if(info.getReadyFlag() == readyFlag)
