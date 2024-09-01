@@ -125,6 +125,7 @@ public class BattleInfoEvent extends BaseEvent {
             GlobalManager.playerManager.updateEnterTime(
                 playerInfo,enterTime
             );
+            GlobalManager.playerManager.checkCanEnterBattle();
         }
         catch (IOException e)
         {
