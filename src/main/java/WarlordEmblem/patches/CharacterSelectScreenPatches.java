@@ -401,6 +401,8 @@ public class CharacterSelectScreenPatches
             AbstractDungeon.isScreenUp = true;
             GlobalManager.playerManager.selfPlayerInfo.initEnterTime();
             entrySend();
+            //检查进入战斗的条件
+            GlobalManager.playerManager.checkCanEnterBattle();
         }
     }
 
@@ -1111,7 +1113,7 @@ public class CharacterSelectScreenPatches
             }
             saveNodeY = AbstractDungeon.getCurrMapNode().y;
             //debug的时候打开这里，这样可以直接进入boss房间
-            //AbstractDungeon.getCurrMapNode().y = 2;
+            // AbstractDungeon.getCurrMapNode().y = 2;
             //如果当前到了3层说明可以进boss房间了
             if(saveNodeY>=FakeEnding.ROW_NUM-1)
             {

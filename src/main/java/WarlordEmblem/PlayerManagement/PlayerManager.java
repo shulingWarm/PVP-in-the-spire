@@ -349,6 +349,11 @@ public class PlayerManager implements TeamCallback {
         team.updateEnterTime(enterTime);
         ++this.readyNum;
         System.out.printf("ready update: %d\n",this.readyNum);
+    }
+
+    //检查是否达到了进入战斗的条件
+    public void checkCanEnterBattle()
+    {
         //如果进入到战斗房间的总数达标了，就调用进入战斗的流程
         if(this.readyNum == this.playerInfoMap.size() && selfPlayerInfo.isLobbyOwner)
         {

@@ -99,8 +99,11 @@ public class BattleInfoEvent extends BaseEvent {
             //读取玩家的tag
             int tempTag = streamHandle.readInt();
             PlayerInfo playerInfo = GlobalManager.playerManager.getPlayerInfo(tempTag);
+            if(playerInfo == null)
+                return;
             //读取生命上限和当前的生命
             playerInfo.maxHealth = streamHandle.readInt();
+            System.out.printf("Receive max health %d\n",playerInfo.maxHealth);
             playerInfo.currentHealth = streamHandle.readInt();
             //处理尾巴的数量
             playerInfo.tailNum = streamHandle.readInt();
