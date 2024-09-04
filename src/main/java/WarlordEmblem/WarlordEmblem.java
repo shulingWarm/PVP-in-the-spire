@@ -287,6 +287,8 @@ public class WarlordEmblem implements
         Communication.registerEvent(new DelayResponseEvent(0,0));
         Communication.registerEvent(new PlayerSeatEvent(null,0));
         Communication.registerEvent(new EnterBattleEvent());
+        Communication.registerEvent(new BeginTurnEvent(0));
+        Communication.registerEvent(new BeginTurnResponseEvent());
 
         FontLibrary.getBaseFont();
         FontLibrary.getFontWithSize(24);

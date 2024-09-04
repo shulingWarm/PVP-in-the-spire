@@ -76,12 +76,10 @@ public class BattleInfo {
             return;
         //更新回合结束时的状态
         info.playerMonster.endOfTurnTrigger();
-        if(info.getIdSeat() != GlobalManager.playerManager.selfPlayerInfo.getIdSeat())
-        {
-            //判断能不能进行下回合
-            if(!(selfDeadFlag) && turnManager.canBeginTurn())
-                MultiPauseAction.pauseStage = false;
-        }
+        //更新维护玩家信息的操作
+        //但这个事只有房主玩家需要去做
+        if(GlobalManager.playerManager.selfPlayerInfo.isLobbyOwner)
+            turnManager.updatePlayerTurn(info,SeatManager.TURN_END);
     }
 
     //战斗胜利的逻辑
@@ -144,6 +142,17 @@ public class BattleInfo {
         //发送死亡信息
         Communication.sendEvent(new DeadEvent());
         updateDeadInfo(GlobalManager.playerManager.selfPlayerInfo);
+    }
+
+    //更新玩家的准备状态
+    public void updatePlayerTurnStage(PlayerInfo info,int newStage)
+    {
+        //只有我方玩家是房主的时候才会走这个分支
+        if(GlobalManager.playerManager.selfPlayerInfo.isLobbyOwner)
+        {
+            //调用turn管理器，去更新里面的状态
+            turnManager.updatePlayerTurn(info,newStage);
+        }
     }
 
     //获得随机的敌人

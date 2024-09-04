@@ -3,6 +3,7 @@ package WarlordEmblem.PlayerManagement;
 import WarlordEmblem.GlobalManager;
 import WarlordEmblem.SocketServer;
 import WarlordEmblem.network.PlayerInfo;
+import WarlordEmblem.patches.steamConnect.SteamManager;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -12,7 +13,7 @@ import java.util.Iterator;
 public class TurnManager {
 
     //每个座次位置的玩家
-    public ArrayList<HashSet<PlayerInfo>> seatList;
+    public ArrayList<SeatManager> seatList;
 
     public TurnManager(int seatNum)
     {
@@ -20,75 +21,34 @@ public class TurnManager {
         //初始化每个位置的玩家
         for(int i=0;i<seatNum;++i)
         {
-            seatList.add(new HashSet<>());
+            seatList.add(new SeatManager());
         }
     }
 
-    //遍历某个范围内的座次数据，判断是否全都一样
-    public boolean isIdTurnSame(int idBegin,int idEnd)
+    //切换到下一下座位的玩家
+    public void startNextTurn(int idSeat)
     {
-        //目前找到的轮次
-        int idTurn = -1;
-        for(int i=idBegin;i<idEnd;++i)
+        //计算下一个座位
+        idSeat = (idSeat + 1) % seatList.size();
+        //调用座位的启动逻辑
+        this.seatList.get(idSeat).launchSeatStart();
+    }
+
+    //更新玩家的回合内状态
+    public void updatePlayerTurn(PlayerInfo info,int stageTag)
+    {
+        int idSeat = info.getIdSeat();
+        this.seatList.get(idSeat).setInfoStage(info,stageTag);
+        //如果是结束回合的操作，就另外再判断一下是不是当前回合已经完全回合结束了
+        if(stageTag == SeatManager.TURN_END)
         {
-            //获取当前位置的哈希表
-            HashSet<PlayerInfo> seatPlayers = this.seatList.get(i);
-            for(PlayerInfo eachPlayer : seatPlayers)
+            //检查当前的seat是不是已经完全结束了
+            if(this.seatList.get(idSeat).isAllPlayerEndTurn())
             {
-                int tempTurn = eachPlayer.getIdTurn();
-                if(tempTurn >= 0)
-                {
-                    if(idTurn >= 0 && idTurn != tempTurn)
-                        return false;
-                    else
-                        idTurn = tempTurn;
-                }
+                //启动下一个回合开始
+                startNextTurn(idSeat);
             }
         }
-        return true;
-    }
-
-    //判断某个位置的前置轮次是大于后置轮次的
-    public boolean isPreTurnBigger(int idSeat)
-    {
-        int preTurn = -1;
-        int postTurn = -1;
-        for(int i=idSeat-1;i>=0;--i)
-        {
-            for (PlayerInfo playerInfo : seatList.get(i)) {
-                preTurn = playerInfo.getIdTurn();
-                if (preTurn != -1)
-                    break;
-            }
-            if(preTurn != -1)
-                break;
-        }
-        for(int i=idSeat+1;i<seatList.size();++i)
-        {
-            for (PlayerInfo playerInfo : seatList.get(i)) {
-                postTurn = playerInfo.getIdTurn();
-                if (postTurn != -1)
-                    break;
-            }
-            if(postTurn != -1)
-                break;
-        }
-        if(postTurn == -1 || preTurn == -1)
-            return true;
-        return preTurn > postTurn;
-    }
-
-    //判断是否可以开始回合
-    public boolean canBeginTurn()
-    {
-        //获取我方玩家所在的seat
-        int idSeat = GlobalManager.playerManager.selfPlayerInfo.getIdSeat();
-        if(idSeat > this.seatList.size())
-            idSeat = this.seatList.size();
-        //遍历所有的前置座位
-        return isPreTurnBigger(idSeat) &&
-            isIdTurnSame(0,idSeat) &&
-            isIdTurnSame(idSeat + 1,this.seatList.size());
     }
 
     //设置玩家的seat
@@ -100,7 +60,7 @@ public class TurnManager {
             System.out.println("Seat out of range");
             return;
         }
-        seatList.get(idSeat).add(info);
+        seatList.get(idSeat).registerPlayer(info);
         info.setIdSeat(idSeat);
     }
 
@@ -115,7 +75,7 @@ public class TurnManager {
         }
         else {
             //判断它属于哪个队伍
-            PlayerInfo existPlayer = seatList.get(0).iterator().next();
+            PlayerInfo existPlayer = seatList.get(0).getFirstPlayer();
             //判断是不是相同的队伍
             if(existPlayer.idTeam == info.idTeam)
             {

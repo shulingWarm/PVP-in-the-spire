@@ -6,6 +6,7 @@ import WarlordEmblem.Events.*;
 import WarlordEmblem.GlobalManager;
 import WarlordEmblem.PVPApi.Communication;
 import WarlordEmblem.SocketServer;
+import WarlordEmblem.actions.MultiPauseAction;
 import WarlordEmblem.character.PlayerMonster;
 import WarlordEmblem.network.PlayerInfo;
 import WarlordEmblem.network.SelfPlayerInfo;
@@ -456,6 +457,13 @@ public class PlayerManager implements TeamCallback {
             }
         }
         return null;
+    }
+
+    //启动本地玩家的回合
+    public void startSelfPlayerTurn()
+    {
+        //强制结束回合
+        MultiPauseAction.pauseStage = false;
     }
 
 }
