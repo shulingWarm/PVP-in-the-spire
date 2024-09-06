@@ -831,6 +831,10 @@ public class CharacterSelectScreenPatches
                     return;
                 }
                 Communication.sendEvent(new EndTurnEvent());
+                //维护回合结束的信息
+                GlobalManager.playerManager.battleInfo.updateTurnInfo(
+                    GlobalManager.playerManager.selfPlayerInfo
+                );
                 //发送一个同步血量的操作信息
 //                AbstractDungeon.actionManager.addToBottom(
 //                    new HealthSyncAction()

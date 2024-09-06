@@ -28,10 +28,18 @@ public class TurnManager {
     //切换到下一下座位的玩家
     public void startNextTurn(int idSeat)
     {
-        //计算下一个座位
-        idSeat = (idSeat + 1) % seatList.size();
-        //调用座位的启动逻辑
-        this.seatList.get(idSeat).launchSeatStart();
+        //循环判断接下来可以开始回合的玩家
+        for(int i=0;i<seatList.size();++i)
+        {
+            //计算下一个座位
+            idSeat = (idSeat + 1) % seatList.size();
+            //调用座位的启动逻辑
+            if(this.seatList.get(idSeat).isPlayerAlive())
+            {
+                this.seatList.get(idSeat).launchSeatStart();
+                break;
+            }
+        }
     }
 
     //更新玩家的回合内状态

@@ -78,6 +78,12 @@ public class BattleInfo {
         info.playerMonster.endOfTurnTrigger();
         //更新维护玩家信息的操作
         //但这个事只有房主玩家需要去做
+        updateTurnInfo(info);
+    }
+
+    //更新回合的结束时的操作
+    public void updateTurnInfo(PlayerInfo info)
+    {
         if(GlobalManager.playerManager.selfPlayerInfo.isLobbyOwner)
             turnManager.updatePlayerTurn(info,SeatManager.TURN_END);
     }

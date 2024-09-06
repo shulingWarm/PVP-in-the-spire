@@ -57,12 +57,27 @@ public class SeatManager {
         return true;
     }
 
+    //判断这个座位里面是否有存活的玩家
+    public boolean isPlayerAlive()
+    {
+        for(PlayerInfo eachPlayer : infoStageMap.keySet())
+        {
+            //判断玩家是否存活
+            if(!eachPlayer.isDead())
+                return true;
+        }
+        return false;
+    }
+
     //调用玩家逻辑的启动过程
     public void launchSeatStart()
     {
         //循环启动每个玩家的状态
         for(PlayerInfo eachInfo : infoStageMap.keySet())
         {
+            //如果玩家已经死了，就直接跳过它
+            if(eachInfo.isDead())
+                continue;
             //查看当前玩家是否为本地玩家
             if(eachInfo.isSelfPlayer())
             {
