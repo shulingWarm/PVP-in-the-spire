@@ -1,10 +1,14 @@
 package WarlordEmblem;
 
+import UI.Chat.ChatBox;
+import UI.Chat.ChatFoldPage;
 import WarlordEmblem.orbs.OrbMapping;
+import WarlordEmblem.patches.InputActionPatch;
 import com.megacrit.cardcrawl.core.CardCrawlGame;
 import com.megacrit.cardcrawl.core.Settings;
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
 import com.megacrit.cardcrawl.helpers.SeedHelper;
+import com.megacrit.cardcrawl.helpers.controller.CInputHelper;
 import com.megacrit.cardcrawl.helpers.input.InputHelper;
 import com.megacrit.cardcrawl.random.Random;
 
@@ -38,8 +42,15 @@ public class GameManager {
         CardCrawlGame.mainMenuScreen.fadeOutMusic();
         Settings.isDailyRun = false;
         AbstractDungeon.generateSeeds();
-        //设置动作捕捉
-        InputHelper.initialize();
+        //如果没有打开聊天窗口，就把快捷键开一下
+        if(!ChatFoldPage.instance.chatBox.isOpen)
+        {
+            ChatFoldPage.instance.chatBox.close();
+        }
+        else
+        {
+            InputActionPatch.allowShortcut = true;
+        }
     }
 
 }

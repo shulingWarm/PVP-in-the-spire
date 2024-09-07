@@ -44,6 +44,9 @@ public class ChatBox extends AbstractPage
     //显示聊天内容的panel
     public BasePanel messagePanel;
 
+    //判断是否为打开的状态
+    public boolean isOpen = false;
+
     public ChatBox()
     {
         //初始化背景框
@@ -84,6 +87,7 @@ public class ChatBox extends AbstractPage
 
     public void open()
     {
+        this.isOpen = true;
         this.inputBox.open();
         //把消息框拉到最下面
         messagePanel.scrolledUsingBar(1);
@@ -91,6 +95,7 @@ public class ChatBox extends AbstractPage
 
     @Override
     public void close() {
+        this.isOpen = false;
         //关闭输入框的内容
         this.inputBox.close();
     }
