@@ -42,9 +42,9 @@ public class ChatFoldPage extends FoldPage {
     }
 
     //收到消息
-    public void receiveMessage(String message)
+    public void receiveMessage(String message, String sender)
     {
-        this.chatBox.receiveMessage(message);
+        this.chatBox.receiveMessage(sender + ": " + message);
         //判断是否处于打开状态
         if(!this.mainPageFlag)
             this.openButton.setTwinkle(true);

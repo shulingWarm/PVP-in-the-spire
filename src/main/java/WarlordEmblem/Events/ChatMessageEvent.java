@@ -2,7 +2,9 @@ package WarlordEmblem.Events;
 
 import UI.Chat.ChatFoldPage;
 import UI.Text.AdvTextManager;
+import WarlordEmblem.GlobalManager;
 import WarlordEmblem.PVPApi.BaseEvent;
+import WarlordEmblem.network.PlayerInfo;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -25,6 +27,8 @@ public class ChatMessageEvent extends BaseEvent {
         //发送这个消息的完整内容
         try
         {
+            //发送本地玩家的tag
+            GlobalManager.playerManager.encodePlayer(streamHandle);
             streamHandle.writeUTF(this.sendingMessage.getTotalString());
         }
         catch (IOException e)
@@ -37,10 +41,13 @@ public class ChatMessageEvent extends BaseEvent {
     public void decode(DataInputStream streamHandle) {
         try
         {
+            //解码玩家的信息
+            PlayerInfo info = GlobalManager.playerManager.decodePlayerInfo(streamHandle);
+            if(info == null)
+                return;
             String message = streamHandle.readUTF();
             //把消息送进chat box
-            ChatFoldPage.getInstance().receiveMessage(message);
-
+            ChatFoldPage.getInstance().receiveMessage(message,info.getName());
         }
         catch (IOException e)
         {
