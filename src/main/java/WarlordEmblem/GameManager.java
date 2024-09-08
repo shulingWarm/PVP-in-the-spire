@@ -43,7 +43,7 @@ public class GameManager {
         Settings.isDailyRun = false;
         AbstractDungeon.generateSeeds();
         //如果没有打开聊天窗口，就把快捷键开一下
-        if(!ChatFoldPage.instance.chatBox.isOpen)
+        if(!ChatFoldPage.getInstance().chatBox.isOpen)
         {
             ChatFoldPage.instance.chatBox.close();
         }

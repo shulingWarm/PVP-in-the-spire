@@ -1,9 +1,13 @@
 package WarlordEmblem.patches;
 
+import UI.Chat.ChatFoldPage;
+import com.badlogic.gdx.Gdx;
 import com.evacipated.cardcrawl.modthespire.lib.SpirePatch;
+import com.evacipated.cardcrawl.modthespire.lib.SpirePostfixPatch;
 import com.evacipated.cardcrawl.modthespire.lib.SpirePrefixPatch;
 import com.evacipated.cardcrawl.modthespire.lib.SpireReturn;
 import com.megacrit.cardcrawl.helpers.input.InputAction;
+import com.megacrit.cardcrawl.ui.panels.TopPanel;
 
 public class InputActionPatch {
 
@@ -20,6 +24,29 @@ public class InputActionPatch {
             if(allowShortcut)
                 return SpireReturn.Continue();
             return SpireReturn.Return(false);
+        }
+    }
+
+    //按下tab键时，打开或关闭聊天窗口
+    @SpirePatch(clz = TopPanel.class, method = "updateButtons")
+    public static class OpenChatBox
+    {
+        @SpirePrefixPatch
+        public static void fix()
+        {
+            for(int i=0;i<256;++i)
+            {
+                if(Gdx.input.isKeyJustPressed(i))
+                {
+                    System.out.printf("%d just pressed\n",i);
+                }
+            }
+            //判断tab键是否被按下过
+            if(Gdx.input.isKeyJustPressed(61))
+            {
+                //重置聊天窗口的状态
+                ChatFoldPage.getInstance().invertStage();
+            }
         }
     }
 

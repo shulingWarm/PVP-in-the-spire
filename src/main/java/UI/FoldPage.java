@@ -43,17 +43,36 @@ public class FoldPage extends AbstractPage
     }
 
     @Override
+    public void open() {
+        this.mainPageFlag = true;
+        this.mainPage.open();
+    }
+
+    @Override
+    public void close() {
+        this.mainPageFlag = false;
+        this.mainPage.close();
+        this.openButton.setTwinkle(false);
+    }
+
+    //反转状态，开着的情况下就关了，关着的情况下就打开
+    public void invertStage()
+    {
+        if(mainPageFlag)
+            this.close();
+        else
+            this.open();
+    }
+
+    @Override
     public void clickEvent(BaseUpdateButton button) {
         if(button == this.openButton)
         {
-            this.mainPageFlag = true;
-            this.mainPage.open();
+            this.open();
         }
         else if(button == this.closeButton)
         {
-            this.mainPageFlag = false;
-            this.mainPage.close();
-            this.openButton.setTwinkle(false);
+            this.close();
         }
     }
 

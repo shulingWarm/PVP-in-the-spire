@@ -97,6 +97,9 @@ public class InputBox extends AbstractPage implements InputProcessor {
     {
         if((int)symbol == 0)
             return false;
+        //禁用tab键
+        if((int)symbol == 9)
+            return false;
         //只允许数字或字母
         return allowAllSymbol || Character.isSpaceChar(symbol) ||
             Character.isLetterOrDigit(symbol);
@@ -188,7 +191,6 @@ public class InputBox extends AbstractPage implements InputProcessor {
     @Override
     public boolean keyTyped(char character) {
         String charStr = String.valueOf(character);
-        // logger.info(charStr);
         if (charStr.length() != 1) {
             return false;
         }
