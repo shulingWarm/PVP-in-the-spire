@@ -31,7 +31,7 @@ public class FoldPage extends AbstractPage
         openButton = new TwinkleButton(Settings.WIDTH*0.01f, Settings.HEIGHT / 2.f,
             Settings.WIDTH * 0.1f,Settings.HEIGHT * 0.1f,
                 "打开", FontLibrary.getBaseFont(), ImageMaster.PROFILE_SLOT,
-                this);
+                this, null);
         //初始化用于关闭页面的按钮
         //先临时把它显示在右上角
         closeButton = new BaseUpdateButton(Settings.WIDTH * 0.3f,

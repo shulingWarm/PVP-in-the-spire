@@ -5,6 +5,7 @@ import UI.Button.WithUpdate.TwinkleButton;
 import UI.FoldPage;
 import UI.TextureManager;
 import WarlordEmblem.helpers.FontLibrary;
+import com.badlogic.gdx.Gdx;
 import com.megacrit.cardcrawl.core.Settings;
 import com.megacrit.cardcrawl.helpers.ImageMaster;
 
@@ -32,7 +33,7 @@ public class ChatFoldPage extends FoldPage {
         openButton = new TwinkleButton(Settings.WIDTH*0.004f, Settings.HEIGHT / 2.f,
                 Settings.WIDTH * 0.05f,Settings.HEIGHT * 0.05f,
                 "", FontLibrary.getBaseFont(), TextureManager.MESSAGE_BUTTON,
-                this);
+                this,"(((((((Tab)))))))");
         //初始化用于关闭页面的按钮
         //先临时把它显示在右上角
         closeButton = new BaseUpdateButton(Settings.WIDTH * 0.24f,
@@ -50,4 +51,13 @@ public class ChatFoldPage extends FoldPage {
             this.openButton.setTwinkle(true);
     }
 
+    @Override
+    public void update() {
+        super.update();
+        if(Gdx.input.isKeyJustPressed(61))
+        {
+            //重置聊天窗口的状态
+            this.invertStage();
+        }
+    }
 }
