@@ -8,6 +8,7 @@ import WarlordEmblem.EffectTransport.EffectManager;
 import WarlordEmblem.EffectTransport.EmptyTransporter;
 import WarlordEmblem.EffectTransport.XYTransporter;
 import WarlordEmblem.Events.*;
+import WarlordEmblem.GameEvent.ModifiedSkull;
 import WarlordEmblem.PVPApi.Communication;
 import WarlordEmblem.card.*;
 import WarlordEmblem.helpers.FontLibrary;
@@ -209,6 +210,8 @@ public class WarlordEmblem implements
         BaseMod.addRelic(new BlockGainer(),RelicType.SHARED);
         BaseMod.addRelic(new OrangePelletsChange(),RelicType.SHARED);
 
+        //注册修改过的全知头骨的事件
+        BaseMod.addEvent(ModifiedSkull.ID,ModifiedSkull.class);
     }
 
 

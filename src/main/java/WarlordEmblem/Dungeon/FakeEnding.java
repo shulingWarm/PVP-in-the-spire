@@ -1,5 +1,6 @@
 package WarlordEmblem.Dungeon;
 
+import WarlordEmblem.GameEvent.ModifiedSkull;
 import com.badlogic.gdx.graphics.Color;
 import com.megacrit.cardcrawl.characters.AbstractPlayer;
 import com.megacrit.cardcrawl.core.CardCrawlGame;
@@ -346,6 +347,7 @@ public class FakeEnding extends AbstractDungeon {
         //如果初始化过就不用初始化了
         if(!eventList.isEmpty())
             return;
+        eventList.add(ModifiedSkull.ID);
         eventList.add("Addict");
         eventList.add("Bonfire Elementals");//小精灵
         eventList.add("Duplicator");
@@ -377,7 +379,7 @@ public class FakeEnding extends AbstractDungeon {
         eventList.add("Beggar");
         eventList.add("Cursed Tome");
         eventList.add("Drug Dealer");
-        eventList.add("Knowing Skull");
+        // eventList.add("Knowing Skull"); 全知头骨
         eventList.add("Nest");
         eventList.add("The Library");
         eventList.add("The Mausoleum");
