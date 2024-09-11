@@ -48,7 +48,7 @@ public class ModifiedSkull extends AbstractImageEvent {
     private ArrayList<Reward> options;
 
     public ModifiedSkull() {
-        super(NAME, INTRO_MSG, "images/events/jpg");
+        super(NAME, INTRO_MSG, "images/events/knowingSkull.jpg");
         this.screen = CurScreen.INTRO_1;
         this.optionsChosen = "";
         this.options = new ArrayList();
