@@ -8,6 +8,7 @@ import WarlordEmblem.EffectTransport.EffectManager;
 import WarlordEmblem.EffectTransport.EmptyTransporter;
 import WarlordEmblem.EffectTransport.XYTransporter;
 import WarlordEmblem.Events.*;
+import WarlordEmblem.GameEvent.ModifiedShiningLight;
 import WarlordEmblem.GameEvent.ModifiedSkull;
 import WarlordEmblem.PVPApi.Communication;
 import WarlordEmblem.card.*;
@@ -212,6 +213,8 @@ public class WarlordEmblem implements
 
         //注册修改过的全知头骨的事件
         BaseMod.addEvent(ModifiedSkull.ID,ModifiedSkull.class);
+        //修改过的打防之光
+        BaseMod.addEvent(ModifiedShiningLight.ID,ModifiedShiningLight.class);
     }
 
 

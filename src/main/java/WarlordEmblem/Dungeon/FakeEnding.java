@@ -371,7 +371,7 @@ public class FakeEnding extends AbstractDungeon {
         eventList.add("Scrap Ooze");
         eventList.add("Liars Game");
         eventList.add("Living Wall");
-        eventList.add("Shining Light");
+        eventList.add("ModifiedShiningLight");
         eventList.add("Vampires");
         //eventList.add("Ghosts"); 灵体事件
         eventList.add("Addict");
