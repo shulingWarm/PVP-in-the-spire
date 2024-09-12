@@ -43,7 +43,8 @@ public class ModifiedShiningLight extends AbstractImageEvent {
         }
 
         if (AbstractDungeon.player.masterDeck.hasUpgradableCards()) {
-            this.imageEventText.setDialogOption(OPTIONS[0] + this.damage + OPTIONS[1]);
+            this.imageEventText.setDialogOption(OPTIONS[0] + this.damage + OPTIONS[1],
+                this.damage < AbstractDungeon.player.currentHealth);
         } else {
             this.imageEventText.setDialogOption(OPTIONS[3], true);
         }
