@@ -14,6 +14,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.esotericsoftware.spine.AnimationState;
 import com.megacrit.cardcrawl.cards.AbstractCard;
 import com.megacrit.cardcrawl.cards.DamageInfo;
+import com.megacrit.cardcrawl.cards.red.Barricade;
 import com.megacrit.cardcrawl.characters.AbstractPlayer;
 import com.megacrit.cardcrawl.core.CardCrawlGame;
 import com.megacrit.cardcrawl.core.Settings;
@@ -238,9 +239,16 @@ public class PlayerMonster extends AbstractMonster {
     //强制失去block
     public void forceLoseBlock(boolean checkCaliper)
     {
+        //先看是否需要判断壁垒
+        if(checkCaliper && this.hasPower(Barricade.ID))
+        {
+            return;
+        }
         //判断是否有外卡钳
         if(this.hasCaliper && checkCaliper)
+        {
             super.loseBlock(15);
+        }
         else
             super.loseBlock();
     }
