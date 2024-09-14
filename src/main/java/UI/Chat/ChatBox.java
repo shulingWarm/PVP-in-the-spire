@@ -95,6 +95,8 @@ public class ChatBox extends AbstractPage
 
     @Override
     public void close() {
+        if(!this.isOpen)
+            return;
         this.isOpen = false;
         //关闭输入框的内容
         this.inputBox.close();

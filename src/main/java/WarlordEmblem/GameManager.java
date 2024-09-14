@@ -51,6 +51,7 @@ public class GameManager {
         {
             InputActionPatch.allowShortcut = true;
         }
+        InputHelper.initialize();
     }
 
 }
