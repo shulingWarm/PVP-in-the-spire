@@ -25,7 +25,8 @@ public class UserNiliCodex extends AbstractRelic {
         this.addToBot(new RelicAboveCreatureAction(AbstractDungeon.player, this));
         this.addToBot(new UserCodeAction());
         //禁止提前开始下回合
-        MultiPauseAction.pauseStage = true;
+        if(!AbstractDungeon.getCurrRoom().skipMonsterTurn)
+            MultiPauseAction.pauseStage = true;
     }
 
     public AbstractRelic makeCopy() {

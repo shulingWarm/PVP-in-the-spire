@@ -46,10 +46,7 @@ import com.megacrit.cardcrawl.cards.colorless.Apparition;
 import com.megacrit.cardcrawl.cards.colorless.Purity;
 import com.megacrit.cardcrawl.cards.curses.Necronomicurse;
 import com.megacrit.cardcrawl.cards.green.*;
-import com.megacrit.cardcrawl.cards.purple.Foresight;
-import com.megacrit.cardcrawl.cards.purple.Judgement;
-import com.megacrit.cardcrawl.cards.purple.Ragnarok;
-import com.megacrit.cardcrawl.cards.purple.Tantrum;
+import com.megacrit.cardcrawl.cards.purple.*;
 import com.megacrit.cardcrawl.cards.red.*;
 import com.megacrit.cardcrawl.cards.status.Wound;
 import com.megacrit.cardcrawl.cards.tempCards.Expunger;
@@ -717,8 +714,8 @@ public class CharacterSelectScreenPatches
 //                }
             }
             //添加一个灭除之刃
-//            Strike_Blue tempCard = new Strike_Blue();
-//            tempCard.baseDamage = 999;
+//            AbstractCard tempCard = new Vault();
+//            tempCard.upgrade();
 //            AbstractDungeon.actionManager.addToBottom(
 //                new MakeTempCardInHandAction(tempCard,1)
 //            );
