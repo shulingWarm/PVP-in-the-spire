@@ -3,6 +3,8 @@ package WarlordEmblem.character;
 import UI.BattleUI.BattleCardPanel;
 import UI.BattleUI.OrbManager;
 import UI.BattleUI.OrbManagerInvert;
+import WarlordEmblem.Events.KillEvent;
+import WarlordEmblem.PVPApi.Communication;
 import WarlordEmblem.PlayerManagement.PlayerCardManager;
 import WarlordEmblem.actions.MultiPauseAction;
 import WarlordEmblem.orbs.MonsterOrb;
@@ -224,6 +226,9 @@ public class PlayerMonster extends AbstractMonster {
     //这属于战斗结束时的操作了，最后再说
     public void makeItDie()
     {
+        //发送命令死亡的事件
+        Communication.advanceSendEvent(new KillEvent(this.playerTag),
+                this.playerTag);
         //设置玩家死亡
         this.isDead = true;
         this.renderPlayer.playDeathAnimation();

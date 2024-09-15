@@ -15,6 +15,7 @@ import WarlordEmblem.actions.OrbAction.ChannelActionEnemy;
 import WarlordEmblem.actions.OrbAction.UpdateOrbDescriptionAction;
 import WarlordEmblem.character.ControlMoster;
 import WarlordEmblem.character.PlayerMonster;
+import WarlordEmblem.network.PlayerInfo;
 import WarlordEmblem.orbs.FakeFrost;
 import WarlordEmblem.orbs.FakeLighting;
 import WarlordEmblem.orbs.FakrDark;
@@ -58,6 +59,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.time.ZoneId;
+import java.util.ArrayList;
 
 import com.megacrit.cardcrawl.actions.animations.VFXAction;
 import com.megacrit.cardcrawl.relics.AbstractRelic;
@@ -165,6 +167,11 @@ public class ActionNetworkPatches {
             //如果tag是自身，那就返回player
             if(playerTag == GlobalManager.myPlayerTag)
                 return AbstractDungeon.player;
+            //获取目标的player info
+            PlayerInfo info = GlobalManager.playerManager.getPlayerInfo(playerTag);
+            //如果不是有效的monster,那就直接返回空指针
+            if(info == null)
+                return null;
             return GlobalManager.playerManager.getPlayerInfo(playerTag).playerMonster;
         } catch (IOException | NullPointerException e)
         {
@@ -1886,6 +1893,27 @@ public class ActionNetworkPatches {
         }
     }
 
+    //强制斩杀
+    public static void instantKill(AbstractCreature creature)
+    {
+        //如果目标已经死了就不用管了
+        if(creature.isDying || creature.isDead)
+            return;
+        creature.currentHealth = 0;
+        creature.currentBlock = 0;
+        creature.healthBarUpdatedEvent();
+        //临时禁止buff的触发
+        ArrayList<AbstractPower> powerList = creature.powers;
+        creature.powers = new ArrayList<>();
+        //给0点伤害触发死亡
+        //不发送这次伤害信息
+        stopSendAttack = true;
+        creature.damage(new DamageInfo((AbstractCreature)null, 1, DamageInfo.DamageType.HP_LOSS));
+        stopSendAttack = false;
+        //伤害处理完了再把power送回去
+        creature.powers = powerList;
+    }
+
     //审判信息的解码
     public static void judgementDecode(DataInputStream streamHandle)
     {
@@ -1900,11 +1928,7 @@ public class ActionNetworkPatches {
             //判断是否可以杀
             if(target.currentHealth <= cutoff)
             {
-                target.currentHealth = 0;
-                target.currentBlock = 0;
-                target.healthBarUpdatedEvent();
-                //给0点伤害触发死亡
-                target.damage(new DamageInfo((AbstractCreature)null, 1, DamageInfo.DamageType.HP_LOSS));
+                instantKill(target);
             }
         }
         catch (IOException e)

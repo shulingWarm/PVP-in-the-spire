@@ -14,6 +14,7 @@ import WarlordEmblem.PVPApi.Communication;
 import WarlordEmblem.card.*;
 import WarlordEmblem.helpers.FontLibrary;
 import WarlordEmblem.helpers.RandMonsterHelper;
+import WarlordEmblem.network.PlayerInfo;
 import WarlordEmblem.relics.BlockGainer;
 import WarlordEmblem.relics.OrangePelletsChange;
 import basemod.ModLabeledToggleButton;
@@ -295,6 +296,7 @@ public class WarlordEmblem implements
         Communication.registerEvent(new EnterBattleEvent());
         Communication.registerEvent(new BeginTurnEvent(0));
         Communication.registerEvent(new BeginTurnResponseEvent());
+        Communication.registerEvent(new KillEvent(0));
 
         FontLibrary.getBaseFont();
         FontLibrary.getFontWithSize(24);

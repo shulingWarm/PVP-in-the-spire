@@ -123,6 +123,11 @@ public class BattleInfo {
     //记录死亡信息
     public void updateDeadInfo(PlayerInfo info)
     {
+        //如果info是其它玩家，那就强制它死亡一下
+        if(info.playerMonster!= null && info.playerMonster.currentHealth > 0)
+        {
+            ActionNetworkPatches.instantKill(info.playerMonster);
+        }
         //判断是不是和本机玩家一个team
         if(info.idTeam == oppositeTeam.idTeam)
         {
@@ -139,6 +144,9 @@ public class BattleInfo {
     //标记为自身已经死亡
     public void recordSelfDead()
     {
+        //如果自身目前已经是死亡状态了，就不需要再记录一次了
+        if(this.selfDeadFlag)
+            return;
         //记录自身已经死亡
         selfDeadFlag = true;
         //先记录玩家生前的形象
