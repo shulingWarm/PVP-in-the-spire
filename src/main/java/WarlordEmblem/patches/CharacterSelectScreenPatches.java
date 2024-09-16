@@ -714,7 +714,7 @@ public class CharacterSelectScreenPatches
 //                }
             }
             //添加一个灭除之刃
-//            AbstractCard tempCard = new Vault();
+//            AbstractCard tempCard = new Caltrops();
 //            tempCard.upgrade();
 //            AbstractDungeon.actionManager.addToBottom(
 //                new MakeTempCardInHandAction(tempCard,1)

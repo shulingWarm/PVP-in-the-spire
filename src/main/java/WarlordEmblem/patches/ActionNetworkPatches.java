@@ -1897,7 +1897,7 @@ public class ActionNetworkPatches {
     public static void instantKill(AbstractCreature creature)
     {
         //如果目标已经死了就不用管了
-        if(creature.isDying || creature.isDead)
+        if(creature.isDying || creature.isDead || disableCombatTrigger)
             return;
         creature.currentHealth = 0;
         creature.currentBlock = 0;

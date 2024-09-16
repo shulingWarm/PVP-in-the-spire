@@ -2,6 +2,7 @@ package WarlordEmblem.relics;
 
 import WarlordEmblem.actions.MultiPauseAction;
 import WarlordEmblem.actions.UserCodeAction;
+import WarlordEmblem.patches.ActionNetworkPatches;
 import com.megacrit.cardcrawl.actions.common.RelicAboveCreatureAction;
 import com.megacrit.cardcrawl.actions.unique.CodexAction;
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
@@ -22,8 +23,13 @@ public class UserNiliCodex extends AbstractRelic {
     }
 
     public void onPlayerEndTurn() {
-        this.addToBot(new RelicAboveCreatureAction(AbstractDungeon.player, this));
-        this.addToBot(new UserCodeAction());
+        //需要判断玩家是否还活着
+        if(AbstractDungeon.player.currentHealth > 0 &&
+            (!ActionNetworkPatches.disableCombatTrigger))
+        {
+            this.addToBot(new RelicAboveCreatureAction(AbstractDungeon.player, this));
+            this.addToBot(new UserCodeAction());
+        }
         //禁止提前开始下回合
         if(!AbstractDungeon.getCurrRoom().skipMonsterTurn)
             MultiPauseAction.pauseStage = true;

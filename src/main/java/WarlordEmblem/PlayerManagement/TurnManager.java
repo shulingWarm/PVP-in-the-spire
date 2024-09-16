@@ -14,6 +14,8 @@ public class TurnManager {
 
     //每个座次位置的玩家
     public ArrayList<SeatManager> seatList;
+    //目前正在进行的座位
+    int currIdSeat = 0;
 
     public TurnManager(int seatNum)
     {
@@ -37,6 +39,8 @@ public class TurnManager {
             if(this.seatList.get(idSeat).isPlayerAlive())
             {
                 this.seatList.get(idSeat).launchSeatStart();
+                //记录当前开启的座位
+                this.currIdSeat = idSeat;
                 break;
             }
         }
@@ -48,7 +52,7 @@ public class TurnManager {
         int idSeat = info.getIdSeat();
         this.seatList.get(idSeat).setInfoStage(info,stageTag);
         //如果是结束回合的操作，就另外再判断一下是不是当前回合已经完全回合结束了
-        if(stageTag == SeatManager.TURN_END)
+        if(stageTag == SeatManager.TURN_END && idSeat == currIdSeat)
         {
             //检查当前的seat是不是已经完全结束了
             if(this.seatList.get(idSeat).isAllPlayerEndTurn())

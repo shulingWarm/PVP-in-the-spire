@@ -17,6 +17,7 @@ import WarlordEmblem.relics.PVPTail;
 import com.badlogic.gdx.graphics.Texture;
 import com.megacrit.cardcrawl.characters.AbstractPlayer;
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
+import com.megacrit.cardcrawl.relics.AbstractRelic;
 
 import java.util.ArrayList;
 import java.util.logging.FileHandler;
@@ -108,6 +109,7 @@ public class BattleInfo {
         }
         //记录下一场战斗为后手
         SocketServer.firstHandFlag = false;
+        System.out.println("Battle win !!!!!");
     }
 
     //战斗失败的逻辑
@@ -118,26 +120,32 @@ public class BattleInfo {
         SocketServer.firstHandFlag = true;
         //执行尾巴回复操作
         PVPTail.triggerFirstTail();
+        System.out.println("Battle lose !!!!!");
     }
 
     //记录死亡信息
     public void updateDeadInfo(PlayerInfo info)
     {
-        //如果info是其它玩家，那就强制它死亡一下
-        if(info.playerMonster!= null && info.playerMonster.currentHealth > 0)
-        {
-            ActionNetworkPatches.instantKill(info.playerMonster);
-        }
+        System.out.printf("%s dead !!!\n",info.getName());
+        //更新玩家的座次信息
+        updatePlayerTurnStage(info,SeatManager.TURN_END);
         //判断是不是和本机玩家一个team
         if(info.idTeam == oppositeTeam.idTeam)
         {
             if(oppositeTeam.isAllDead())
             {
                 battleWin();
+                return;
             }
         }
         else if(selfTeam.isAllDead()) {
             battleLose();
+            return;
+        }
+        //如果info是其它玩家，那就强制它死亡一下
+        if(info.playerMonster!= null && info.playerMonster.currentHealth > 0)
+        {
+            ActionNetworkPatches.instantKill(info.playerMonster);
         }
     }
 
@@ -155,6 +163,13 @@ public class BattleInfo {
         AbstractDungeon.player.playDeathAnimation();
         //发送死亡信息
         Communication.sendEvent(new DeadEvent());
+        //如果还是在自己的回合，就强制结束一下回合
+        if(!MultiPauseAction.pauseStage)
+        {
+            MultiPauseAction.pauseStage = true;
+            //强制回合提前结束
+            AbstractDungeon.actionManager.callEndTurnEarlySequence();
+        }
         updateDeadInfo(GlobalManager.playerManager.selfPlayerInfo);
     }
 
