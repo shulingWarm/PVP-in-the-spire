@@ -1,5 +1,6 @@
 package WarlordEmblem.Dungeon;
 
+import WarlordEmblem.GameEvent.ModifiedShiningLight;
 import WarlordEmblem.GameEvent.ModifiedSkull;
 import com.badlogic.gdx.graphics.Color;
 import com.megacrit.cardcrawl.characters.AbstractPlayer;
@@ -347,6 +348,7 @@ public class FakeEnding extends AbstractDungeon {
         //如果初始化过就不用初始化了
         if(!eventList.isEmpty())
             return;
+        eventList.add(ModifiedShiningLight.ID);//打防之光
         eventList.add(ModifiedSkull.ID);
         eventList.add("Addict");
         eventList.add("Bonfire Elementals");//小精灵
@@ -371,7 +373,6 @@ public class FakeEnding extends AbstractDungeon {
         eventList.add("Scrap Ooze");
         eventList.add("Liars Game");
         eventList.add("Living Wall");
-        eventList.add("ModifiedShiningLight");
         eventList.add("Vampires");
         //eventList.add("Ghosts"); 灵体事件
         eventList.add("Addict");
