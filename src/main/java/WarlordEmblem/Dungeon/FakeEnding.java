@@ -1,5 +1,6 @@
 package WarlordEmblem.Dungeon;
 
+import WarlordEmblem.GameEvent.ModifiedCurseTome;
 import WarlordEmblem.GameEvent.ModifiedShiningLight;
 import WarlordEmblem.GameEvent.ModifiedSkull;
 import com.badlogic.gdx.graphics.Color;
@@ -378,7 +379,7 @@ public class FakeEnding extends AbstractDungeon {
         eventList.add("Addict");
         eventList.add("Back to Basics");
         eventList.add("Beggar");
-        eventList.add("Cursed Tome");
+        eventList.add(ModifiedCurseTome.ID);
         eventList.add("Drug Dealer");
         // eventList.add("Knowing Skull"); 全知头骨
         eventList.add("Nest");

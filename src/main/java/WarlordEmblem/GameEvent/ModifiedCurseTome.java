@@ -55,7 +55,10 @@ public class ModifiedCurseTome extends AbstractImageEvent {
             this.finalDmg = 10;
         }
 
-        this.imageEventText.setDialogOption(OPT_READ);
+        //计算伤害的总量
+        int totalDamage = this.finalDmg + 6;
+
+        this.imageEventText.setDialogOption(OPT_READ, totalDamage >= AbstractDungeon.player.currentHealth);
         this.imageEventText.setDialogOption(OPT_LEAVE);
     }
 

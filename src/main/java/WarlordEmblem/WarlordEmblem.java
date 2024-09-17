@@ -8,6 +8,7 @@ import WarlordEmblem.EffectTransport.EffectManager;
 import WarlordEmblem.EffectTransport.EmptyTransporter;
 import WarlordEmblem.EffectTransport.XYTransporter;
 import WarlordEmblem.Events.*;
+import WarlordEmblem.GameEvent.ModifiedCurseTome;
 import WarlordEmblem.GameEvent.ModifiedShiningLight;
 import WarlordEmblem.GameEvent.ModifiedSkull;
 import WarlordEmblem.PVPApi.Communication;
@@ -216,6 +217,7 @@ public class WarlordEmblem implements
         BaseMod.addEvent(ModifiedSkull.ID,ModifiedSkull.class);
         //修改过的打防之光
         BaseMod.addEvent(ModifiedShiningLight.ID,ModifiedShiningLight.class);
+        BaseMod.addEvent(ModifiedCurseTome.ID,ModifiedCurseTome.class);
     }
 
 
