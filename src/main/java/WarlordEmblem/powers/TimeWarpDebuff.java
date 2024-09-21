@@ -1,0 +1,104 @@
+package WarlordEmblem.powers;
+
+import WarlordEmblem.GlobalManager;
+import WarlordEmblem.patches.ActionNetworkPatches;
+import com.badlogic.gdx.graphics.Color;
+import com.megacrit.cardcrawl.actions.common.RemoveSpecificPowerAction;
+import com.megacrit.cardcrawl.actions.utility.UseCardAction;
+import com.megacrit.cardcrawl.cards.AbstractCard;
+import com.megacrit.cardcrawl.core.AbstractCreature;
+import com.megacrit.cardcrawl.core.CardCrawlGame;
+import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
+import com.megacrit.cardcrawl.localization.PowerStrings;
+import com.megacrit.cardcrawl.monsters.AbstractMonster;
+import com.megacrit.cardcrawl.powers.AbstractPower;
+import com.megacrit.cardcrawl.vfx.BorderFlashEffect;
+import com.megacrit.cardcrawl.vfx.combat.TimeWarpTurnEndEffect;
+
+import java.util.LinkedList;
+import java.util.List;
+
+//debuff版本的老头表
+//把power上给每个玩家，然后拥有这个power的玩家打牌的时候会执行相应的打牌计数
+public class TimeWarpDebuff extends CommunicatePower {
+
+    public static final String POWER_ID = "TimeWarpDebuff";
+    private static final PowerStrings powerStrings;
+    public static final String NAME;
+    public static final String[] DESC;
+
+    //用于判断是否需要计数
+    public boolean needCount;
+
+    //剩余触发次数
+    public int triggerTime;
+    //每回合的最多出牌数
+    public int maxCardNum;
+
+    //构造函数，需要指定操作目标和层数
+    public TimeWarpDebuff(AbstractCreature creature, int amount)
+    {
+        this.name = NAME;
+        this.ID = POWER_ID + amount;
+        this.updateDescription();
+        this.loadRegion("time");
+        //这里和之前的时间扭曲不一样，这里是debuff
+        this.type = PowerType.DEBUFF;
+        //记录本地的owner
+        this.owner = creature;
+        this.amount = amount;
+        //记录剩余触发次数为1
+        this.triggerTime = 1;
+        this.maxCardNum = amount;
+        //是否执行出牌计数取决于owner是否为玩家
+        this.needCount = (creature == AbstractDungeon.player);
+    }
+
+    public void updateDescription() {
+        this.description = DESC[0] + this.maxCardNum + DESC[1] + triggerTime + DESC[2];
+    }
+
+    @Override
+    public void atStartOfTurn() {
+        //将amount设置为待出牌的数据
+        this.amount = maxCardNum;
+        updateDescription();
+    }
+
+    @Override
+    public void onAfterUseCard(AbstractCard card, UseCardAction action) {
+        //如果不需要计数，这里是不用动的
+        if(!needCount)
+        {
+            return;
+        }
+        //减小当前的amount
+        --this.amount;
+        //更新power的数值
+        this.setAmount(this.amount-1,true);
+        //如果amount到0的时候就强制结束出牌
+        if(this.amount <= 0)
+        {
+            this.playApplyPowerSfx();
+            //强制提前结束回合
+            AbstractDungeon.actionManager.callEndTurnEarlySequence();
+            CardCrawlGame.sound.play("POWER_TIME_WARP", 0.05F);
+            AbstractDungeon.effectsQueue.add(new BorderFlashEffect(Color.GOLD, true));
+            AbstractDungeon.topLevelEffectsQueue.add(new TimeWarpTurnEndEffect());
+            --this.triggerTime;
+            //减少待触发的次数
+            if(triggerTime <= 0)
+            {
+                GlobalManager.playerManager.selfPlayerInfo.powerManager.removePower(
+                    this.idPower,true
+                );
+            }
+        }
+    }
+
+    static {
+        powerStrings = CardCrawlGame.languagePack.getPowerStrings("TimeWarpDebuff");
+        NAME = powerStrings.NAME;
+        DESC = powerStrings.DESCRIPTIONS;
+    }
+}

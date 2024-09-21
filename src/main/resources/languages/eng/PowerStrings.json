@@ -15,6 +15,14 @@
       " #yStrength 。"
     ]
   },
+  "TimeWarpDebuff": {
+    "NAME": "Time Warp",
+    "DESCRIPTIONS": [
+      "After playering #b",
+      " cards, forcely end the turn. Remove after triggering #b ",
+      " times"
+    ]
+  },
   "burnTransformPower": {
   "NAME": "Burn Transform",
   "DESCRIPTIONS": [

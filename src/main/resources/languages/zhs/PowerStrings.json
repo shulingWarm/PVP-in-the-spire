@@ -15,6 +15,14 @@
       " 点 #y力量 。"
     ]
   },
+  "TimeWarpDebuff": {
+    "NAME": "时间扭曲",
+    "DESCRIPTIONS": [
+      "回合内打出第 #b",
+      " 张牌时，强制结束回合。还能触发 #b",
+      " 次 。"
+    ]
+  },
   "burnTransformPower": {
   "NAME": "燃烧转移",
   "DESCRIPTIONS": [

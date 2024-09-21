@@ -7,6 +7,7 @@ import WarlordEmblem.PlayerManagement.PlayerCardManager;
 import WarlordEmblem.character.CharacterInfo;
 import WarlordEmblem.character.PlayerMonster;
 import WarlordEmblem.patches.AnimationRecorder;
+import WarlordEmblem.powers.PowerManager;
 import com.megacrit.cardcrawl.characters.AbstractPlayer;
 import com.megacrit.cardcrawl.monsters.AbstractMonster;
 import com.megacrit.cardcrawl.potions.AbstractPotion;
@@ -32,6 +33,10 @@ public class PlayerInfo {
 
     //卡牌信息管理器
     public PlayerCardManager cardManager;
+
+    //玩家的power信息管理器 这是用来管理当前玩家的buff的
+    //这些buff不一定是在这个玩家身上，但这个buff是由当前玩家发起的
+    public PowerManager powerManager;
 
     //玩家掌管的遗物列表
     public ArrayList<AbstractRelic> relicList;
@@ -90,6 +95,8 @@ public class PlayerInfo {
         this.playerTag = playerTag;
         initConfigPage();
         this.cardManager = new PlayerCardManager();
+        //初始化power的管理器
+        this.powerManager = new PowerManager();
         //初始化玩家的药水列表
         this.potionList = new ArrayList<>();
         //准备遗物列表

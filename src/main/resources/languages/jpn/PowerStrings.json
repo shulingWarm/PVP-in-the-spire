@@ -15,6 +15,14 @@
       " を得る。"
     ]
   },
+  "TimeWarpDebuff": {
+    "NAME": "タイムワープ",
+    "DESCRIPTIONS": [
+      " #b",
+      " 枚プレイしたら、ターンを強制終了する。  #b ",
+      " 回トリガーした後にバフを取り除く。"
+    ]
+  },
   "burnTransformPower": {
   "NAME": "火炎波",
   "DESCRIPTIONS": [
