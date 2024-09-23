@@ -2,14 +2,18 @@ package WarlordEmblem.powers;
 
 import WarlordEmblem.Events.SetPowerAmountEvent;
 import WarlordEmblem.PVPApi.Communication;
+import com.megacrit.cardcrawl.core.AbstractCreature;
 import com.megacrit.cardcrawl.powers.AbstractPower;
+
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 
 //带通信功能的power
 //最初是为了给老头表设置的一个父类
-public class CommunicatePower extends AbstractPower {
+public abstract class CommunicatePower extends AbstractPower {
 
     //这是power在多端通信时用到的唯一标识符
-    public int idPower;
+    private int idPower = -1;
 
     //设置power的通信id
     public void setCommunicateId(int idPower)
@@ -35,4 +39,29 @@ public class CommunicatePower extends AbstractPower {
             ));
         }
     }
+
+    //获取用于映射的map id
+    public String getMapId()
+    {
+        return this.ID;
+    }
+
+    //获取apply power时的amount
+    public int getPowerAmount()
+    {
+        return this.amount;
+    }
+
+    //获取power的source
+    //一般来说这里返回owner就行
+    public AbstractCreature getSourcePlayer()
+    {
+        return this.owner;
+    }
+
+    //对power进行编码
+    public abstract void encode(DataOutputStream stream);
+
+    //对power做解码操作
+    public abstract CommunicatePower decode(DataInputStream stream);
 }

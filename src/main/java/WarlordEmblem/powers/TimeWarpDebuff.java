@@ -15,6 +15,9 @@ import com.megacrit.cardcrawl.powers.AbstractPower;
 import com.megacrit.cardcrawl.vfx.BorderFlashEffect;
 import com.megacrit.cardcrawl.vfx.combat.TimeWarpTurnEndEffect;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -54,6 +57,11 @@ public class TimeWarpDebuff extends CommunicatePower {
         this.needCount = (creature == AbstractDungeon.player);
     }
 
+    @Override
+    public String getMapId() {
+        return POWER_ID;
+    }
+
     public void updateDescription() {
         this.description = DESC[0] + this.maxCardNum + DESC[1] + triggerTime + DESC[2];
     }
@@ -90,10 +98,47 @@ public class TimeWarpDebuff extends CommunicatePower {
             if(triggerTime <= 0)
             {
                 GlobalManager.playerManager.selfPlayerInfo.powerManager.removePower(
-                    this.idPower,true
+                    this.getCommunicateId(),true
                 );
             }
         }
+    }
+
+    @Override
+    public void encode(DataOutputStream stream) {
+        try
+        {
+            //对当前的owner做编码
+            ActionNetworkPatches.creatureEncode(
+                stream,this.owner,true
+            );
+            stream.writeInt(this.maxCardNum);
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public CommunicatePower decode(DataInputStream stream) {
+        //解码出临时的creature
+        AbstractCreature tempCreature = ActionNetworkPatches.creatureDecode(
+            stream,false
+        );
+        if(tempCreature == null)
+            return null;
+        //读取层数
+        try
+        {
+            int powerAmount = stream.readInt();
+            return new TimeWarpDebuff(tempCreature,powerAmount);
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     static {

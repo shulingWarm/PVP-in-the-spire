@@ -7,6 +7,10 @@
     "NAME": "Evil Spell",
     "DESCRIPTION": "每当对方打出1张能力牌，你获得 !M! 点 力量。"
   },
+  "MultiplayerTimeWarp": {
+    "NAME": "Time Warp",
+    "DESCRIPTION": "When the enemy plays !M! cards in his turn, end his turn. Remove effect after trigger 1 times."
+  },
   "hexCard": {
     "NAME": "Evil Spell",
     "DESCRIPTION": "In the next !M! turns, shuffle a *Dazed into enemy's discard pile when the enemy play a non-Attack card. NL Exhaust."

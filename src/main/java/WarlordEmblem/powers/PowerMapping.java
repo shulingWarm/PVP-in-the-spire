@@ -1,9 +1,12 @@
 package WarlordEmblem.powers;
 
+import WarlordEmblem.PVPApi.Communication;
 import com.gikk.twirk.types.usernotice.subtype.Ritual;
 import com.megacrit.cardcrawl.cards.blue.LockOn;
 import com.megacrit.cardcrawl.characters.AbstractPlayer;
 import com.megacrit.cardcrawl.core.AbstractCreature;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import com.megacrit.cardcrawl.powers.*;
 import com.megacrit.cardcrawl.powers.watcher.EnergyDownPower;
@@ -368,6 +371,44 @@ public class PowerMapping {
     //从ID到power生成方法的映射
     public static HashMap<String,PowerCreate> creatorMapper;
 
+    //通信形式下的power mapping
+    public static ArrayList<CommunicatePower> powerList;
+    //通信相关的power从power到通信id的映射表
+    public static HashMap<String, Integer> comPowerMap;
+
+    public static void registerCommunicatePower(CommunicatePower power)
+    {
+        int idPower = powerList.size();
+        comPowerMap.put(power.getMapId(),idPower);
+        powerList.add(power);
+    }
+
+    public static CommunicatePower getComPower(int idPower)
+    {
+        initCreatorMapper();
+        if(idPower >=0 && idPower<powerList.size())
+            return powerList.get(idPower);
+        return null;
+    }
+
+    public static int getPowerId(String powerId)
+    {
+        initCreatorMapper();
+        if(comPowerMap.containsKey(powerId))
+            return comPowerMap.get(powerId);
+        return -1;
+    }
+
+    //初始化通信用的power
+    public static void initCommunicatePowerMap()
+    {
+        //给两个power开辟空间
+        powerList = new ArrayList<>();
+        comPowerMap = new HashMap<>();
+        //初始化从power到id到map
+        registerCommunicatePower(new TimeWarpDebuff(null,0));
+    }
+
     //生成power的mapper的初始化器
     public static void initCreatorMapper()
     {
@@ -377,6 +418,8 @@ public class PowerMapping {
             return;
         }
         creatorMapper = new HashMap<String,PowerCreate>();
+        //初始化通信用的map
+        initCommunicatePowerMap();
         creatorMapper.put(VulnerablePower.POWER_ID,
                 new Vulnerable());
         creatorMapper.put(WeakPower.POWER_ID,

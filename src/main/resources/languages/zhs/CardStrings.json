@@ -3,6 +3,10 @@
     "NAME": "时间扭曲",
     "DESCRIPTION": "每当对方打出16张牌，对方的回合会强制结束，并且你获得 !M! 点 力量 "
   },
+  "MultiplayerTimeWarp": {
+    "NAME": "时间扭曲",
+    "DESCRIPTION": "目标回合内打出第 !M! 张牌后，强制结束回合。触发1次后失效。"
+  },
   "curiousness": {
     "NAME": "好奇",
     "DESCRIPTION": "每当对方打出1张能力牌，你获得 !M! 点 力量。"

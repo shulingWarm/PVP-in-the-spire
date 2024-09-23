@@ -16,6 +16,7 @@ import WarlordEmblem.card.*;
 import WarlordEmblem.helpers.FontLibrary;
 import WarlordEmblem.helpers.RandMonsterHelper;
 import WarlordEmblem.network.PlayerInfo;
+import WarlordEmblem.powers.PowerMapping;
 import WarlordEmblem.relics.BlockGainer;
 import WarlordEmblem.relics.OrangePelletsChange;
 import basemod.ModLabeledToggleButton;
@@ -193,6 +194,7 @@ public class WarlordEmblem implements
         cards.add(new PainSword());
         cards.add(new ElectronicInterference());
         cards.add(new PsychicSnooping());
+        cards.add(new MultiplayerTimeWarp());
 
         for (CustomCard card : cards) {
             BaseMod.addCard(card);
@@ -301,6 +303,7 @@ public class WarlordEmblem implements
         Communication.registerEvent(new KillEvent(0));
         Communication.registerEvent(new RemovePowerEvent(0));
         Communication.registerEvent(new SetPowerAmountEvent(0,0));
+        Communication.registerEvent(new ApplyComPowerEvent(null));
 
         FontLibrary.getBaseFont();
         FontLibrary.getFontWithSize(24);
