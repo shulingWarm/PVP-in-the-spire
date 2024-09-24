@@ -96,7 +96,7 @@ public class PlayerInfo {
         initConfigPage();
         this.cardManager = new PlayerCardManager();
         //初始化power的管理器
-        this.powerManager = new PowerManager();
+        this.powerManager = new PowerManager(playerTag);
         //初始化玩家的药水列表
         this.potionList = new ArrayList<>();
         //准备遗物列表

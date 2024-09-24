@@ -12,18 +12,20 @@ import java.io.IOException;
 public class RemovePowerEvent extends BaseEvent {
 
     int idPower;
+    int playerTag;
 
-    public RemovePowerEvent(int idPower)
+    public RemovePowerEvent(int playerTag,int idPower)
     {
         this.idPower = idPower;
         this.eventId = "RemovePowerEvent";
+        this.playerTag = playerTag;
     }
 
     @Override
     public void encode(DataOutputStream streamHandle) {
         try
         {
-            GlobalManager.playerManager.encodePlayer(streamHandle);
+            streamHandle.writeInt(this.playerTag);
             //写入能量的id
             streamHandle.writeInt(idPower);
         }

@@ -14,19 +14,21 @@ public class SetPowerAmountEvent extends BaseEvent {
 
     public int idPower;
     public int amount;
+    public int playerTag;
 
-    public SetPowerAmountEvent(int idPower,int amount)
+    public SetPowerAmountEvent(int playerTag,int idPower,int amount)
     {
         this.eventId = "SetPowerAmountEvent";
         this.idPower = idPower;
         this.amount = amount;
+        this.playerTag = playerTag;
     }
 
     @Override
     public void encode(DataOutputStream streamHandle) {
         try
         {
-            GlobalManager.playerManager.encodePlayer(streamHandle);
+            streamHandle.writeInt(playerTag);
             streamHandle.writeInt(idPower);
             streamHandle.writeInt(this.amount);
         }

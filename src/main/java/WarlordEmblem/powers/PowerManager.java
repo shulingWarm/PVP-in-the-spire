@@ -8,6 +8,7 @@ import com.megacrit.cardcrawl.actions.common.ApplyPowerAction;
 import com.megacrit.cardcrawl.actions.common.RemoveSpecificPowerAction;
 import com.megacrit.cardcrawl.core.AbstractCreature;
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
+import org.lwjgl.Sys;
 
 import java.util.HashMap;
 
@@ -21,18 +22,28 @@ public class PowerManager {
     //目前已经分配过的power id
     public int nextPowerId = 0;
 
+    //判断自己是属于哪个玩家的tag
+    public int playerTag;
+
+    public PowerManager(int playerTag)
+    {
+        this.playerTag = playerTag;
+    }
+
+
     //在map里面注册power
     public void registerPower(CommunicatePower power)
     {
         //判断是否本来就有power id
         //本来就有id的情况一般是power管理者发过来的
-        if(power.getCommunicateId() != -1)
+        if(power.getCommunicateId() == -1)
         {
             power.setCommunicateId(nextPowerId);
             ++nextPowerId;
         }
         //记录power
         powerMap.put(power.getCommunicateId(),power);
+        power.powerManager = this;
     }
 
     //对特定目标应用power
@@ -66,19 +77,20 @@ public class PowerManager {
         //如果没有这个power就直接跳过了
         if(!powerMap.containsKey(idPower))
         {
+            System.out.println("Cannot find id power\n");
             return;
         }
         //获取对应的power
         CommunicatePower power = powerMap.get(idPower);
         //执行power的移除
-        ActionNetworkPatches.ReducePowerInfoSend.stopTrigger = true;
+        ActionNetworkPatches.RemovePowerInfoSend.stopTrigger = true;
         AbstractDungeon.actionManager.addToBottom(
             new RemoveSpecificPowerAction(power.owner, power.owner, power));
-        ActionNetworkPatches.ReducePowerInfoSend.stopTrigger = false;
+        ActionNetworkPatches.RemovePowerInfoSend.stopTrigger = false;
         powerMap.remove(idPower);
         if(sendFlag)
         {
-            Communication.sendEvent(new RemovePowerEvent(idPower));
+            Communication.sendEvent(new RemovePowerEvent(this.playerTag,idPower));
         }
     }
 

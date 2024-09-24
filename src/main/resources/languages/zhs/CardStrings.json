@@ -5,7 +5,7 @@
   },
   "MultiplayerTimeWarp": {
     "NAME": "时间扭曲",
-    "DESCRIPTION": "目标回合内打出第 !M! 张牌后，强制结束回合。触发1次后失效。"
+    "DESCRIPTION": "目标单个回合内打出第 !M! 张牌后，强制结束回合。触发1次后失效。"
   },
   "curiousness": {
     "NAME": "好奇",

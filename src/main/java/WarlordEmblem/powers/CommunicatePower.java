@@ -15,6 +15,9 @@ public abstract class CommunicatePower extends AbstractPower {
     //这是power在多端通信时用到的唯一标识符
     private int idPower = -1;
 
+    //power的管理者
+    public PowerManager powerManager = null;
+
     //设置power的通信id
     public void setCommunicateId(int idPower)
     {
@@ -35,7 +38,7 @@ public abstract class CommunicatePower extends AbstractPower {
         if(sendFlag)
         {
             Communication.sendEvent(new SetPowerAmountEvent(
-                this.idPower, this.amount
+                this.powerManager.playerTag,this.idPower, this.amount
             ));
         }
     }

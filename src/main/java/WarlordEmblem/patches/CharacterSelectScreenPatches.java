@@ -714,9 +714,7 @@ public class CharacterSelectScreenPatches
 //                }
             }
             //添加一个灭除之刃
-//            AbstractCard tempCard = new Strike_Blue();
-//            tempCard.baseDamage = 999;
-//            tempCard.damage = 999;
+//            AbstractCard tempCard = new MultiplayerTimeWarp();
 //            tempCard.upgrade();
 //            AbstractDungeon.actionManager.addToBottom(
 //                new MakeTempCardInHandAction(tempCard,1)

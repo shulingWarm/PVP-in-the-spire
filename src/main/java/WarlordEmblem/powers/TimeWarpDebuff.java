@@ -43,7 +43,6 @@ public class TimeWarpDebuff extends CommunicatePower {
     {
         this.name = NAME;
         this.ID = POWER_ID + amount;
-        this.updateDescription();
         this.loadRegion("time");
         //这里和之前的时间扭曲不一样，这里是debuff
         this.type = PowerType.DEBUFF;
@@ -55,6 +54,7 @@ public class TimeWarpDebuff extends CommunicatePower {
         this.maxCardNum = amount;
         //是否执行出牌计数取决于owner是否为玩家
         this.needCount = (creature == AbstractDungeon.player);
+        this.updateDescription();
     }
 
     @Override
@@ -74,14 +74,21 @@ public class TimeWarpDebuff extends CommunicatePower {
     }
 
     @Override
+    public void setAmount(int newAmount, boolean sendFlag) {
+        super.setAmount(newAmount, sendFlag);
+        if(this.amount <= 0)
+        {
+            this.triggerTime--;
+        }
+    }
+
+    @Override
     public void onAfterUseCard(AbstractCard card, UseCardAction action) {
         //如果不需要计数，这里是不用动的
         if(!needCount)
         {
             return;
         }
-        //减小当前的amount
-        --this.amount;
         //更新power的数值
         this.setAmount(this.amount-1,true);
         //如果amount到0的时候就强制结束出牌
@@ -93,15 +100,15 @@ public class TimeWarpDebuff extends CommunicatePower {
             CardCrawlGame.sound.play("POWER_TIME_WARP", 0.05F);
             AbstractDungeon.effectsQueue.add(new BorderFlashEffect(Color.GOLD, true));
             AbstractDungeon.topLevelEffectsQueue.add(new TimeWarpTurnEndEffect());
-            --this.triggerTime;
             //减少待触发的次数
             if(triggerTime <= 0)
             {
-                GlobalManager.playerManager.selfPlayerInfo.powerManager.removePower(
+                this.powerManager.removePower(
                     this.getCommunicateId(),true
                 );
             }
         }
+        this.updateDescription();
     }
 
     @Override
