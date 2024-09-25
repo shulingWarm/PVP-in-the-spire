@@ -29,7 +29,7 @@ public class MultiplayerTimeWarp extends CustomCard {
     public MultiplayerTimeWarp()
     {
         super(ID, NAME, IMG, COST, DESCRIPTION, TYPE, COLOR, RARITY, TARGET);
-        this.baseMagicNumber = 12;
+        this.baseMagicNumber = 16;
         this.magicNumber = this.baseMagicNumber;
     }
 

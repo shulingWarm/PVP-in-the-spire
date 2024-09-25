@@ -53,6 +53,7 @@ import com.megacrit.cardcrawl.cards.tempCards.Expunger;
 import com.megacrit.cardcrawl.cards.tempCards.Insight;
 import com.megacrit.cardcrawl.cards.tempCards.Miracle;
 import com.megacrit.cardcrawl.characters.AbstractPlayer;
+import com.megacrit.cardcrawl.characters.Ironclad;
 import com.megacrit.cardcrawl.characters.Watcher;
 import com.megacrit.cardcrawl.core.AbstractCreature;
 import com.megacrit.cardcrawl.core.CardCrawlGame;
@@ -927,6 +928,13 @@ public class CharacterSelectScreenPatches
                     }
                     //获得手链
                     (new JuzuBracelet()).instantObtain();
+                    //卡牌测试
+//                    if(AbstractDungeon.player instanceof Ironclad)
+//                    {
+//                        AbstractDungeon.actionManager.addToBottom(
+//                            new AddCardToDeckAction(new MultiplayerTimeWarp())
+//                        );
+//                    }
                     //修改生命上限
 //                    if(AbstractDungeon.player.maxHealth<INIT_HEALTH)
 //                    {
