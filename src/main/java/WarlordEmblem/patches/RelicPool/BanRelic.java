@@ -28,7 +28,6 @@ public class BanRelic {
                 case BlackStar.ID:
                 case JuzuBracelet.ID:
                 case PreservedInsect.ID:
-                case TinyChest.ID:
                 case GremlinHorn.ID:
                 case Pantograph.ID:
                 case SingingBowl.ID:
@@ -43,6 +42,7 @@ public class BanRelic {
                 case TheSpecimen.ID:
                 case MembershipCard.ID:
                 case Sling.ID:
+                case VelvetChoker.ID: //狗圈
                 case OrangePellets.ID: //药丸
                 case LizardTail.ID: //尾巴
                 //case Brimstone.ID: //硫磺

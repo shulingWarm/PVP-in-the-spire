@@ -7,6 +7,15 @@
       " block again. (Body Slam is not effected)"
     ]
   },
+  "PVPVelvetChoker": {
+    "NAME": "Velvet Choker",
+    "FLAVOR": "\"Immense power, but too limited.\" - Kublai the Great",
+    "DESCRIPTIONS": [
+      "Gain [E] .",
+      "If you play more than #b",
+      " cards, lose [E] in the next turn."
+    ]
+  },
   "OrangePelletsChange": {
     "NAME": "Red Pellets",
     "FLAVOR": "“There used to be an orange pelletes in PVPMOD, but it was sold out.”",

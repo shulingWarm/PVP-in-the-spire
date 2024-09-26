@@ -19,6 +19,7 @@ import WarlordEmblem.network.PlayerInfo;
 import WarlordEmblem.powers.PowerMapping;
 import WarlordEmblem.relics.BlockGainer;
 import WarlordEmblem.relics.OrangePelletsChange;
+import WarlordEmblem.relics.PVPVelvetChoker;
 import basemod.ModLabeledToggleButton;
 import basemod.ModPanel;
 import basemod.abstracts.CustomRelic;
@@ -214,6 +215,8 @@ public class WarlordEmblem implements
         //把格挡增益添加到遗物池里面，只是为了方便在哈希表里面找到它
         BaseMod.addRelic(new BlockGainer(),RelicType.SHARED);
         BaseMod.addRelic(new OrangePelletsChange(),RelicType.SHARED);
+        BaseMod.addRelic(new PVPVelvetChoker(),RelicType.SHARED);
+        UnlockTracker.markRelicAsSeen(PVPVelvetChoker.ID);
 
         //注册修改过的全知头骨的事件
         BaseMod.addEvent(ModifiedSkull.ID,ModifiedSkull.class);
