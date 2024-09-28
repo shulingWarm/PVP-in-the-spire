@@ -19,6 +19,7 @@ import WarlordEmblem.network.PlayerInfo;
 import WarlordEmblem.powers.PowerMapping;
 import WarlordEmblem.relics.BlockGainer;
 import WarlordEmblem.relics.OrangePelletsChange;
+import WarlordEmblem.relics.PVPSozu;
 import WarlordEmblem.relics.PVPVelvetChoker;
 import basemod.ModLabeledToggleButton;
 import basemod.ModPanel;
@@ -216,7 +217,9 @@ public class WarlordEmblem implements
         BaseMod.addRelic(new BlockGainer(),RelicType.SHARED);
         BaseMod.addRelic(new OrangePelletsChange(),RelicType.SHARED);
         BaseMod.addRelic(new PVPVelvetChoker(),RelicType.SHARED);
+        BaseMod.addRelic(new PVPSozu(),RelicType.SHARED);
         UnlockTracker.markRelicAsSeen(PVPVelvetChoker.ID);
+        UnlockTracker.markRelicAsSeen(PVPSozu.ID);
 
         //注册修改过的全知头骨的事件
         BaseMod.addEvent(ModifiedSkull.ID,ModifiedSkull.class);

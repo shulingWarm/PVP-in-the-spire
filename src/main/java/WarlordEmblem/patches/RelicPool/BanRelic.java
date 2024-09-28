@@ -42,6 +42,7 @@ public class BanRelic {
                 case TheSpecimen.ID:
                 case MembershipCard.ID:
                 case Sling.ID:
+                case Sozu.ID:
                 case VelvetChoker.ID: //狗圈
                 case OrangePellets.ID: //药丸
                 case LizardTail.ID: //尾巴
