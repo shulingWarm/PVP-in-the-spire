@@ -16,6 +16,14 @@
       " cards, lose [E] in the next turn."
     ]
   },
+  "PVPEctoplasm": {
+    "NAME": "Ectoplasm",
+    "FLAVOR": "This blob of slime and energy seems to pulse with life.",
+    "DESCRIPTIONS": [
+      " Damage source will steal your 5 #y金币 in each damage.",
+      "Gain [E] at start of turn."
+    ]
+  },
   "PVPSozu": {
     "NAME": "Sozu",
     "FLAVOR": "You notice that magical liquids seem to lose their properties when near this relic.",

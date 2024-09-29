@@ -7,6 +7,8 @@ import WarlordEmblem.PVPApi.Communication;
 import WarlordEmblem.PlayerManagement.CharacterManager;
 import WarlordEmblem.character.CharacterInfo;
 import com.megacrit.cardcrawl.characters.AbstractPlayer;
+import com.megacrit.cardcrawl.core.AbstractCreature;
+import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
 
 //这是用来管理本地的PlayerInfo的
 public class SelfPlayerInfo extends PlayerInfo {
@@ -79,5 +81,10 @@ public class SelfPlayerInfo extends PlayerInfo {
             //同时还要设置一下房主的状态
             this.configPage.setOwnerUI(this.isLobbyOwner);
         }
+    }
+
+    @Override
+    public AbstractCreature getCreature() {
+        return AbstractDungeon.player;
     }
 }

@@ -9,6 +9,7 @@ import WarlordEmblem.character.PlayerMonster;
 import WarlordEmblem.patches.AnimationRecorder;
 import WarlordEmblem.powers.PowerManager;
 import com.megacrit.cardcrawl.characters.AbstractPlayer;
+import com.megacrit.cardcrawl.core.AbstractCreature;
 import com.megacrit.cardcrawl.monsters.AbstractMonster;
 import com.megacrit.cardcrawl.potions.AbstractPotion;
 import com.megacrit.cardcrawl.relics.AbstractRelic;
@@ -275,5 +276,11 @@ public class PlayerInfo {
         if(this.playerMonster == null)
             return -1;
         return this.playerMonster.getIdTurn();
+    }
+
+    //获得info里面对应的玩家
+    public AbstractCreature getCreature()
+    {
+        return this.playerMonster;
     }
 }

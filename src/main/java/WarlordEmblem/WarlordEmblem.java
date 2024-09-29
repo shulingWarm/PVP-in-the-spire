@@ -17,10 +17,7 @@ import WarlordEmblem.helpers.FontLibrary;
 import WarlordEmblem.helpers.RandMonsterHelper;
 import WarlordEmblem.network.PlayerInfo;
 import WarlordEmblem.powers.PowerMapping;
-import WarlordEmblem.relics.BlockGainer;
-import WarlordEmblem.relics.OrangePelletsChange;
-import WarlordEmblem.relics.PVPSozu;
-import WarlordEmblem.relics.PVPVelvetChoker;
+import WarlordEmblem.relics.*;
 import basemod.ModLabeledToggleButton;
 import basemod.ModPanel;
 import basemod.abstracts.CustomRelic;
@@ -218,8 +215,11 @@ public class WarlordEmblem implements
         BaseMod.addRelic(new OrangePelletsChange(),RelicType.SHARED);
         BaseMod.addRelic(new PVPVelvetChoker(),RelicType.SHARED);
         BaseMod.addRelic(new PVPSozu(),RelicType.SHARED);
+        BaseMod.addRelic(new PVPEctoplasm(),RelicType.SHARED);
+        BaseMod.removeRelic(new Ectoplasm());
         UnlockTracker.markRelicAsSeen(PVPVelvetChoker.ID);
         UnlockTracker.markRelicAsSeen(PVPSozu.ID);
+        UnlockTracker.markRelicAsSeen(PVPEctoplasm.ID);
 
         //注册修改过的全知头骨的事件
         BaseMod.addEvent(ModifiedSkull.ID,ModifiedSkull.class);
@@ -310,6 +310,7 @@ public class WarlordEmblem implements
         Communication.registerEvent(new RemovePowerEvent(0,0));
         Communication.registerEvent(new SetPowerAmountEvent(0,0,0));
         Communication.registerEvent(new ApplyComPowerEvent(null));
+        Communication.registerEvent(new LoseGoldEvent(0,0,0));
 
         FontLibrary.getBaseFont();
         FontLibrary.getFontWithSize(24);
