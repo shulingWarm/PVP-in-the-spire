@@ -3,6 +3,8 @@ package UI;
 import UI.Button.BackButton;
 import UI.Events.ConnectOkEvent;
 import UI.Lobby.IpLobbyConfig;
+import UI.configOptions.FirstHandOption;
+import UI.configOptions.ToggleOption;
 import WarlordEmblem.GlobalManager;
 import WarlordEmblem.Screens.Buttons.AsServerButton;
 import WarlordEmblem.Screens.Buttons.ConnectButton;
@@ -46,6 +48,9 @@ public class LocalConnectPage extends AbstractPage implements ConnectOkEvent {
 
     //完整的黑色背景
     public PlainBox plainBackground = new PlainBox();
+
+    //用于测试的一些界面，这里仅仅是搞一些debug
+    public AbstractPage testPage;
 
     public LocalConnectPage()
     {

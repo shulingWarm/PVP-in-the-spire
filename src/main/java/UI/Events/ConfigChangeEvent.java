@@ -18,4 +18,7 @@ public interface ConfigChangeEvent {
     //接收发送角色的请求
     public void receiveCharacterRequest(DataInputStream streamHandle);
 
+    //toggle按钮更新时的触发事件
+    public void receiveToggleChange(int idToggle,boolean stage);
+
 }

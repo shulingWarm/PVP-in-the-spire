@@ -103,6 +103,11 @@ public class ConfigPage extends AbstractPage implements UpdateCharacter, ConfigC
         System.out.println("Config page should not get receiveCharacterRequest");
     }
 
+    @Override
+    public void receiveToggleChange(int idToggle, boolean stage) {
+
+    }
+
     //接收所有config信息
     @Override
     public void receiveAllConfig(DataInputStream streamHandle) {

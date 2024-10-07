@@ -1,5 +1,7 @@
 package WarlordEmblem.patches.connection;
 
+import UI.AbstractPage;
+import UI.TogglePanel;
 import WarlordEmblem.AutomaticSocketServer;
 import WarlordEmblem.Screens.Buttons.AsServerButton;
 import WarlordEmblem.Screens.Buttons.ConnectButton;

@@ -274,6 +274,11 @@ public class LobbyConfig extends AbstractPage
         server.send();
     }
 
+    @Override
+    public void receiveToggleChange(int idToggle, boolean stage) {
+
+    }
+
     //发送获取对方角色的请求
     public void requestOppositeCharacter(DataOutputStream stream)
     {

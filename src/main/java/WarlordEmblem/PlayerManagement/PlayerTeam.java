@@ -36,6 +36,9 @@ public class PlayerTeam {
     //这个team最早的进入时间
     public long enterTime = -1;
 
+    //用于判断是否为地主的标志
+    public boolean landlordFlag = false;
+
     public PlayerTeam(int idTeam,Color color,boolean isLeft,
                       TeamCallback teamCallback
     )
@@ -205,6 +208,12 @@ public class PlayerTeam {
         this.playerInfos.clear();
         //移除显示界面里面的玩家
         this.gridPanel.removeAllPages();
+    }
+
+    //判断是否为地主
+    public boolean isLandlord()
+    {
+        return landlordFlag;
     }
 
 }

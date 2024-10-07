@@ -73,7 +73,7 @@ public class BasePanel extends AbstractPage implements ScrollBarListener {
     //获取新的page.y
     public void updatePageY(float panelBound,AbstractPage page)
     {
-        page.y = panelBound - pageGap - page.height;
+        page.moveTo(page.x,panelBound - pageGap - page.height);
     }
 
     //在panel里面添加新的项目
@@ -87,7 +87,7 @@ public class BasePanel extends AbstractPage implements ScrollBarListener {
             scrolledUsingBar(scrollInitLocation);
         }
         //更新这个page的上边缘位置
-        page.x = this.x + xGap;
+        page.moveTo(this.x + xGap,page.y);
         updatePageY(minBound,page);
         scrollRange[0] = page.y;
         pageList.add(page);

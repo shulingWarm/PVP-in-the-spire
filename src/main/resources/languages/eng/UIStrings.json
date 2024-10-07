@@ -120,7 +120,9 @@
       "Create",
       "Waiting for join",
       "Failed to join",
-      "ok"
+      "ok",
+      "Benefit for the team with less players",
+      "Always go first"
     ]
   },
   "WaitPage": {

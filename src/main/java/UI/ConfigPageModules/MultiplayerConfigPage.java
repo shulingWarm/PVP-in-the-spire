@@ -9,6 +9,8 @@ import UI.Events.*;
 import UI.configOptions.*;
 import WarlordEmblem.*;
 import WarlordEmblem.Events.RegisterPlayerEvent;
+import WarlordEmblem.Events.ToggleTriggerEvent;
+import WarlordEmblem.Other.Pair;
 import WarlordEmblem.PVPApi.Communication;
 import WarlordEmblem.PlayerManagement.PlayerJoinInterface;
 import WarlordEmblem.PlayerManagement.PlayerManager;
@@ -47,7 +49,8 @@ public class MultiplayerConfigPage extends AbstractPage
         ConfigChangeEvent,
         ClickCallback,
         MemberChangeEvent,
-        PlayerJoinInterface
+        PlayerJoinInterface,
+        ToggleInterface
 {
 
     public static final UIStrings uiStrings =
@@ -81,6 +84,8 @@ public class MultiplayerConfigPage extends AbstractPage
 
     //所有需要被添加的config列表
     public ArrayList<AbstractConfigOption> optionList = new ArrayList<>();
+    //所有的toggle option的列表
+    public ArrayList<Pair<ToggleOption,ToggleInterface>> toggleOptionList = new ArrayList<>();
 
     //当前是否为发送hello阶段的标志 这里直接就用int来代表了
     //-1 是房间里只有自己时的状态
@@ -191,6 +196,20 @@ public class MultiplayerConfigPage extends AbstractPage
 
     }
 
+    @Override
+    public void receiveToggleChange(int idToggle, boolean stage) {
+        if(idToggle >= 0 && idToggle < toggleOptionList.size())
+        {
+            //获取toggle,更新它的状态
+            ToggleOption toggleOption = toggleOptionList.get(idToggle).first;
+            toggleOption.setStage(stage);
+            //执行toggle的触发事件
+            toggleOptionList.get(idToggle).second.triggerToggleButton(
+                toggleOption.userToggle,idToggle,stage
+            );
+        }
+    }
+
     //获取我方的名字
     public String getMyName()
     {
@@ -220,6 +239,19 @@ public class MultiplayerConfigPage extends AbstractPage
         {
             e.printStackTrace();
         }
+    }
+
+    //注册新的toggle option
+    public void registerToggleOption(String text,
+         float optionWidth,
+         ToggleInterface toggleInterface
+    )
+    {
+        ToggleOption option = new ToggleOption(0,0,text,optionWidth,this);
+        toggleOptionList.add(
+            new Pair<>(option,toggleInterface)
+        );
+        configPanel.addNewPage(option);
     }
 
     //初始化page选项
@@ -256,6 +288,17 @@ public class MultiplayerConfigPage extends AbstractPage
             //添加到panel里面
             configPanel.addNewPage(currOption);
         }
+
+        //地主增益选项的标题文本
+        configPanel.addNewPage(
+            new TextLabel(0,0,optionWidth,
+                    Settings.HEIGHT*0.04f,
+                    uiStrings.TEXT[5],FontLibrary.getBaseFont())
+        );
+
+        //注册option
+        registerToggleOption(uiStrings.TEXT[6],optionWidth,new FirstHandOption());
+
     }
 
     //点击事件
@@ -427,5 +470,15 @@ public class MultiplayerConfigPage extends AbstractPage
     @Override
     public void setMainCharacter(AbstractPage page) {
         this.characterPanel.setMainCharacter(page);
+    }
+
+    @Override
+    public void triggerToggleButton(UserToggle toggle, int id, boolean stage) {
+        if(id >= 0 && id<toggleOptionList.size())
+        {
+            //如果是通过点击触发的，就调用一下通信逻辑
+            Communication.sendEvent(new ToggleTriggerEvent(id,stage));
+            toggleOptionList.get(id).second.triggerToggleButton(toggle,id,stage);
+        }
     }
 }

@@ -231,7 +231,13 @@ public class PlayerManager implements TeamCallback {
     //初始化用于下次战斗的轮次管理器
     public void initTurnManager()
     {
-        if(GlobalManager.turnStrategy == 0)
+        //如果是地主并且涉及到总是先手的方案
+        if(GlobalManager.landlordFirstHandFlag &&
+                (teams[0].isLandlord() || teams[1].isLandlord()))
+        {
+            this.turnManager = new LandlordFirstHand(this.playerInfoMap.size());
+        }
+        else if(GlobalManager.turnStrategy == 0)
             this.turnManager = new PersonTurnManager(this.playerInfoMap.size());
         else
             this.turnManager = new TurnManager(2);
@@ -265,6 +271,9 @@ public class PlayerManager implements TeamCallback {
         {
             //初始化开始游戏的时间
             beginGameTime = System.currentTimeMillis();
+            //判断两个队伍是否存在地主
+            teams[0].landlordFlag = teams[0].getPlayerNum() < teams[1].getPlayerNum();
+            teams[1].landlordFlag = teams[1].getPlayerNum() < teams[0].getPlayerNum();
             playerJoinInterface.enterGame();
             this.readyNum = 0;
             resetPlayerTexture();
