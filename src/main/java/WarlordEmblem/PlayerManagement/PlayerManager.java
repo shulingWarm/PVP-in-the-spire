@@ -475,4 +475,10 @@ public class PlayerManager implements TeamCallback {
         MultiPauseAction.pauseStage = false;
     }
 
+    //判断我方是否需要执行先手惩罚
+    public boolean needFirstHandPunishment()
+    {
+        return !(teams[selfPlayerInfo.idTeam].isLandlord() &&
+                GlobalManager.landlordNoPunishment);
+    }
 }

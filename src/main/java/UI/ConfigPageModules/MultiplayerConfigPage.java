@@ -244,14 +244,17 @@ public class MultiplayerConfigPage extends AbstractPage
     //注册新的toggle option
     public void registerToggleOption(String text,
          float optionWidth,
-         ToggleInterface toggleInterface
+         ToggleInterface toggleInterface,
+         boolean initStage
     )
     {
-        ToggleOption option = new ToggleOption(0,0,text,optionWidth,this);
+        ToggleOption option = new ToggleOption(0,0,text,optionWidth,
+this,this.toggleOptionList.size());
         toggleOptionList.add(
             new Pair<>(option,toggleInterface)
         );
         configPanel.addNewPage(option);
+        option.setStage(initStage);
     }
 
     //初始化page选项
@@ -297,8 +300,11 @@ public class MultiplayerConfigPage extends AbstractPage
         );
 
         //注册option
-        registerToggleOption(uiStrings.TEXT[6],optionWidth,new FirstHandOption());
-
+        registerToggleOption(uiStrings.TEXT[6],optionWidth,new FirstHandOption(),
+            GlobalManager.landlordFirstHandFlag);
+        //地主没有先手惩罚
+        registerToggleOption(uiStrings.TEXT[7],optionWidth,
+            new NoFirstPunishment(),GlobalManager.landlordNoPunishment);
     }
 
     //点击事件

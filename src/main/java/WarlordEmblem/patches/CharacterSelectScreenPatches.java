@@ -504,7 +504,12 @@ public class CharacterSelectScreenPatches
         StopSecondHandDraw.stopNextDraw = true;
         //先手少摸一张
         if(SocketServer.firstHandFlag)
-            StopSecondHandDraw.nextDrawDecrease = 1;
+        {
+            if(GlobalManager.playerManager.needFirstHandPunishment())
+                StopSecondHandDraw.nextDrawDecrease = 1;
+            else
+                StopSecondHandDraw.nextDrawDecrease = 0;
+        }
         else
             StopSecondHandDraw.nextDrawDecrease = 10;
     }
@@ -700,7 +705,8 @@ public class CharacterSelectScreenPatches
 //                    AbstractDungeon.actionManager.addToBottom(
 //                            new MakeTempCardInHandAction(dischargeCard,1)
 //                    );
-                    AbstractDungeon.actionManager.addToBottom(new LoseEnergyAction(1));
+                    if(GlobalManager.playerManager.needFirstHandPunishment())
+                        AbstractDungeon.actionManager.addToBottom(new LoseEnergyAction(1));
                     initSolidPower();
                 }
                 //第二回合添加一个友军，用于测试

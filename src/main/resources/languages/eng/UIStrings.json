@@ -122,7 +122,8 @@
       "Failed to join",
       "ok",
       "Benefit for the team with less players",
-      "Always go first"
+      "Always go first",
+      "No punishment when going first"
     ]
   },
   "WaitPage": {

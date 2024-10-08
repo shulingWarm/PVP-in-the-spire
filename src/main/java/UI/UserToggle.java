@@ -28,12 +28,13 @@ public class UserToggle extends AbstractPage {
     int idToggle = 0;
 
     public UserToggle(float x, float y,
-              ToggleInterface toggleInterface) {
+              ToggleInterface toggleInterface,int idToggle) {
         this.x = x;
         this.y = y;
         this.hb = new Hitbox(200.0F * Settings.scale, 32.0F * Settings.scale);
         this.hb.move(x + 74.0F * Settings.scale, this.y);
         this.toggleInterface = toggleInterface;
+        this.idToggle = idToggle;
     }
 
     public UserToggle(float x, float y, ToggleInterface toggleInterface,

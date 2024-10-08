@@ -21,7 +21,8 @@ public class ToggleOption extends AbstractPage {
 
     public ToggleOption(float x,float y,
         String text,float width,
-        ToggleInterface toggleInterface
+        ToggleInterface toggleInterface,
+        int idToggle
     )
     {
         this.x = x;
@@ -33,7 +34,7 @@ public class ToggleOption extends AbstractPage {
             width,HEIGHT,text, FontLibrary.getBaseFont());
         this.label.isLeftAlign = true;
         //初始化按钮
-        this.userToggle = new UserToggle(this.x + this.width,y+this.height * 0.5f,toggleInterface);
+        this.userToggle = new UserToggle(this.x + this.width,y+this.height * 0.5f,toggleInterface,idToggle);
     }
 
     @Override

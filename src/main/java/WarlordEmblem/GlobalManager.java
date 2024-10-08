@@ -44,7 +44,7 @@ public class GlobalManager {
     //初始的坚不可摧比例
     public static int invincibleRate = 2;
     //版本号
-    public static final String VERSION = "v0.5.27";
+    public static final String VERSION = "v0.5.28";
     //玩家的名字，如果选用steam渠道的话就会通过这里个性
     public static String myName = "user";
     //是否启用customMOD,例如现开套牌
@@ -78,7 +78,9 @@ public class GlobalManager {
     //初始化player时默认的玩家类型
     public static AbstractPlayer.PlayerClass defaultClass = null;
     //地主总是先手的选项
-    public static boolean landlordFirstHandFlag = false;
+    public static boolean landlordFirstHandFlag = true;
+    //地主没有先手惩罚
+    public static boolean landlordNoPunishment = true;
 
     //获取battle info
     public static BattleInfo getBattleInfo()
@@ -156,6 +158,7 @@ public class GlobalManager {
         invincibleRate = 2;
         //初始化地主总是先手的选项
         landlordFirstHandFlag = true;
+        landlordNoPunishment = true;
         //初始化每张牌可以被使用的次数
         UseCardSend.CardUseManager.MAX_USE_TIME = 2;
         RenderPatch.delayBox = null;
