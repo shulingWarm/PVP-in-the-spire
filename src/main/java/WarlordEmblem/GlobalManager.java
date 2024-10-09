@@ -44,7 +44,7 @@ public class GlobalManager {
     //初始的坚不可摧比例
     public static int invincibleRate = 2;
     //版本号
-    public static final String VERSION = "v0.5.28";
+    public static final String VERSION = "v0.5.29";
     //玩家的名字，如果选用steam渠道的话就会通过这里个性
     public static String myName = "user";
     //是否启用customMOD,例如现开套牌
@@ -83,6 +83,8 @@ public class GlobalManager {
     public static boolean landlordNoPunishment = true;
     //令地主多获得一费的选项
     public static boolean landlordEnergyFlag = false;
+    //地主多获得尾巴
+    public static boolean landlordMoreTail = true;
 
     //获取battle info
     public static BattleInfo getBattleInfo()

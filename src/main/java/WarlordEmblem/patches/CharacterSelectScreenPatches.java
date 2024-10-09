@@ -932,6 +932,12 @@ public class CharacterSelectScreenPatches
                     {
                         (new PVPTail()).instantObtain();
                     }
+                    //判断是否需要额外获得尾巴
+                    if(GlobalManager.playerManager.isSelfLandlord() &&
+                        GlobalManager.landlordMoreTail)
+                    {
+                        (new PVPTail()).instantObtain();
+                    }
                     //获得手链
                     (new JuzuBracelet()).instantObtain();
                     //如果是地主并且需要加费的话，就多给一费
@@ -1134,7 +1140,7 @@ public class CharacterSelectScreenPatches
             }
             saveNodeY = AbstractDungeon.getCurrMapNode().y;
             //debug的时候打开这里，这样可以直接进入boss房间
-            AbstractDungeon.getCurrMapNode().y = 2;
+            // AbstractDungeon.getCurrMapNode().y = 2;
             //如果当前到了3层说明可以进boss房间了
             if(saveNodeY>=FakeEnding.ROW_NUM-1)
             {

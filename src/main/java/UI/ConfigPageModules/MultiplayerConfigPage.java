@@ -308,6 +308,8 @@ this,this.toggleOptionList.size());
         //令地主开局多获得一费
         registerToggleOption(uiStrings.TEXT[8],optionWidth,
                 new LandlordMoreEnergy(),GlobalManager.landlordEnergyFlag);
+        registerToggleOption(uiStrings.TEXT[9],optionWidth,
+                new LandlordMoreTail(),GlobalManager.landlordMoreTail);
     }
 
     //点击事件
