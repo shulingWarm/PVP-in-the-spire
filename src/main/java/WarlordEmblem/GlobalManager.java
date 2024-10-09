@@ -81,6 +81,8 @@ public class GlobalManager {
     public static boolean landlordFirstHandFlag = true;
     //地主没有先手惩罚
     public static boolean landlordNoPunishment = true;
+    //令地主多获得一费的选项
+    public static boolean landlordEnergyFlag = false;
 
     //获取battle info
     public static BattleInfo getBattleInfo()
@@ -159,6 +161,7 @@ public class GlobalManager {
         //初始化地主总是先手的选项
         landlordFirstHandFlag = true;
         landlordNoPunishment = true;
+        landlordEnergyFlag = false;
         //初始化每张牌可以被使用的次数
         UseCardSend.CardUseManager.MAX_USE_TIME = 2;
         RenderPatch.delayBox = null;

@@ -305,6 +305,9 @@ this,this.toggleOptionList.size());
         //地主没有先手惩罚
         registerToggleOption(uiStrings.TEXT[7],optionWidth,
             new NoFirstPunishment(),GlobalManager.landlordNoPunishment);
+        //令地主开局多获得一费
+        registerToggleOption(uiStrings.TEXT[8],optionWidth,
+                new LandlordMoreEnergy(),GlobalManager.landlordEnergyFlag);
     }
 
     //点击事件
