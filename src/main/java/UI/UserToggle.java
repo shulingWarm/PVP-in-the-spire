@@ -32,7 +32,7 @@ public class UserToggle extends AbstractPage {
         this.x = x;
         this.y = y;
         this.hb = new Hitbox(200.0F * Settings.scale, 32.0F * Settings.scale);
-        this.hb.move(x + 74.0F * Settings.scale, this.y);
+        this.hb.move(x - 74.0F * Settings.scale, this.y);
         this.toggleInterface = toggleInterface;
         this.idToggle = idToggle;
     }
@@ -63,7 +63,7 @@ public class UserToggle extends AbstractPage {
     @Override
     public void move(float xChange, float yChange) {
         super.move(xChange, yChange);
-        this.hb.move(x + 74.0F * Settings.scale, this.y);
+        this.hb.move(x - 74.0F * Settings.scale, this.y);
     }
 
     public void toggle() {
