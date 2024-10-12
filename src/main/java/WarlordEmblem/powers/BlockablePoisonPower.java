@@ -66,7 +66,7 @@ public class BlockablePoisonPower extends AbstractPower {
     public void addDamage() {
         if (AbstractDungeon.getCurrRoom().phase == AbstractRoom.RoomPhase.COMBAT && !AbstractDungeon.getMonsters().areMonstersBasicallyDead()) {
             this.flashWithoutSound();
-            this.addToBot(new PoisonLoseHpActionCanBlock(this.owner, this.source, this.amount, AbstractGameAction.AttackEffect.POISON));
+            this.addToTop(new PoisonLoseHpActionCanBlock(this.owner, this.source, this.amount, AbstractGameAction.AttackEffect.POISON));
         }
         --this.amount;
         //如果减到零了就移除

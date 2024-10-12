@@ -721,7 +721,9 @@ public class CharacterSelectScreenPatches
 //                }
             }
             //添加一个灭除之刃
-//            AbstractCard tempCard = new MultiplayerTimeWarp();
+//            AbstractCard tempCard = new DeadlyPoison();
+//            tempCard.magicNumber = 50;
+//            tempCard.baseMagicNumber = 50;
 //            tempCard.upgrade();
 //            AbstractDungeon.actionManager.addToBottom(
 //                new MakeTempCardInHandAction(tempCard,1)
@@ -773,7 +775,7 @@ public class CharacterSelectScreenPatches
                 }
             }
             //如果正常运行的话，检查一下毒触发的问题
-            BlockablePoisonPower.checkAddPoisonDamage();
+            // BlockablePoisonPower.checkAddPoisonDamage();
             return SpireReturn.Continue();
         }
     }

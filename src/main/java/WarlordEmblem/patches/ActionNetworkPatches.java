@@ -22,6 +22,7 @@ import WarlordEmblem.orbs.FakrDark;
 import WarlordEmblem.orbs.OrbMapping;
 import WarlordEmblem.patches.connection.MeunScreenFadeout;
 import WarlordEmblem.powers.BlockablePoisonPower;
+import WarlordEmblem.powers.FakePoisonPower;
 import WarlordEmblem.powers.PowerMapping;
 import WarlordEmblem.powers.PowerShell;
 import basemod.BaseMod;
@@ -957,7 +958,9 @@ public class ActionNetworkPatches {
                 Field tempField = ApplyPowerAction.class.getDeclaredField("powerToApply");
                 //把info设置成可用
                 tempField.setAccessible(true);
-                tempField.set(action,new BlockablePoisonPower(oldPower.owner,source,oldPower.amount));
+                tempField.set(action, oldPower.owner.isPlayer ?
+                    new BlockablePoisonPower(oldPower.owner,source,oldPower.amount) :
+                    new FakePoisonPower(oldPower.owner,source,oldPower.amount));
             }
             catch (NoSuchFieldException | IllegalAccessException e)
             {

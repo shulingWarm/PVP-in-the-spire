@@ -45,7 +45,9 @@ public class PowerMapping {
     {
         @Override
         public AbstractPower make(AbstractCreature owner,int amount,boolean isSourceMonster) {
-            //解析返回的时候生成的是假的毒，防止毒伤害触发两次
+            //只有承受方是本体的情况下才使用真毒
+            if(owner.isPlayer)
+                return new BlockablePoisonPower(owner,owner,amount);
             return new FakePoisonPower(owner,owner,amount);
         }
     }

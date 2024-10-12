@@ -10,9 +10,13 @@ import WarlordEmblem.actions.MultiPauseAction;
 import WarlordEmblem.character.PlayerMonster;
 import WarlordEmblem.network.PlayerInfo;
 import WarlordEmblem.network.SelfPlayerInfo;
+import WarlordEmblem.powers.BlockablePoisonPower;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
+import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
 import com.megacrit.cardcrawl.monsters.MonsterGroup;
+import com.megacrit.cardcrawl.powers.AbstractPower;
+import com.megacrit.cardcrawl.powers.PoisonPower;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -471,6 +475,12 @@ public class PlayerManager implements TeamCallback {
     //启动本地玩家的回合
     public void startSelfPlayerTurn()
     {
+        //在一个特别提前的时机，检查本地的毒触发
+        AbstractPower poisonPower = AbstractDungeon.player.getPower(PoisonPower.POWER_ID);
+        if(poisonPower instanceof BlockablePoisonPower)
+        {
+            ((BlockablePoisonPower) poisonPower).addDamage();
+        }
         //强制结束回合
         MultiPauseAction.pauseStage = false;
     }
