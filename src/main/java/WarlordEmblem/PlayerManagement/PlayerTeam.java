@@ -140,12 +140,14 @@ public class PlayerTeam {
     }
 
     //判断是不是所有玩家都死了
-    public boolean isAllDead()
+    public boolean isAllDead(PlayerInfo ignoreInfo)
     {
         for(PlayerInfo eachPlayer : playerInfos)
         {
-            if(!eachPlayer.isDead())
+            if(eachPlayer != ignoreInfo && (!eachPlayer.isDead()))
+            {
                 return false;
+            }
         }
         return true;
     }

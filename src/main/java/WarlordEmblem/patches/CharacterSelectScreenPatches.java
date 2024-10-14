@@ -726,7 +726,7 @@ public class CharacterSelectScreenPatches
 //            tempCard.baseMagicNumber = 50;
 //            tempCard.upgrade();
 //            AbstractDungeon.actionManager.addToBottom(
-//                new MakeTempCardInHandAction(tempCard,1)
+//                new MakeTempCardInHandAction(tempCard,3)
 //            );
             return SpireReturn.Continue();
         }

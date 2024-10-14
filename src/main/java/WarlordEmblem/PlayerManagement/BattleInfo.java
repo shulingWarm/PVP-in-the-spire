@@ -127,26 +127,26 @@ public class BattleInfo {
     public void updateDeadInfo(PlayerInfo info)
     {
         System.out.printf("%s dead !!!\n",info.getName());
-        //更新玩家的座次信息
-        updatePlayerTurnStage(info,SeatManager.TURN_END);
-        //判断是不是和本机玩家一个team
-        if(info.idTeam == oppositeTeam.idTeam)
-        {
-            if(oppositeTeam.isAllDead())
-            {
-                battleWin();
-                return;
-            }
-        }
-        else if(selfTeam.isAllDead()) {
-            battleLose();
-            return;
-        }
         //如果info是其它玩家，那就强制它死亡一下
         if(info.playerMonster!= null && info.playerMonster.currentHealth > 0)
         {
             ActionNetworkPatches.instantKill(info.playerMonster);
         }
+        //判断是不是和本机玩家一个team
+        if(info.idTeam == oppositeTeam.idTeam)
+        {
+            if(oppositeTeam.isAllDead(info))
+            {
+                battleWin();
+                return;
+            }
+        }
+        else if(selfTeam.isAllDead(info)) {
+            battleLose();
+            return;
+        }
+        //更新玩家的座次信息
+        updatePlayerTurnStage(info,SeatManager.TURN_END);
     }
 
     //标记为自身已经死亡

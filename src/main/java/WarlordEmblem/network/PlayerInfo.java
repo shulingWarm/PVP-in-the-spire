@@ -283,4 +283,10 @@ public class PlayerInfo {
     {
         return this.playerMonster;
     }
+
+    public void setAsDead()
+    {
+        if(this.playerMonster != null)
+            this.playerMonster.isDead = true;
+    }
 }

@@ -87,4 +87,9 @@ public class SelfPlayerInfo extends PlayerInfo {
     public AbstractCreature getCreature() {
         return AbstractDungeon.player;
     }
+
+    @Override
+    public void setAsDead() {
+        GlobalManager.getBattleInfo().selfDeadFlag = true;
+    }
 }
