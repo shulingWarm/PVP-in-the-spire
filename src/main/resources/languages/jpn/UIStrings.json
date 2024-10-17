@@ -4,6 +4,11 @@
       "ローカル接続"
     ]
   },
+  "PVPSystemMessage": {
+    "TEXT": [
+      "は戦闘室に入った。"
+    ]
+  },
   "ConnectInSteam": {
     "TEXT": [
       "Steam経由接続"

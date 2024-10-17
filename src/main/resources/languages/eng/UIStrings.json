@@ -4,6 +4,11 @@
       "Local Connection"
     ]
   },
+  "PVPSystemMessage": {
+    "TEXT": [
+      "Entered battle room. "
+    ]
+  },
   "ConnectInSteam": {
     "TEXT": [
       "Connect via Steam"

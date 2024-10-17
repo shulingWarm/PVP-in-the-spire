@@ -4,6 +4,11 @@
       "通过局域网连接"
     ]
   },
+  "PVPSystemMessage": {
+    "TEXT": [
+      "进入战斗房间。"
+    ]
+  },
   "ConnectInSteam": {
     "TEXT": [
       "通过Steam连接"

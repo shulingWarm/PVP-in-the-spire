@@ -1,5 +1,6 @@
 package WarlordEmblem.PlayerManagement;
 
+import UI.Chat.ChatFoldPage;
 import UI.ConfigPageModules.CharacterPanel;
 import UI.GridPanel;
 import WarlordEmblem.Events.*;
@@ -13,7 +14,9 @@ import WarlordEmblem.network.SelfPlayerInfo;
 import WarlordEmblem.powers.BlockablePoisonPower;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.MathUtils;
+import com.megacrit.cardcrawl.core.CardCrawlGame;
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
+import com.megacrit.cardcrawl.localization.UIStrings;
 import com.megacrit.cardcrawl.monsters.MonsterGroup;
 import com.megacrit.cardcrawl.powers.AbstractPower;
 import com.megacrit.cardcrawl.powers.PoisonPower;
@@ -26,6 +29,10 @@ import java.util.HashMap;
 //玩家信息的管理器
 //主要是用于管理多个玩家
 public class PlayerManager implements TeamCallback {
+
+
+    public static final UIStrings systemStrings =
+            CardCrawlGame.languagePack.getUIString("PVPSystemMessage");
 
     //注意，这个player信息也包括本机的玩家
     public PlayerTeam[] teams = new PlayerTeam[2];
@@ -362,7 +369,8 @@ public class PlayerManager implements TeamCallback {
         PlayerTeam team = teams[playerInfo.idTeam];
         team.updateEnterTime(enterTime);
         ++this.readyNum;
-        System.out.printf("ready update: %d\n",this.readyNum);
+        ChatFoldPage.getInstance().systemMessage(playerInfo.getName() + systemStrings.TEXT[0] +
+            this.readyNum + "/" + this.playerInfoMap.size());
     }
 
     //检查是否达到了进入战斗的条件

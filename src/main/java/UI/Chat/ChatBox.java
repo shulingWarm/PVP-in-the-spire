@@ -148,7 +148,7 @@ public class ChatBox extends AbstractPage
     }
 
     //用于处理收到的消息
-    public void receiveMessage(String message)
+    public void receiveMessage(String message, Color color)
     {
         //新建一个消息管理器
         AdvTextManager textManager = new AdvTextManager(
@@ -158,7 +158,7 @@ public class ChatBox extends AbstractPage
         textManager.freeze();
         //新建多行文本
         MultiRowLabel tempLabel = new MultiRowLabel(
-            textManager,0,0,Color.ORANGE
+            textManager,0,0,color
         );
         this.messagePanel.addNewPage(tempLabel);
     }

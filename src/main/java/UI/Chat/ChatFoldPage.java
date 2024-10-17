@@ -6,6 +6,7 @@ import UI.FoldPage;
 import UI.TextureManager;
 import WarlordEmblem.helpers.FontLibrary;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.megacrit.cardcrawl.core.Settings;
 import com.megacrit.cardcrawl.helpers.ImageMaster;
 
@@ -45,10 +46,18 @@ public class ChatFoldPage extends FoldPage {
     //收到消息
     public void receiveMessage(String message, String sender)
     {
-        this.chatBox.receiveMessage(sender + ": " + message);
+        this.chatBox.receiveMessage(sender + ": " + message,
+                Color.ORANGE);
         //判断是否处于打开状态
         if(!this.mainPageFlag)
             this.openButton.setTwinkle(true);
+    }
+
+    //显示系统信息
+    public void systemMessage(String message)
+    {
+        this.chatBox.receiveMessage(message,
+                Color.SKY);
     }
 
     @Override
