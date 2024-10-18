@@ -15,6 +15,7 @@ import com.megacrit.cardcrawl.relics.BurningBlood;
 public class BurnBloodPercent{
 
     public static final RelicStrings relicStrings = CardCrawlGame.languagePack.getRelicStrings(BurningBlood.ID);
+    public static final RelicStrings percentString = CardCrawlGame.languagePack.getRelicStrings("BloodPercent");
 
     //更改燃烧之血的描述
     @SpirePatch(clz = BurningBlood.class, method = "getUpdatedDescription")
@@ -24,7 +25,7 @@ public class BurnBloodPercent{
         public static SpireReturn<String> fix(BurningBlood __instance)
         {
             return SpireReturn.Return(
-                relicStrings.DESCRIPTIONS[0] + "10%" + relicStrings.DESCRIPTIONS[1]
+                relicStrings.DESCRIPTIONS[0] + percentString.DESCRIPTIONS[0] + relicStrings.DESCRIPTIONS[1]
             );
         }
     }

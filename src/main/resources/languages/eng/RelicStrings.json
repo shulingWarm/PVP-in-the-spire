@@ -32,6 +32,14 @@
       "If you have no potions, gain [E]"
     ]
   },
+  "BloodPercent": {
+    "NAME": "灵体外质",
+    "FLAVOR": "这团黏液与能量的混合物微微脉动，仿佛有着生命。",
+    "DESCRIPTIONS": [
+      "for 10% of",
+      "for 20% of"
+    ]
+  },
   "OrangePelletsChange": {
     "NAME": "Red Pellets",
     "FLAVOR": "“There used to be an orange pelletes in PVPMOD, but it was sold out.”",

@@ -24,7 +24,8 @@ public class BlackBloodPercent {
         public static SpireReturn<String> fix(BlackBlood __instance)
         {
             return SpireReturn.Return(
-                    relicStrings.DESCRIPTIONS[0] + "20%" + relicStrings.DESCRIPTIONS[1]
+                    relicStrings.DESCRIPTIONS[0] + BurnBloodPercent.percentString.DESCRIPTIONS[1]
+                        + relicStrings.DESCRIPTIONS[1]
             );
         }
     }
