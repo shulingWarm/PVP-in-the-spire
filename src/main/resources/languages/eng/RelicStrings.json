@@ -11,16 +11,16 @@
     "NAME": "Velvet Choker",
     "FLAVOR": "\"Immense power, but too limited.\" - Kublai the Great",
     "DESCRIPTIONS": [
-      "Gain [E] .",
-      "If you play more than #b",
-      " cards, lose [E] in the next turn."
+      "Start each combat with an additional [E] .",
+      "Whenever you play #b",
+      " or less cards during your turn, gain [E] at the start of your next turn."
     ]
   },
   "PVPEctoplasm": {
     "NAME": "Ectoplasm",
     "FLAVOR": "This blob of slime and energy seems to pulse with life.",
     "DESCRIPTIONS": [
-      " Damage source will steal your 5 #y金币 in each damage.",
+      " Whenever you take unblocked damage, lose 5 #ygold.",
       "Gain [E] at start of turn."
     ]
   },
@@ -28,7 +28,7 @@
     "NAME": "Sozu",
     "FLAVOR": "You notice that magical liquids seem to lose their properties when near this relic.",
     "DESCRIPTIONS": [
-      " at the start of your turn. Remove one potion slots.",
+      " at the start of your turn. Remove one potion slot.",
       "If you have no potions, gain [E]"
     ]
   },
@@ -44,7 +44,7 @@
     "NAME": "Red Pellets",
     "FLAVOR": "“There used to be an orange pelletes in PVPMOD, but it was sold out.”",
     "DESCRIPTIONS": [
-      "Whenever you play a #yPower, #yAttack, and #ySkill in the same turn, disable your debuffs for one turn."
+      "Whenever you play a #yPower, #yAttack, and #ySkill in the same turn, remove all your debuffs for the rest of this turn."
     ]
   },
   "WarlordEmblem:BadgeWrath": {
