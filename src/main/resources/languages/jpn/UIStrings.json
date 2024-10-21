@@ -81,6 +81,13 @@
       "全キャラの初期デッキのミックス"
     ]
   },
+  "ConsoleEnableOption": {
+    "TEXT": [
+      "操作卓可能:",
+      "できる",
+      "無効"
+    ]
+  },
   "CardPoolOption": {
     "TEXT": [
       "カードプール:",

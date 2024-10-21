@@ -281,6 +281,9 @@ this,this.toggleOptionList.size());
         //添加败者奖励配置
         optionList.add((new LoserRewardOption(optionWidth)));
         optionList.add((new TurnStrategyOption(optionWidth)));
+        //添加是否启用控制台的option
+        optionList.add((new ConsoleEnableOption(optionWidth)));
+
         //遍历每个需要被添加的page
         for(int idPage=0;idPage<optionList.size();++idPage)
         {
