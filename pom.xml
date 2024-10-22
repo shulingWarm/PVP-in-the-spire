@@ -99,7 +99,7 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <properties>
-                <steam.path>C:/Program Files (x86)/steam/steamapps</steam.path>
+                <steam.path>/media/zzh/data/SteamLibrary/steamapps</steam.path>
                 <sts.path>/common/SlayTheSpire/desktop-1.0.jar</sts.path>
             </properties>
         </profile>
