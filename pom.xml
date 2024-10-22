@@ -1,27 +1,39 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>PvPInTheSpire</groupId>
-    <artifactId>PvPInTheSpire</artifactId>
-    <version>v1.0.0</version>
-    <packaging>jar</packaging>
-
-    <name>PvPInTheSpire</name>
-    <description>Attempting to make a mod!</description>
-
     <properties>
+        <!-- TODO: Is it ok to change modID? I did change it, which might be very dangerous. -->
+        <modID>pvp-in-the-spire</modID>
+        <author>Zseal and Reindier</author>
+
+        <!-- Compatible STS version and version we are using for ModTheSpire -->
+        <SlayTheSpire.version>12-18-2022</SlayTheSpire.version>
+        <!-- TODO: With what version of ModTheSpire is PvPInTheSpire compatible? -->
+        <ModTheSpire.version>3.16.0</ModTheSpire.version>
+
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <SlayTheSpire.version>01-27-2020</SlayTheSpire.version>
-        <ModTheSpire.version>3.16.0</ModTheSpire.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
+    <!-- The name of the mod as it will appear in the mod launcher. -->
+    <name>PvP In The Spire</name>
+    <!-- If you want to change the version number, change this version field.-->
+    <version>0.5.33</version>
+    <!-- TODO: add a new description. However, where does this even go?-->
+
+    <description>杀戮尖塔联机对战 (make better description and replace with english)</description>
+
+    <!-- When packaging, we get warnings that this should be hard-coded and not a reference.  -->
+    <groupId>${modID}</groupId>
+    <artifactId>${modID}</artifactId>
+
+    <!-- The dependencies. All local system paths are found in the profiles at the end of the document -->
     <dependencies>
         <dependency>
             <groupId>com.megacrit.cardcrawl</groupId>
             <artifactId>slaythespire</artifactId>
-            <version>016</version>
+            <version>${SlayTheSpire.version}</version>
             <scope>system</scope>
             <systemPath>${steam.path}/common/SlayTheSpire/desktop-1.0.jar</systemPath>
         </dependency>
@@ -35,6 +47,7 @@
         <dependency>
             <groupId>basemod</groupId>
             <artifactId>basemod</artifactId>
+            <!-- This version number does not need to be accurate; They're only used for display in the left sidebar under external libraries -->
             <version>5.21.1</version>
             <scope>system</scope>
             <systemPath>${steam.path}/workshop/content/646570/1605833019/BaseMod.jar</systemPath>
@@ -42,14 +55,17 @@
         <dependency>
             <groupId>com.evacipated.cardcrawl.mod</groupId>
             <artifactId>StSLib</artifactId>
+            <!-- TODO: Is this version number important?-->
             <version>1.19.3</version>
             <scope>system</scope>
             <systemPath>${steam.path}/workshop/content/646570/1609158507/StSLib.jar</systemPath>
         </dependency>
     </dependencies>
 
+    <!-- Information on how to package the project into a jar file. Also uses the local system paths found in the
+    profiles at the end of the document. -->
     <build>
-        <finalName>PvPInTheSpire</finalName>
+        <finalName>${project.artifactId}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -80,8 +96,40 @@
                 </executions>
             </plugin>
         </plugins>
+
+        <!-- This resources block fixes the references in ModTheSpire.json (I think)  -->
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>false</filtering>
+                <excludes> <!-- These files won't be filtered. -->
+                    <exclude>ModTheSpire.json</exclude>
+                    <exclude>**/*.json</exclude>
+                </excludes>
+            </resource>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <includes> <!-- These files will be filtered. -->
+                    <include>**/*.json</include>
+                </includes>
+            </resource>
+            <!-- Filtering replaces certain text like ${modID} with the corresponding value from this file. -->
+        </resources>
     </build>
 
+
+    <!-- These are the building profiles of all developers. This is needed, because each developer may have a different
+    path to their Steam- and Slay The Spire folder. If you are a new developer (first of all hi!), you can copy and
+    paste an entire <profile>...</profile> block. Simply change the id to your preferred name and change the
+    <steam.path> and <sts.path> fields accordingly to your local folder path:
+    - <steam.path> is the path to your "steamapps" folder.
+    - <sts.path> is to the launcher .jar file located in the SlayTheSpire folder in steamapps/common. This most likely
+    will be under the name "desktop-1.0.jar".
+
+    There is a reasonable chance you will not have to change anything from Reindier's paths, as this is the default
+    Steam path. We still recommend you make a separate profile instead of just selecting some else's profile.
+    -->
     <profiles>
         <profile>
             <id>Reindier</id>

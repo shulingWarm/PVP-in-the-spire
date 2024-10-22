@@ -15,78 +15,64 @@ import WarlordEmblem.PVPApi.Communication;
 import WarlordEmblem.card.*;
 import WarlordEmblem.helpers.FontLibrary;
 import WarlordEmblem.helpers.RandMonsterHelper;
-import WarlordEmblem.network.PlayerInfo;
-import WarlordEmblem.powers.PowerMapping;
 import WarlordEmblem.relics.*;
-import basemod.ModLabeledToggleButton;
-import basemod.ModPanel;
-import basemod.abstracts.CustomRelic;
 import basemod.helpers.RelicType;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
+import com.evacipated.cardcrawl.modthespire.Loader;
+import com.evacipated.cardcrawl.modthespire.ModInfo;
+import com.evacipated.cardcrawl.modthespire.Patcher;
 import com.evacipated.cardcrawl.modthespire.lib.SpireConfig;
 import com.evacipated.cardcrawl.modthespire.lib.SpireInitializer;
 import basemod.BaseMod;
 import basemod.interfaces.*;
-import com.google.gson.Gson;
-import com.megacrit.cardcrawl.cards.AbstractCard;
-import com.megacrit.cardcrawl.characters.AbstractPlayer;
-import com.megacrit.cardcrawl.core.CardCrawlGame;
 import com.megacrit.cardcrawl.core.Settings;
-import com.megacrit.cardcrawl.dungeons.TheCity;
-import com.megacrit.cardcrawl.dungeons.TheEnding;
-import com.megacrit.cardcrawl.helpers.FontHelper;
 import com.megacrit.cardcrawl.localization.*;
-import com.megacrit.cardcrawl.monsters.MonsterInfo;
-import com.megacrit.cardcrawl.orbs.Dark;
 import com.megacrit.cardcrawl.potions.AbstractPotion;
 import com.megacrit.cardcrawl.relics.*;
-import com.megacrit.cardcrawl.ui.panels.energyorb.EnergyOrbBlue;
 import com.megacrit.cardcrawl.unlock.UnlockTracker;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import basemod.abstracts.CustomCard;
 import com.badlogic.gdx.graphics.Color;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
-import java.util.Random;
+import java.util.*;
 
-import com.evacipated.cardcrawl.mod.stslib.Keyword;
-import WarlordEmblem.patches.CharacterSelectScreenPatches;
-
-import javax.management.monitor.StringMonitor;
+import org.scannotation.AnnotationDB;
 
 
 @SpireInitializer
-public class WarlordEmblem implements
+public class PvPInTheSpireMod implements
+        EditStringsSubscriber,
+        EditKeywordsSubscriber,
         PostInitializeSubscriber,
         EditCardsSubscriber,
-        EditStringsSubscriber,
-        AddAudioSubscriber,
         EditRelicsSubscriber,
-        EditKeywordsSubscriber,
         PotionGetSubscriber,
-        EditCharactersSubscriber{
-    public static final Logger logger = LogManager.getLogger(WarlordEmblem.class.getSimpleName());
+        EditCharactersSubscriber,
+        AddAudioSubscriber {
+
+    public static ModInfo info;
+    public static String modID;
+    static { loadModInfo(); }
+
+    public static final Logger logger = LogManager.getLogger(PvPInTheSpireMod.class.getSimpleName());
 
 
-    public static String MOD_ID = "WarlordEmblem";
     public static String makeID(String id) {
-        return MOD_ID + ":" + id;
-    }
-    public static String assetPath(String path) {
-        return MOD_ID + "/" + path;
+        return modID + ":" + id;
     }
 
-    public static final String MODNAME = "Warlord Emblem";
-    public static final String AUTHOR = "Rita";
-    public static final String DESCRIPTION = "Porting Warlord Emblem to latest version.";
-    public static String  DK_bgImg = assetPath("img/character/DeathKnight/dk_blood.png");
+    public static void initialize() {
+        logger.info("========================= 开始初始化 =========================");
+        new PvPInTheSpireMod();
+        logger.info("========================= 初始化完成 =========================");
+    }
 
+    public PvPInTheSpireMod(){
+        BaseMod.subscribe(this);
+        logger.debug(modID + "subscribed to BaseMod.");
+    }
+
+    //TODO: What are these booleans for? Can these be removed? - Luc
     public static boolean addonRelic = true;
     public static boolean ringRelic = true;
     public static boolean mantleRelic = true;
@@ -95,28 +81,55 @@ public class WarlordEmblem implements
 
     public static Properties WarlordEmblemDefaults = new Properties();
 
-    public static final Color DeathKnight_Color = new Color(0.171F,0.722F,0.722F,1.0F);
-    public static final Color BloodRealm_Color = new Color(0.835f,0.25f,0.187f,1.0f);
-    public static final Color IceRealm_Color = new Color(0.125F,0.219F,0.633F,1.0F);
-    public static final Color EvilRealm_Color = new Color(0.043F,0.875F,0.195F,1.0F);
-    public static final Color RuneShadow_Color = new Color(0.0F,0.3F,0.35F,0.8F);
-    public static final Color Transparent_Color = new Color(0.0F,0.0F,0.0F,0.0F);
-
-    public WarlordEmblem(){
-        logger.debug("Constructor started.");
-        BaseMod.subscribe(this);
-        //CaseMod.subscribe(this);
 
 
-        //loadConfig();
-        logger.debug("Constructor finished.");
+    @Override
+    public void receiveEditCards() {
+
+        //添加自定义的牌
+        List<CustomCard> cards = new ArrayList<>();
+        // cards.add(new TimeEat());
+        cards.add(new HexCard());
+        cards.add(new BurnTransform());
+        cards.add(new ComputeTransform());
+        cards.add(new VirusTransform());
+        cards.add(new FateTransform());
+        cards.add(new DoubleSword());
+        cards.add(new PainSword());
+        cards.add(new ElectronicInterference());
+        cards.add(new PsychicSnooping());
+        cards.add(new MultiplayerTimeWarp());
+
+        for (CustomCard card : cards) {
+            BaseMod.addCard(card);
+            UnlockTracker.unlockCard(card.cardID);
+        }
     }
 
-    public static void initialize() {
-        logger.info("========================= 开始初始化 =========================");
-        new WarlordEmblem();
-        logger.info("========================= 初始化完成 =========================");
+    @Override
+    public void receiveEditRelics() {
+        TextureManager.initTexture();
+
+        //把格挡增益添加到遗物池里面，只是为了方便在哈希表里面找到它
+        BaseMod.addRelic(new BlockGainer(),RelicType.SHARED);
+        BaseMod.addRelic(new OrangePelletsChange(),RelicType.SHARED);
+        BaseMod.addRelic(new PVPVelvetChoker(),RelicType.SHARED);
+        BaseMod.addRelic(new PVPSozu(),RelicType.SHARED);
+        BaseMod.addRelic(new PVPEctoplasm(),RelicType.SHARED);
+        BaseMod.removeRelic(new Ectoplasm());
+        UnlockTracker.markRelicAsSeen(PVPVelvetChoker.ID);
+        UnlockTracker.markRelicAsSeen(PVPSozu.ID);
+        UnlockTracker.markRelicAsSeen(PVPEctoplasm.ID);
+
+        //注册修改过的全知头骨的事件
+        BaseMod.addEvent(ModifiedSkull.ID,ModifiedSkull.class);
+        //修改过的打防之光
+        BaseMod.addEvent(ModifiedShiningLight.ID,ModifiedShiningLight.class);
+        BaseMod.addEvent(ModifiedCurseTome.ID,ModifiedCurseTome.class);
     }
+
+
+
 
     public static void loadConfig() {
         logger.debug("===徽章读取设置======");
@@ -165,68 +178,21 @@ public class WarlordEmblem implements
 
     }
 
-
     @Override
     public void receiveEditCharacters() {
     }
 
-
-
     @Override
     public void receiveAddAudio() {
-        //BaseMod.addAudio(this.makeID("VO_Kael_Intimidate"), assetPath("/audio/sound/Kael/VO/嘲讽2.wav"));
+
     }
 
-
-    @Override
-    public void receiveEditCards() {
-
-        //添加自定义的牌
-        List<CustomCard> cards = new ArrayList<>();
-        // cards.add(new TimeEat());
-        cards.add(new HexCard());
-        cards.add(new BurnTransform());
-        cards.add(new ComputeTransform());
-        cards.add(new VirusTransform());
-        cards.add(new FateTransform());
-        cards.add(new DoubleSword());
-        cards.add(new PainSword());
-        cards.add(new ElectronicInterference());
-        cards.add(new PsychicSnooping());
-        cards.add(new MultiplayerTimeWarp());
-
-        for (CustomCard card : cards) {
-            BaseMod.addCard(card);
-            UnlockTracker.unlockCard(card.cardID);
-        }
-    }
 
     @Override
     public void receivePotionGet(AbstractPotion abstractPotion) {
-        //    BaseMod.addPotion(ReserveRunePotion.class,DeathKnight_Color,DeathKnight_Color,DeathKnight_Color,WarlordEmblem.makeID("ReserveRunePotion"),AbstractPlayerEnum.DeathKnight);
+
     }
 
-    @Override
-    public void receiveEditRelics() {
-        TextureManager.initTexture();
-
-        //把格挡增益添加到遗物池里面，只是为了方便在哈希表里面找到它
-        BaseMod.addRelic(new BlockGainer(),RelicType.SHARED);
-        BaseMod.addRelic(new OrangePelletsChange(),RelicType.SHARED);
-        BaseMod.addRelic(new PVPVelvetChoker(),RelicType.SHARED);
-        BaseMod.addRelic(new PVPSozu(),RelicType.SHARED);
-        BaseMod.addRelic(new PVPEctoplasm(),RelicType.SHARED);
-        BaseMod.removeRelic(new Ectoplasm());
-        UnlockTracker.markRelicAsSeen(PVPVelvetChoker.ID);
-        UnlockTracker.markRelicAsSeen(PVPSozu.ID);
-        UnlockTracker.markRelicAsSeen(PVPEctoplasm.ID);
-
-        //注册修改过的全知头骨的事件
-        BaseMod.addEvent(ModifiedSkull.ID,ModifiedSkull.class);
-        //修改过的打防之光
-        BaseMod.addEvent(ModifiedShiningLight.ID,ModifiedShiningLight.class);
-        BaseMod.addEvent(ModifiedCurseTome.ID,ModifiedCurseTome.class);
-    }
 
 
 
@@ -355,7 +321,25 @@ public class WarlordEmblem implements
         if(!language.equals(Settings.GameLanguage.ENG)) {
             loadLocKeywords(language);
         }
+    }
 
-
+    /**
+     * This determines the mod's ID based on information stored by ModTheSpire.
+     */
+    private static void loadModInfo() {
+        Optional<ModInfo> infos = Arrays.stream(Loader.MODINFOS).filter((modInfo)->{
+            AnnotationDB annotationDB = Patcher.annotationDBMap.get(modInfo.jarURL);
+            if (annotationDB == null)
+                return false;
+            Set<String> initializers = annotationDB.getAnnotationIndex().getOrDefault(SpireInitializer.class.getName(), Collections.emptySet());
+            return initializers.contains(PvPInTheSpireMod.class.getName());
+        }).findFirst();
+        if (infos.isPresent()) {
+            info = infos.get();
+            modID = info.ID;
+        }
+        else {
+            throw new RuntimeException("Failed to determine mod info/ID based on initializer.");
+        }
     }
 }
