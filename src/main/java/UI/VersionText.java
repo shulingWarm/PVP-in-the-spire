@@ -2,6 +2,7 @@ package UI;
 
 
 import WarlordEmblem.GlobalManager;
+import WarlordEmblem.PvPInTheSpireMod;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.megacrit.cardcrawl.core.Settings;
@@ -11,7 +12,7 @@ public class VersionText extends TextLabel {
 
     public VersionText(float x, float y, BitmapFont font)
     {
-        super(x,y, Settings.WIDTH*0.04f,Settings.HEIGHT*0.07f, GlobalManager.VERSION,font);
+        super(x,y, Settings.WIDTH*0.04f,Settings.HEIGHT*0.07f, String.valueOf(PvPInTheSpireMod.info.ModVersion),font);
     }
 
     @Override

@@ -5,6 +5,7 @@ import WarlordEmblem.Events.UpdateCharacterEvent;
 import WarlordEmblem.GlobalManager;
 import WarlordEmblem.PVPApi.Communication;
 import WarlordEmblem.PlayerManagement.CharacterManager;
+import WarlordEmblem.PvPInTheSpireMod;
 import WarlordEmblem.character.CharacterInfo;
 import com.megacrit.cardcrawl.characters.AbstractPlayer;
 import com.megacrit.cardcrawl.core.AbstractCreature;
@@ -33,7 +34,7 @@ public class SelfPlayerInfo extends PlayerInfo {
         CharacterManager.initArrayList();
         this.idClass = CharacterManager.getClassId(GlobalManager.defaultClass);
         //设置玩家的信息
-        setCharacterInfo(GlobalManager.myName,GlobalManager.VERSION,
+        setCharacterInfo(GlobalManager.myName,String.valueOf(PvPInTheSpireMod.info.ModVersion),
                 GlobalManager.defaultClass);
     }
 
