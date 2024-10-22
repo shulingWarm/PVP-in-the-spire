@@ -1,10 +1,18 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0">
     <modelVersion>4.0.0</modelVersion>
 
+    <!-- The name of the mod as it will appear in the mod launcher. -->
+    <name>PvP In The Spire</name>
+    <!-- Version number of the mod. Change this value if you want to update the version number! -->
+    <version>0.5.33</version>
+    <!-- TODO: add a new description. However, where does this even go?-->
+    <description>杀戮尖塔联机对战 (make better description and replace with english)</description>
+
     <properties>
-        <!-- TODO: Is it ok to change modID? I did change it, which might be very dangerous. -->
-        <modID>pvp-in-the-spire</modID>
-        <author>Zseal and Reindier</author>
+        <!-- The mod ID of the mod. PLEASE DO NOT TOUCH! -->
+        <modID>PvPInTheSpire</modID>
+        <!-- The authors of the mod. If you are a new developer, feel free to add your name! -->
+        <author>Zseal, Reindier</author>
 
         <!-- Compatible STS version and version we are using for ModTheSpire -->
         <SlayTheSpire.version>12-18-2022</SlayTheSpire.version>
@@ -16,13 +24,6 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 
-    <!-- The name of the mod as it will appear in the mod launcher. -->
-    <name>PvP In The Spire</name>
-    <!-- If you want to change the version number, change this version field.-->
-    <version>0.5.33</version>
-    <!-- TODO: add a new description. However, where does this even go?-->
-
-    <description>杀戮尖塔联机对战 (make better description and replace with english)</description>
 
     <!-- When packaging, we get warnings that this should be hard-coded and not a reference.  -->
     <groupId>${modID}</groupId>
