@@ -1,12 +1,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0">
     <modelVersion>4.0.0</modelVersion>
 
-    <!-- The name of the mod as it will appear in the mod launcher. -->
+    <!-- The name of the mod, which will appear in the mod launcher. -->
     <name>PvP In The Spire</name>
-    <!-- Version number of the mod. Change this value if you want to update the version number! -->
+    <!-- Version number of the mod, which will appear in the mod launcher.
+    Change this value if you want to update the version number! -->
     <version>0.5.33</version>
-    <!-- TODO: add a new description. However, where does this even go?-->
-    <description>杀戮尖塔联机对战 (make better description and replace with english)</description>
+    <!-- Description of the mod, which will appear in the mod launcher. TODO: add a new description in english. -->
+    <description>杀戮尖塔联机对战</description>
 
     <properties>
         <!-- The mod ID of the mod. PLEASE DO NOT TOUCH! -->
