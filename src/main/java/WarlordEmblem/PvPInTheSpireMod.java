@@ -117,6 +117,8 @@ public class PvPInTheSpireMod implements
         BaseMod.addRelic(new PVPSozu(),RelicType.SHARED);
         BaseMod.addRelic(new PVPEctoplasm(),RelicType.SHARED);
         BaseMod.removeRelic(new Ectoplasm());
+        BaseMod.removeRelic(new Sozu());
+        BaseMod.removeRelic(new VelvetChoker());
         UnlockTracker.markRelicAsSeen(PVPVelvetChoker.ID);
         UnlockTracker.markRelicAsSeen(PVPSozu.ID);
         UnlockTracker.markRelicAsSeen(PVPEctoplasm.ID);
