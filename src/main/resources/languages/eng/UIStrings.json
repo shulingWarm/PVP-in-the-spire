@@ -170,19 +170,5 @@
       "Cancel",
       "Wrong password"
     ]
-  },
-  "WarlordEmblem:UtilizeAction": {
-    "TEXT": [
-      "选择丢弃一张手牌并获得其耗能等量的能量"
-    ]
-  },
-  "WarlordEmblem:RelicFilter": {
-    "TEXT": [
-      "加入附加遗物（需要重启游戏）",
-      "加入戒指遗物（需要重启游戏）",
-      "加入斗篷遗物（需要重启游戏）",
-      "符文巨剑数据显示在人物旁边",
-      "死亡骑士获得某些原版专属遗物(beta)"
-    ]
   }
 }

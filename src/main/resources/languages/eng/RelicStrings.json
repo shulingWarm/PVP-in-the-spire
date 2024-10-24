@@ -46,12 +46,5 @@
     "DESCRIPTIONS": [
       "Whenever you play a #yPower, #yAttack, and #ySkill in the same turn, remove all your debuffs for the rest of this turn."
     ]
-  },
-  "WarlordEmblem:BadgeWrath": {
-    "NAME": "徽章的愤怒",
-    "FLAVOR": "徽章很少发怒，但是发怒了后果很严重。",
-    "DESCRIPTIONS": [
-      "每场战斗开始时，所有敌人失去 #b1 点 #y力量 。 NL #b协同-徽章的祝福: 给予所有敌人 #b1 层 #y虚弱 。"
-    ]
   }
 }
