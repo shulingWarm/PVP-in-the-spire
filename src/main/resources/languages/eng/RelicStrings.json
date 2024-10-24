@@ -20,7 +20,7 @@
     "NAME": "Ectoplasm",
     "FLAVOR": "This blob of slime and energy seems to pulse with life.",
     "DESCRIPTIONS": [
-      " Whenever you take unblocked damage, lose 5 #ygold.",
+      " Whenever you take unblocked damage, enemy steals 5 #ygold.",
       "Gain [E] at start of turn."
     ]
   },
