@@ -20,7 +20,7 @@
     "NAME": "Ectoplasm",
     "FLAVOR": "This blob of slime and energy seems to pulse with life.",
     "DESCRIPTIONS": [
-      " Whenever you take unblocked damage, lose 5 #ygold.",
+      " Whenever you take unblocked damage, enemy steals 5 #ygold.",
       "Gain [E] at start of turn."
     ]
   },
@@ -45,13 +45,6 @@
     "FLAVOR": "“There used to be an orange pelletes in PVPMOD, but it was sold out.”",
     "DESCRIPTIONS": [
       "Whenever you play a #yPower, #yAttack, and #ySkill in the same turn, remove all your debuffs for the rest of this turn."
-    ]
-  },
-  "WarlordEmblem:BadgeWrath": {
-    "NAME": "徽章的愤怒",
-    "FLAVOR": "徽章很少发怒，但是发怒了后果很严重。",
-    "DESCRIPTIONS": [
-      "每场战斗开始时，所有敌人失去 #b1 点 #y力量 。 NL #b协同-徽章的祝福: 给予所有敌人 #b1 层 #y虚弱 。"
     ]
   }
 }

@@ -112,6 +112,13 @@
       "BOSS遗物三选一"
     ]
   },
+  "ConsoleEnableOption": {
+    "TEXT": [
+      "是否开启控制台:",
+      "开",
+      "关"
+    ]
+  },
   "TurnStrategyOption": {
     "TEXT": [
       "轮次方案:",
