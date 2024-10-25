@@ -14,6 +14,8 @@
         <modID>PvPInTheSpire</modID>
         <!-- The authors of the mod. If you are a new developer, feel free to add your name! -->
         <author>Zseal, Reindier</author>
+        <!-- The credits of the mod, which will appear in the mod launcher. TODO: add people to the credits.-->
+        <credits>-</credits>
 
         <!-- Compatible STS version and version we are using for ModTheSpire -->
         <SlayTheSpire.version>12-18-2022</SlayTheSpire.version>

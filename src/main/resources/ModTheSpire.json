@@ -6,6 +6,6 @@
   "version": "${project.version}",
   "mts_version": "${ModTheSpire.version}",
   "sts_version": "${SlayTheSpire.version}",
-  "credits": "PvP In The Spire (what is this used for???)",
+  "credits": "${credits}",
   "dependencies": ["basemod", "stslib"]
 }
