@@ -375,6 +375,11 @@ public class CharacterSelectScreenPatches
                     if(!player.hasPower(ConfusionPower.POWER_ID))
                         player.addPower(new ConfusionPower(player));
                 }
+                //Bug fix for Centennial Puzzle, it should trigger preBattle normally
+                if(player.hasRelic(CentennialPuzzle.ID))
+                {
+                    player.getRelic(CentennialPuzzle.ID).atPreBattle();
+                }
                 //如果对方还没有准备好，也就是禁止渲染的状态下，是不需要做这个的
                 if(CharacterSelectScreenPatches.TestUpdateFading.needPauseRender())
                 {
