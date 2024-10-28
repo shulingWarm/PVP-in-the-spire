@@ -44,9 +44,10 @@ public class PVPEctoplasm extends CustomRelic {
     @Override
     public void onLoseHp(int damageAmount) {
         //判断自己目前的钱是否足够
-        if(damageAmount > AbstractDungeon.player.currentBlock &&
-                AbstractDungeon.player.gold > 0 &&
-                this.tempInfo.owner instanceof PlayerMonster)
+        if(this.tempInfo != null && this.tempInfo.type == DamageInfo.DamageType.NORMAL &&
+            damageAmount > AbstractDungeon.player.currentBlock &&
+            AbstractDungeon.player.gold > 0 &&
+            this.tempInfo.owner instanceof PlayerMonster)
         {
             int loseAmount = Math.min(LOSE_GOLD, AbstractDungeon.player.gold);
             PlayerMonster playerMonster = (PlayerMonster)this.tempInfo.owner;
@@ -69,6 +70,7 @@ public class PVPEctoplasm extends CustomRelic {
                 ));
             }
             EffectPatch.enable = true;
+            this.tempInfo = null;
         }
     }
 
