@@ -282,6 +282,8 @@ public class PvPInTheSpireMod implements
 
         FontLibrary.getBaseFont();
         FontLibrary.getFontWithSize(24);
+        FontLibrary.getFontWithSize(40);
+        FontLibrary.getFontWithSize(34);
 
         //初始化随机怪物的事件
         RandMonsterHelper.initMonsterList();

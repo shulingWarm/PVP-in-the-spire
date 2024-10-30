@@ -6,7 +6,8 @@
   },
   "PVPSystemMessage": {
     "TEXT": [
-      "Entered battle room. "
+      "Entered battle room. ",
+      "left the game."
     ]
   },
   "ConnectInSteam": {

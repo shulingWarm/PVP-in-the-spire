@@ -142,6 +142,10 @@ public class GlobalManager {
         {
             defaultClass = AbstractPlayer.PlayerClass.IRONCLAD;
         }
+        //初始化玩家管理器
+        if(playerManager == null)
+            playerManager = new PlayerManager();
+        playerManager.initGameInfo();
     }
 
     public static void initGlobal()
@@ -176,8 +180,6 @@ public class GlobalManager {
         loserRewardFlag = 0;
         //以下是与网络无关的设置
         initGameGlobal();
-        //初始化玩家管理器
-        playerManager = new PlayerManager();
     }
 
     //选择人物时点击启程的操作，点击的时候会确定游戏即将开始

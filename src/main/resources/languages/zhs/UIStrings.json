@@ -6,7 +6,8 @@
   },
   "PVPSystemMessage": {
     "TEXT": [
-      "进入战斗房间。"
+      "进入战斗房间。",
+      "离开了游戏。"
     ]
   },
   "ConnectInSteam": {
