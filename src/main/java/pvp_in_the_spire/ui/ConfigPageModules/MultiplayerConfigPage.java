@@ -121,6 +121,15 @@ public class MultiplayerConfigPage extends AbstractPage
                 AbstractConfigOption currentOption = optionList.get(idOption);
                 currentOption.receiveConfigChange(streamHandle);
             }
+            //Read toggle options
+            int toggleNum = streamHandle.readInt();
+            for(int idToggle=0;idToggle<toggleNum;++idToggle)
+            {
+                //Get current toggle option
+                ToggleOption option = this.toggleOptionList.get(idToggle).first;
+                boolean tempStage = streamHandle.readBoolean();
+                option.setStage(tempStage);
+            }
         }
         catch (IOException e)
         {
@@ -226,6 +235,14 @@ public class MultiplayerConfigPage extends AbstractPage
                 stream.writeInt(eachOption.getCurrentSelect());
                 //把当前选项设置为可更新
                 eachOption.sendConfigChangeFlag = true;
+            }
+            //Send my toggle option number
+            stream.writeInt(this.toggleOptionList.size());
+            //Send all toggle option to new player
+            for(Pair<ToggleOption,ToggleInterface> eachToggleOption : this.toggleOptionList)
+            {
+                //Record this option flag
+                stream.writeBoolean(eachToggleOption.first.userToggle.enabled);
             }
         }
         catch (IOException e)
