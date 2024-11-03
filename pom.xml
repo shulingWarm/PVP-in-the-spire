@@ -13,7 +13,7 @@
         <!-- The mod ID of the mod. PLEASE DO NOT TOUCH! -->
         <modID>PvPInTheSpire</modID>
         <!-- The authors of the mod. If you are a new developer, feel free to add your name! -->
-        <author>Zseal, Reindier</author>
+        <author>佐守(Zseal), Reindier</author>
 
         <!-- Compatible STS version and version we are using for ModTheSpire -->
         <SlayTheSpire.version>12-18-2022</SlayTheSpire.version>
