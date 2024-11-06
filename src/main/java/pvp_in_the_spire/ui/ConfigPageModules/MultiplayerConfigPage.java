@@ -411,17 +411,17 @@ this,this.toggleOptionList.size());
         GlobalManager.playerManager.selfPlayerInfo.setLobbyOwner(isOwner);
         //初始化渲染角色的控件
         this.characterPanel = new CharacterPanel();
-        //给玩家管理器传递用于显示角色的两个grid
-        GlobalManager.playerManager.initCharacterLayout(
-            this.characterPanel.leftCharacters,
-            this.characterPanel.rightCharacters
-        );
         initConfigOption();
     }
 
     //刚刚打开页面时的操作
     @Override
     public void open() {
+        //给玩家管理器传递用于显示角色的两个grid
+        GlobalManager.playerManager.initCharacterLayout(
+                this.characterPanel.leftCharacters,
+                this.characterPanel.rightCharacters
+        );
         InputHelper.initialize();
         //登记config信息的处理
         GlobalManager.messageTriggerInterface = new ConfigProtocol();

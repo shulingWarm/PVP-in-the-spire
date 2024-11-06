@@ -401,6 +401,9 @@ public class PlayerManager implements TeamCallback {
         //把两个队伍的内容都清空
         teams[0].removeAllPlayer();
         teams[1].removeAllPlayer();
+        //把team的左右情况重置一下
+        teams[0].isLeft = true;
+        teams[1].isLeft = false;
         //把自己的team设置成待定
         selfPlayerInfo.idTeam = -1;
         selfPlayerInfo.setReadyFlag(false);
