@@ -1,5 +1,7 @@
 package pvp_in_the_spire.relics;
 
+import basemod.devcommands.gold.Gold;
+import com.megacrit.cardcrawl.rewards.RewardItem;
 import pvp_in_the_spire.GlobalManager;
 import pvp_in_the_spire.patches.ActionNetworkPatches;
 import pvp_in_the_spire.patches.CharacterSelectScreenPatches;

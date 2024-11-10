@@ -108,9 +108,14 @@
   },
   "LoserRewardOption": {
     "TEXT": [
-      "败者奖励:",
+      "BOSS遗物:",
       "小屋子",
-      "BOSS遗物三选一"
+      "随机BOSS遗物三选一"
+    ]
+  },
+  "LoserGoldOption": {
+    "TEXT": [
+      "金币:"
     ]
   },
   "ConsoleEnableOption": {
@@ -138,7 +143,9 @@
       "总是先手",
       "无先手惩罚",
       "多一费",
-      "多一条尾巴"
+      "多一条尾巴",
+      "败者奖励",
+      "金卡三选一"
     ]
   },
   "WaitPage": {
