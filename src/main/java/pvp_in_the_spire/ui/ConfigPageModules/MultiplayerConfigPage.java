@@ -121,6 +121,15 @@ public class MultiplayerConfigPage extends AbstractPage
                 AbstractConfigOption currentOption = optionList.get(idOption);
                 currentOption.receiveConfigChange(streamHandle);
             }
+            //Read toggle options
+            int toggleNum = streamHandle.readInt();
+            for(int idToggle=0;idToggle<toggleNum;++idToggle)
+            {
+                //Get current toggle option
+                ToggleOption option = this.toggleOptionList.get(idToggle).first;
+                boolean tempStage = streamHandle.readBoolean();
+                option.setStage(tempStage);
+            }
         }
         catch (IOException e)
         {
@@ -227,6 +236,14 @@ public class MultiplayerConfigPage extends AbstractPage
                 //把当前选项设置为可更新
                 eachOption.sendConfigChangeFlag = true;
             }
+            //Send my toggle option number
+            stream.writeInt(this.toggleOptionList.size());
+            //Send all toggle option to new player
+            for(Pair<ToggleOption,ToggleInterface> eachToggleOption : this.toggleOptionList)
+            {
+                //Record this option flag
+                stream.writeBoolean(eachToggleOption.first.userToggle.enabled);
+            }
         }
         catch (IOException e)
         {
@@ -250,50 +267,55 @@ this,this.toggleOptionList.size());
         option.setStage(initStage);
     }
 
+    //注册新的config选项
+    public void registerConfigOption(AbstractConfigOption option){
+        option.setOptionId(optionList.size());
+        optionList.add(option);
+        configPanel.addNewPage(option);
+    }
+
+    //添加文本
+    public void addTextTitle(String title,float optionWidth)
+    {
+        //地主增益选项的标题文本
+        configPanel.addNewPage(
+                new TextLabel(0,0,optionWidth,
+                        Settings.HEIGHT*0.04f,
+                        title,FontLibrary.getBaseFont())
+        );
+    }
+
     //初始化page选项
     public void initConfigOption()
     {
         optionList.clear();
         //能用的option宽度
         float optionWidth = configPanel.width*0.8f;
-        optionList.add(new TailNumSelect(optionWidth));
-        optionList.add(new InvincibleRate(optionWidth));
-        optionList.add(new AddConstConfig(optionWidth));
-        //设置格挡增益比率
-        optionList.add(new BlockGainConfig(optionWidth));
-        //设置掉落金钱的比例
-        optionList.add(new LoseGoldConfig(optionWidth));
-        //选择初始牌组
-        optionList.add(new StartDeckConfig(optionWidth));
-        //设置初始金币
-        optionList.add(new StartGoldConfig(optionWidth));
-        //设置卡池
-        optionList.add(new CardPoolOption(optionWidth));
-        //设置地图资源层数
-        optionList.add(new MapRowNumConfig(optionWidth));
-        //添加败者奖励配置
-        optionList.add((new LoserRewardOption(optionWidth)));
-        optionList.add((new TurnStrategyOption(optionWidth)));
-        //添加是否启用控制台的option
-        optionList.add((new ConsoleEnableOption(optionWidth)));
+        registerConfigOption(new TailNumSelect(optionWidth));
+        registerConfigOption(new InvincibleRate(optionWidth));
+        registerConfigOption(new AddConstConfig(optionWidth));
+        registerConfigOption(new BlockGainConfig(optionWidth));
+        registerConfigOption(new BlockGainConfig(optionWidth));
+        registerConfigOption(new LoseGoldConfig(optionWidth));
+        registerConfigOption(new StartDeckConfig(optionWidth));
+        registerConfigOption(new StartGoldConfig(optionWidth));
+        registerConfigOption(new CardPoolOption(optionWidth));
+        registerConfigOption(new CardPoolOption(optionWidth));
+        registerConfigOption(new MapRowNumConfig(optionWidth));
+        registerConfigOption(new ConsoleEnableOption(optionWidth));
+        //败者奖励的文本
+        addTextTitle(uiStrings.TEXT[10],optionWidth);
+        //败者boss遗物
+        registerConfigOption(new LoserRewardOption(optionWidth));
+        //金币奖励
+        registerConfigOption(new LoserGoldOption(optionWidth));
+        //地主的金卡选项
+        registerToggleOption(uiStrings.TEXT[11],optionWidth,
+            new LoserCardOption(),GlobalManager.loserCardFlag);
 
-        //遍历每个需要被添加的page
-        for(int idPage=0;idPage<optionList.size();++idPage)
-        {
-            //当前要添加的page
-            AbstractConfigOption currOption = optionList.get(idPage);
-            //设置option的标号
-            currOption.setOptionId(idPage);
-            //添加到panel里面
-            configPanel.addNewPage(currOption);
-        }
-
-        //地主增益选项的标题文本
-        configPanel.addNewPage(
-            new TextLabel(0,0,optionWidth,
-                    Settings.HEIGHT*0.04f,
-                    uiStrings.TEXT[5],FontLibrary.getBaseFont())
-        );
+        //地主增益选项的标题
+        //Title of benefit for team with less players
+        addTextTitle(uiStrings.TEXT[5],optionWidth);
 
         //注册option
         registerToggleOption(uiStrings.TEXT[6],optionWidth,new FirstHandOption(),
@@ -394,17 +416,17 @@ this,this.toggleOptionList.size());
         GlobalManager.playerManager.selfPlayerInfo.setLobbyOwner(isOwner);
         //初始化渲染角色的控件
         this.characterPanel = new CharacterPanel();
-        //给玩家管理器传递用于显示角色的两个grid
-        GlobalManager.playerManager.initCharacterLayout(
-            this.characterPanel.leftCharacters,
-            this.characterPanel.rightCharacters
-        );
         initConfigOption();
     }
 
     //刚刚打开页面时的操作
     @Override
     public void open() {
+        //给玩家管理器传递用于显示角色的两个grid
+        GlobalManager.playerManager.initCharacterLayout(
+                this.characterPanel.leftCharacters,
+                this.characterPanel.rightCharacters
+        );
         InputHelper.initialize();
         //登记config信息的处理
         GlobalManager.messageTriggerInterface = new ConfigProtocol();

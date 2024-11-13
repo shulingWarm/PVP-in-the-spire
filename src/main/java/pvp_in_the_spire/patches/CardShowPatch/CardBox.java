@@ -113,23 +113,23 @@ public class CardBox {
     {
         //判断是否需要更新显示位置
         boolean updateLocation=false;
-        if(shownCards.justUpdateFlag)
+        if(this.belongMonster != null && (shownCards.justUpdateFlag ||
+            this.belongMonster.intent == AbstractMonster.Intent.DEBUG))
         {
             updateLocation = true;
             shownCards.justUpdateFlag = false;
             //更新意图
-            if(this.belongMonster!=null)
+            AbstractMonster.Intent tempIntent = getIntent();
+            //如果是攻击意图，需要设置对应的伤害值
+            if(tempIntent== AbstractMonster.Intent.ATTACK)
             {
-                AbstractMonster.Intent tempIntent = getIntent();
-                //如果是攻击意图，需要设置对应的伤害值
-                if(tempIntent== AbstractMonster.Intent.ATTACK)
-                {
-                    this.belongMonster.setMove((byte)1,tempIntent,
-                            this.damageAmount);
-                }
-                else {
-                    this.belongMonster.setMove((byte)1,tempIntent,-1);
-                }
+                this.belongMonster.setMove((byte)1,tempIntent,
+                        this.damageAmount);
+                if(this.belongMonster.intent == AbstractMonster.Intent.DEBUG)
+                    this.belongMonster.createIntent();
+            }
+            else {
+                this.belongMonster.setMove((byte)1,tempIntent,-1);
             }
         }
         //遍历所有需要显示的牌

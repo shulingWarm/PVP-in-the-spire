@@ -53,10 +53,14 @@ public class ChatFoldPage extends FoldPage {
     }
 
     //显示系统信息
-    public void systemMessage(String message)
+    public void systemMessage(String message, boolean setTwinkle)
     {
         this.chatBox.receiveMessage(message,
                 Color.SKY);
+        if(!this.mainPageFlag && setTwinkle)
+        {
+            this.openButton.setTwinkle(true);
+        }
     }
 
     @Override

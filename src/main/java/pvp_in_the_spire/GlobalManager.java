@@ -53,6 +53,10 @@ public class GlobalManager {
     public static boolean friendMonsterFlag = false;
     //败者奖励等级
     public static int loserRewardFlag = 0;
+    //败者获得的金币数量
+    public static int loserGoldAmount = 0;
+    //败者是否获得金卡
+    public static boolean loserCardFlag = false;
     //特效管理器
     public static EffectManager effectManager = new EffectManager();
     //是否准备胜利
@@ -142,6 +146,10 @@ public class GlobalManager {
         {
             defaultClass = AbstractPlayer.PlayerClass.IRONCLAD;
         }
+        //初始化玩家管理器
+        if(playerManager == null)
+            playerManager = new PlayerManager();
+        playerManager.initGameInfo();
     }
 
     public static void initGlobal()
@@ -174,10 +182,11 @@ public class GlobalManager {
         friendMonsterFlag = false;
         //败者奖励，默认是小屋子
         loserRewardFlag = 0;
+
+        loserGoldAmount = 0;
+        loserCardFlag = false;
         //以下是与网络无关的设置
         initGameGlobal();
-        //初始化玩家管理器
-        playerManager = new PlayerManager();
     }
 
     //选择人物时点击启程的操作，点击的时候会确定游戏即将开始
