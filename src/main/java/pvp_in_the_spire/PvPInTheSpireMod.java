@@ -76,15 +76,6 @@ public class PvPInTheSpireMod implements
         logger.debug(modID + "subscribed to BaseMod.");
     }
 
-    //TODO: What are these booleans for? Can these be removed? - Luc
-    public static boolean addonRelic = true;
-    public static boolean ringRelic = true;
-    public static boolean mantleRelic = true;
-    public static boolean RuneCountDisplay = true;
-    public static boolean baseGameRelic2DK = true;
-
-    public static Properties WarlordEmblemDefaults = new Properties();
-
 
 
     @Override
@@ -132,50 +123,6 @@ public class PvPInTheSpireMod implements
         //修改过的打防之光
         BaseMod.addEvent(ModifiedShiningLight.ID,ModifiedShiningLight.class);
         BaseMod.addEvent(ModifiedCurseTome.ID,ModifiedCurseTome.class);
-    }
-
-
-
-
-    public static void loadConfig() {
-        logger.debug("===徽章读取设置======");
-
-        System.out.println("load config!!!!!\n\n\n\n\n\n");
-
-        try {
-            SpireConfig config = new SpireConfig("pvp_in_the_spire", "WarlordEmblemSaveData", WarlordEmblemDefaults);
-            config.load();
-            addonRelic = config.getBool("addonRelic");
-            ringRelic = config.getBool("ringRelic");
-            mantleRelic = config.getBool("mantleRelic");
-            RuneCountDisplay = config.getBool("RuneCountDisplay");
-            baseGameRelic2DK = config.getBool("baseGameRelic2DK");
-        } catch (Exception e) {
-            e.printStackTrace();
-            clearConfig();
-        }
-        logger.debug("===徽章读取设置完成======");
-    }
-
-    public static void saveConfig() {
-        logger.debug("===徽章存储设置======");
-
-        try {
-            SpireConfig config = new SpireConfig("pvp_in_the_spire", "WarlordEmblemSaveData", WarlordEmblemDefaults);
-            config.setBool("addonRelic", addonRelic);
-            config.setBool("ringRelic", ringRelic);
-            config.setBool("mantleRelic", mantleRelic);
-            config.setBool("RuneCountDisplay", RuneCountDisplay);
-            config.setBool("baseGameRelic2DK", baseGameRelic2DK);
-            config.save();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        logger.debug("===徽章存储设置完成======");
-    }
-
-    public static void clearConfig() {
-        saveConfig();
     }
 
 
