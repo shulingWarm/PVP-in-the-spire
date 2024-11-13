@@ -227,7 +227,7 @@ public class PvPInTheSpireMod implements
 
     private void loadLocStrings(Settings.GameLanguage language)
     {
-        String path = "pvp_in_the_spire/languages/" + language.toString().toLowerCase() + "/";
+        String path = "pvp_in_the_spire/localization/" + language.toString().toLowerCase() + "/";
 
         //载入卡牌相关的语言包
         BaseMod.loadCustomStringsFile(CardStrings.class, path + "CardStrings.json");
