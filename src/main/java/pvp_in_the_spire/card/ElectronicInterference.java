@@ -15,7 +15,7 @@ public class ElectronicInterference extends CustomCard {
     private static final CardStrings cardStrings = CardCrawlGame.languagePack.getCardStrings(ID);
     public static final String NAME = cardStrings.NAME;
     //临时用斩破命运的图片来代替，所有的图片最后统一处理
-    public static final String IMG = "pvp/card/electronicInterference.png";
+    public static final String IMG = "images/cards/skill/electronicInterference.png";
     private static final int COST = -1;
     public static final String DESCRIPTION = cardStrings.DESCRIPTION;
     public static final CardType TYPE = CardType.SKILL;

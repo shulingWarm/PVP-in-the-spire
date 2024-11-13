@@ -52,8 +52,8 @@ public class DungeonPatch {
         @SpirePostfixPatch
         public static void fix()
         {
-            DungeonMap.boss = ImageMaster.loadImage("pvp/ui/map/pvp.png");
-            DungeonMap.bossOutline = ImageMaster.loadImage("pvp/ui/map/pvp_outline.png");
+            DungeonMap.boss = ImageMaster.loadImage("images/ui/map/pvp.png");
+            DungeonMap.bossOutline = ImageMaster.loadImage("images/ui/map/pvp_outline.png");
         }
     }
 
