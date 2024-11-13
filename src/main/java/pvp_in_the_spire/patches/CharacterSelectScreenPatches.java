@@ -1,5 +1,6 @@
 package pvp_in_the_spire.patches;
 
+import com.megacrit.cardcrawl.cards.blue.Strike_Blue;
 import pvp_in_the_spire.dungeon.FakeEnding;
 import pvp_in_the_spire.events.BattleInfoEvent;
 import pvp_in_the_spire.events.EndTurnEvent;
@@ -680,12 +681,12 @@ public class CharacterSelectScreenPatches
 //                }
             }
             //添加一个灭除之刃
-//            AbstractCard tempCard = new DeadlyPoison();
-//            tempCard.magicNumber = 50;
-//            tempCard.baseMagicNumber = 50;
+//            AbstractCard tempCard = new Strike_Blue();
+//            tempCard.damage = 100;
+//            tempCard.baseDamage = 100;
 //            tempCard.upgrade();
 //            AbstractDungeon.actionManager.addToBottom(
-//                new MakeTempCardInHandAction(tempCard,3)
+//                new MakeTempCardInHandAction(tempCard,1)
 //            );
             return SpireReturn.Continue();
         }
@@ -1458,7 +1459,9 @@ public class CharacterSelectScreenPatches
             ActionNetworkPatches.disableCombatTrigger = true;
             ActionNetworkPatches.HealEventSend.disableSend = true;
             //下面是逃跑对应的逻辑
-            AbstractDungeon.getCurrRoom().smoked = true;
+            // AbstractDungeon.getCurrRoom().smoked = true;
+            //指定失败的一方跳过下次的奖励
+            RewardPatch.loserJumpRewardFlag = true;
             AbstractDungeon.actionManager.addToBottom(new VFXAction(new SmokeBombEffect(
                 AbstractDungeon.player.hb.cX, AbstractDungeon.player.hb.cY)));
             AbstractDungeon.player.hideHealthBar();

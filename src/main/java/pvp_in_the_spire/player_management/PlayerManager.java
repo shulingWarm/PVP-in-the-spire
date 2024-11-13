@@ -1,5 +1,6 @@
 package pvp_in_the_spire.player_management;
 
+import pvp_in_the_spire.screens.midExit.MidExitScreen;
 import pvp_in_the_spire.ui.Chat.ChatFoldPage;
 import pvp_in_the_spire.ui.GridPanel;
 import pvp_in_the_spire.events.*;
@@ -69,6 +70,13 @@ public class PlayerManager implements TeamCallback {
         playerInfoMap.put(selfPlayerInfo.playerTag,selfPlayerInfo);
         //战斗相关的信息
         battleInfo = new BattleInfo();
+    }
+
+    //Only initialize values for the second game
+    public void initGameInfo()
+    {
+        //When beginGameTime is 0, it means game has not begun.
+        this.beginGameTime = 0;
     }
 
     //注册新的玩家
@@ -369,7 +377,7 @@ public class PlayerManager implements TeamCallback {
         team.updateEnterTime(enterTime);
         ++this.readyNum;
         ChatFoldPage.getInstance().systemMessage(playerInfo.getName() + systemStrings.TEXT[0] +
-            this.readyNum + "/" + this.playerInfoMap.size());
+            this.readyNum + "/" + this.playerInfoMap.size(),false);
     }
 
     //检查是否达到了进入战斗的条件
@@ -393,6 +401,9 @@ public class PlayerManager implements TeamCallback {
         //把两个队伍的内容都清空
         teams[0].removeAllPlayer();
         teams[1].removeAllPlayer();
+        //把team的左右情况重置一下
+        teams[0].isLeft = true;
+        teams[1].isLeft = false;
         //把自己的team设置成待定
         selfPlayerInfo.idTeam = -1;
         selfPlayerInfo.setReadyFlag(false);
@@ -405,9 +416,20 @@ public class PlayerManager implements TeamCallback {
         PlayerInfo info = getPlayerInfo(playerTag);
         if(info == null)
             return;
-        updateReadyFlag(info,false);
+        //If the game is running, show the end game button.
+        if(this.beginGameTime != 0)
+        {
+            System.out.println("Calling force exit!!!");
+            //Give system tip about player leave.
+            ChatFoldPage.getInstance().systemMessage(info.getName() + systemStrings.TEXT[1],
+                true);
+            MidExitScreen.receiveExitInfo();
+        }
+        else
+            updateReadyFlag(info,false);
         if(info.idTeam >= 0)
             teams[info.idTeam].removePlayer(info);
+        System.out.println("Removing players!!!");
         playerInfoMap.remove(playerTag);
     }
 

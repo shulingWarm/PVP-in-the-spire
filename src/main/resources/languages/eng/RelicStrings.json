@@ -40,6 +40,13 @@
       "for 20% of"
     ]
   },
+  "RelicModify": {
+    "NAME": "",
+    "FLAVOR": "",
+    "DESCRIPTIONS": [
+      "After each combat, you will always obtain obtain three potions."
+    ]
+  },
   "OrangePelletsChange": {
     "NAME": "Red Pellets",
     "FLAVOR": "“There used to be an orange pelletes in PVPMOD, but it was sold out.”",

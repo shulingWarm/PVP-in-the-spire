@@ -14,6 +14,9 @@ import pvp_in_the_spire.helpers.FontLibrary;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.megacrit.cardcrawl.core.Settings;
+import pvp_in_the_spire.util.Pair;
+
+import java.util.ArrayList;
 
 //最基本的聊天框，里面用来显示各种聊天要素
 public class ChatBox extends AbstractPage
@@ -43,6 +46,9 @@ public class ChatBox extends AbstractPage
 
     //判断是否为打开的状态
     public boolean isOpen = false;
+
+    //等待写入到box的文本内容
+    public ArrayList<Pair<String,Color>> taskBuffer = new ArrayList<>();
 
     public ChatBox()
     {
@@ -111,6 +117,12 @@ public class ChatBox extends AbstractPage
 
     @Override
     public void update() {
+        //Deal with task buffer
+        for(Pair<String, Color> eachTask : taskBuffer)
+        {
+            receiveMessageExecute(eachTask.first,eachTask.second);
+        }
+        taskBuffer.clear();
         this.background.update();
         this.messagePanel.update();
         this.inputBox.update();
@@ -144,19 +156,24 @@ public class ChatBox extends AbstractPage
         }
     }
 
-    //用于处理收到的消息
-    public void receiveMessage(String message, Color color)
+    public void receiveMessageExecute(String message, Color color)
     {
         //新建一个消息管理器
         AdvTextManager textManager = new AdvTextManager(
-            this.inputBox.width,this.inputBox.font
+                this.inputBox.width,this.inputBox.font
         );
         textManager.appendStr(message);
         textManager.freeze();
         //新建多行文本
         MultiRowLabel tempLabel = new MultiRowLabel(
-            textManager,0,0,color
+                textManager,0,0,color
         );
         this.messagePanel.addNewPage(tempLabel);
+    }
+
+    //用于处理收到的消息
+    public void receiveMessage(String message, Color color)
+    {
+        this.taskBuffer.add(new Pair<>(message,color));
     }
 }

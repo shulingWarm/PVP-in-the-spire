@@ -1,5 +1,6 @@
 package pvp_in_the_spire.screens.midExit;
 
+import pvp_in_the_spire.helpers.FontLibrary;
 import pvp_in_the_spire.patches.connection.InputIpBox;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -40,7 +41,7 @@ public class MidExitScreen {
     {
         if(buttonFont==null)
         {
-            buttonFont = InputIpBox.generateFont(40);
+            buttonFont = FontLibrary.getFontWithSize(40);
         }
     }
 

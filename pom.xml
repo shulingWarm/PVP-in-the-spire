@@ -5,7 +5,7 @@
     <name>PvP In The Spire</name>
     <!-- Version number of the mod, which will appear in the mod launcher.
     Change this value if you want to update the version number! -->
-    <version>0.5.35</version>
+    <version>0.5.38</version>
     <!-- Description of the mod, which will appear in the mod launcher. TODO: add a new description in english. -->
     <description>杀戮尖塔联机对战</description>
 
@@ -13,9 +13,7 @@
         <!-- The mod ID of the mod. PLEASE DO NOT TOUCH! -->
         <modID>PvPInTheSpire</modID>
         <!-- The authors of the mod. If you are a new developer, feel free to add your name! -->
-        <author>Zseal, Reindier</author>
-        <!-- The credits of the mod, which will appear in the mod launcher. TODO: add people to the credits.-->
-        <credits>-</credits>
+        <author>佐守(Zseal), Reindier</author>
 
         <!-- Compatible STS version and version we are using for ModTheSpire -->
         <SlayTheSpire.version>12-18-2022</SlayTheSpire.version>

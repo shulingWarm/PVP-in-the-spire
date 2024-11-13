@@ -6,7 +6,8 @@
   },
   "PVPSystemMessage": {
     "TEXT": [
-      "Entered battle room. "
+      "Entered battle room. ",
+      "left the game."
     ]
   },
   "ConnectInSteam": {
@@ -114,9 +115,14 @@
   },
   "LoserRewardOption": {
     "TEXT": [
-      "Loser reward:",
+      "Boss relic option:",
       "Tiny house",
-      "Ordinary BOSS relic"
+      "Choose 1 from 3 random BOSS relic"
+    ]
+  },
+  "LoserGoldOption": {
+    "TEXT": [
+      "Gold:"
     ]
   },
   "TurnStrategyOption": {
@@ -137,7 +143,9 @@
       "Always go first",
       "No punishment when going first",
       "Gain one more energy",
-      "Get one more Lizard Tail"
+      "Get one more Lizard Tail",
+      "Loser reward",
+      "Select 1 rare card from 3"
     ]
   },
   "WaitPage": {

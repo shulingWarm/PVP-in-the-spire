@@ -1,5 +1,7 @@
 package pvp_in_the_spire.patches.RelicPool;
 
+import com.megacrit.cardcrawl.core.CardCrawlGame;
+import com.megacrit.cardcrawl.localization.RelicStrings;
 import pvp_in_the_spire.relics.RedStoneChange;
 import com.evacipated.cardcrawl.modthespire.lib.SpirePatch;
 import com.evacipated.cardcrawl.modthespire.lib.SpirePrefixPatch;
@@ -11,6 +13,20 @@ import com.megacrit.cardcrawl.relics.*;
 
 //对各种遗物功能的修改
 public class RelicPatch {
+
+    //用于修改遗物描述的字符串
+    public static final RelicStrings modifyStrings = CardCrawlGame.languagePack.getRelicStrings("RelicModify");
+
+    //修改白兽雕像的描述
+    @SpirePatch(clz = WhiteBeast.class, method = "getUpdatedDescription")
+    public static class WhiteBeastChange
+    {
+        @SpirePrefixPatch
+        public static SpireReturn<String> fix()
+        {
+            return SpireReturn.Return(modifyStrings.DESCRIPTIONS[0]);
+        }
+    }
 
     //红石复制的时候改为复制自己
     @SpirePatch(clz=PhilosopherStone.class, method = "makeCopy")

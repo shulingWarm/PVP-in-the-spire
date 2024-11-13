@@ -1,5 +1,8 @@
 package pvp_in_the_spire.patches;
 
+import com.evacipated.cardcrawl.modthespire.lib.SpirePostfixPatch;
+import com.megacrit.cardcrawl.rewards.RewardItem;
+import com.megacrit.cardcrawl.rooms.AbstractRoom;
 import pvp_in_the_spire.GlobalManager;
 import pvp_in_the_spire.SocketServer;
 import com.evacipated.cardcrawl.modthespire.lib.SpirePatch;
@@ -49,6 +52,25 @@ public class RoomPatch {
                 return SpireReturn.Return(new TinyHouse());
             }
             return SpireReturn.Continue();
+        }
+    }
+
+    //用于修改白兽雕像，改成战斗结束时固定掉落3药水
+    //Modify White Beast Statue. After each battle, obtain 3 potions.
+    @SpirePatch(clz = AbstractRoom.class, method = "addPotionToRewards",
+        paramtypes = {})
+    public static class ModifyAddPotion
+    {
+        @SpirePostfixPatch
+        public static void fix(AbstractRoom __instance)
+        {
+            //判断自身是否有雕像
+            if(AbstractDungeon.player.hasRelic("White Beast Statue"))
+            {
+                //再添加两瓶药水
+                __instance.rewards.add(new RewardItem(AbstractDungeon.returnRandomPotion()));
+                __instance.rewards.add(new RewardItem(AbstractDungeon.returnRandomPotion()));
+            }
         }
     }
 

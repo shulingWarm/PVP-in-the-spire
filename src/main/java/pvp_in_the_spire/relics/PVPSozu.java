@@ -55,7 +55,7 @@ public class PVPSozu extends CustomRelic {
     }
 
     public AbstractRelic makeCopy() {
-        return new Sozu();
+        return new PVPSozu();
     }
 
 }
