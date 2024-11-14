@@ -69,7 +69,6 @@ public class PvPInTheSpireMod implements
 
     public static void initialize() {
         new PvPInTheSpireMod();
-        initializePVP();
     }
 
     public PvPInTheSpireMod(){
@@ -166,6 +165,8 @@ public class PvPInTheSpireMod implements
                 e.printStackTrace();
             }
         }
+
+        initializePVP();
     }
 
     private void loadLocalization(String lang) {
