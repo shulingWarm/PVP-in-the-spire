@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.megacrit.cardcrawl.helpers.ImageMaster;
 
 //各种纹理的管理器，里面会涉及一些自制的纹理
+//TODO: What is this class for? - Luc
 public class TextureManager {
 
     public static boolean initFlag = false;
@@ -44,8 +45,8 @@ public class TextureManager {
         BLOCK_GAIN = new Texture("images/relics/blockGainer.png");
         RED_PELLETS = new Texture("images/relics/OrangePelletsChange.png");
         //药丸的buff图片
-        PELLETS_BUFF_48 = new Texture("images/powers/Pellets48.png");
-        PELLETS_BUFF_128 = new Texture("images/powers/Pellets128.png");
+        PELLETS_BUFF_48 = new Texture("images/powers/RedPellets.png");
+        PELLETS_BUFF_128 = new Texture("images/powers/large/RedPellets.png");
 
         initFlag = true;
     }
