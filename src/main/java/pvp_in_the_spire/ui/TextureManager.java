@@ -34,19 +34,19 @@ public class TextureManager {
     {
         if(initFlag)
             return;
-        NORMAL_BUTTON = ImageMaster.loadImage("images/ui/normal.png");
-        BACK_BUTTON = ImageMaster.loadImage("images/ui/return.png");
-        READY_TEXTURE = ImageMaster.loadImage("images/ui/ready.png");
-        SEND_BUTTON = ImageMaster.loadImage("images/ui/sendButton.png");
-        MESSAGE_BUTTON = ImageMaster.loadImage("images/ui/message.png");
-        CLOSE_BUTTON = ImageMaster.loadImage("images/ui/close.png");
-        SIDE_BOX = ImageMaster.loadImage("images/ui/SideBox.png");
+        NORMAL_BUTTON = ImageMaster.loadImage("pvp_in_the_spire/images/ui/normal.png");
+        BACK_BUTTON = ImageMaster.loadImage("pvp_in_the_spire/images/ui/return.png");
+        READY_TEXTURE = ImageMaster.loadImage("pvp_in_the_spire/images/ui/ready.png");
+        SEND_BUTTON = ImageMaster.loadImage("pvp_in_the_spire/images/ui/sendButton.png");
+        MESSAGE_BUTTON = ImageMaster.loadImage("pvp_in_the_spire/images/ui/message.png");
+        CLOSE_BUTTON = ImageMaster.loadImage("pvp_in_the_spire/images/ui/close.png");
+        SIDE_BOX = ImageMaster.loadImage("pvp_in_the_spire/images/ui/SideBox.png");
 
-        BLOCK_GAIN = new Texture("images/relics/blockGainer.png");
-        RED_PELLETS = new Texture("images/relics/OrangePelletsChange.png");
+        BLOCK_GAIN = new Texture("pvp_in_the_spire/images/relics/blockGainer.png");
+        RED_PELLETS = new Texture("pvp_in_the_spire/images/relics/OrangePelletsChange.png");
         //药丸的buff图片
-        PELLETS_BUFF_48 = new Texture("images/powers/RedPellets.png");
-        PELLETS_BUFF_128 = new Texture("images/powers/large/RedPellets.png");
+        PELLETS_BUFF_48 = new Texture("pvp_in_the_spire/images/powers/RedPellets.png");
+        PELLETS_BUFF_128 = new Texture("pvp_in_the_spire/images/powers/large/RedPellets.png");
 
         initFlag = true;
     }
