@@ -166,6 +166,12 @@ public class PvPInTheSpireMod implements
             }
         }
 
+        /*
+        TODO: This method replaced the block of code that "initializes" the pvp (setting communication events,
+         fonts, effects and some other stuff). Could we perhaps split this method into more appropriate parts, so
+         we can initialize each piece of code at the appropriate time, instead of initializing it all at the
+         receiveEditStrings() method?
+         */
         initializePVP();
     }
 
