@@ -82,6 +82,24 @@ public class TextureLoader {
         return t;
     }
 
+    private static void loadTexture(final String textureString) throws GdxRuntimeException {
+        loadTexture(textureString, false);
+    }
+
+    private static void loadTexture(final String textureString, boolean linearFilter) throws GdxRuntimeException {
+        Texture texture = new Texture(textureString);
+        if (linearFilter)
+        {
+            texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+        }
+        else
+        {
+            texture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
+        }
+        logger.info("Loaded texture " + textureString);
+        textures.put(textureString, texture);
+    }
+
     public static String getCardTextureString(final String cardName, final AbstractCard.CardType cardType)
     {
         String textureString = imagePath("cards/" + cardType.name().toLowerCase(Locale.ROOT) + "/" + cardName + ".png");
@@ -105,31 +123,11 @@ public class TextureLoader {
         return textureString;
     }
 
-    private static void loadTexture(final String textureString) throws GdxRuntimeException {
-        loadTexture(textureString, false);
-    }
-
-    private static void loadTexture(final String textureString, boolean linearFilter) throws GdxRuntimeException {
-        Texture texture = new Texture(textureString);
-        if (linearFilter)
-        {
-            texture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
-        }
-        else
-        {
-            texture.setFilter(Texture.TextureFilter.Nearest, Texture.TextureFilter.Nearest);
-        }
-        logger.info("Loaded texture " + textureString);
-        textures.put(textureString, texture);
-    }
-
-    public static Texture getPowerTexture(final String powerName)
-    {
+    public static Texture getPowerTexture(final String powerName) {
         String textureString = powerPath(powerName + ".png");
         return getTexture(textureString);
     }
-    public static Texture getHiDefPowerTexture(final String powerName)
-    {
+    public static Texture getHiDefPowerTexture(final String powerName) {
         String textureString = powerPath("large/" + powerName + ".png");
         return getTextureNull(textureString);
     }

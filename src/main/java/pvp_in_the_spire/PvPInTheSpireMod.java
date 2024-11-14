@@ -3,8 +3,11 @@ package pvp_in_the_spire;
 
 
 import com.badlogic.gdx.Files;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.lwjgl.LwjglFileHandle;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.utils.GdxRuntimeException;
+import com.google.gson.Gson;
 import pvp_in_the_spire.ui.Text.KeyHelper;
 import pvp_in_the_spire.ui.TextureManager;
 import pvp_in_the_spire.effect_transport.EffectManager;
@@ -36,9 +39,11 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import basemod.abstracts.CustomCard;
 
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 import org.scannotation.AnnotationDB;
+import pvp_in_the_spire.util.KeywordInfo;
 
 
 @SpireInitializer
@@ -57,26 +62,20 @@ public class PvPInTheSpireMod implements
     static { loadModInfo(); }
 
     private static final String resourcesFolder = checkResourcesPath();
-
     public static final Logger logger = LogManager.getLogger(PvPInTheSpireMod.class.getSimpleName());
-
-
     public static String makeID(String id) {
         return modID + ":" + id;
     }
 
     public static void initialize() {
-        logger.info("========================= 开始初始化 =========================");
         new PvPInTheSpireMod();
-        logger.info("========================= 初始化完成 =========================");
+        initializePVP();
     }
 
     public PvPInTheSpireMod(){
         BaseMod.subscribe(this);
         logger.debug(modID + "subscribed to BaseMod.");
     }
-
-
 
     @Override
     public void receiveEditCards() {
@@ -125,14 +124,9 @@ public class PvPInTheSpireMod implements
         BaseMod.addEvent(ModifiedCurseTome.ID,ModifiedCurseTome.class);
     }
 
-
-    @Override
-    public void receivePostInitialize() {
-
-    }
-
     @Override
     public void receiveEditCharacters() {
+
     }
 
     @Override
@@ -140,141 +134,95 @@ public class PvPInTheSpireMod implements
 
     }
 
-
     @Override
     public void receivePotionGet(AbstractPotion abstractPotion) {
 
     }
 
+    @Override
+    public void receivePostInitialize() {
 
+    }
 
+    private static String getLangString() {
+        return Settings.language.name().toLowerCase();
+    }
+    private static final String defaultLanguage = Settings.GameLanguage.ENG.toString().toLowerCase();
+    public static final Map<String, KeywordInfo> keywords = new HashMap<>();
 
-    private Settings.GameLanguage languageSupport()
-    {
-        switch (Settings.language) {
-            case ZHS:
-                //return Settings.language;
-            case JPN:
-                return Settings.language;
-            default:
-                return Settings.GameLanguage.ENG;
+    public void receiveEditStrings() {
+        /*
+            First, load the default localization.
+            Then, if the current language is different, attempt to load localization for that language.
+            This results in the default localization being used for anything that might be missing.
+            The same process is used to load keywords slightly below.
+        */
+        loadLocalization(defaultLanguage);
+        if (!defaultLanguage.equals(getLangString())) {
+            try {
+                loadLocalization(getLangString());
+            }
+            catch (GdxRuntimeException e) {
+                e.printStackTrace();
+            }
         }
     }
-    public void receiveEditStrings()
-    {
-        Settings.GameLanguage language = languageSupport();
 
-        // Load english first to avoid crashing if translation doesn't exist for something
-        loadLocStrings(Settings.GameLanguage.ENG);
-        if(!language.equals(Settings.GameLanguage.ENG)) {
-            loadLocStrings(language);
-        }
-
+    private void loadLocalization(String lang) {
+        //While this does load every type of localization, most of these files are just outlines so that you can see how they're formatted.
+        //Feel free to comment out/delete any that you don't end up using.
+        BaseMod.loadCustomStringsFile(CardStrings.class,
+                localizationPath(lang, "CardStrings.json"));
+        BaseMod.loadCustomStringsFile(CharacterStrings.class,
+                localizationPath(lang, "CharacterStrings.json"));
+        BaseMod.loadCustomStringsFile(EventStrings.class,
+                localizationPath(lang, "EventStrings.json"));
+        BaseMod.loadCustomStringsFile(OrbStrings.class,
+                localizationPath(lang, "OrbStrings.json"));
+        BaseMod.loadCustomStringsFile(PotionStrings.class,
+                localizationPath(lang, "PotionStrings.json"));
+        BaseMod.loadCustomStringsFile(PowerStrings.class,
+                localizationPath(lang, "PowerStrings.json"));
+        BaseMod.loadCustomStringsFile(RelicStrings.class,
+                localizationPath(lang, "RelicStrings.json"));
+        BaseMod.loadCustomStringsFile(UIStrings.class,
+                localizationPath(lang, "UIStrings.json"));
     }
 
-    private void loadLocStrings(Settings.GameLanguage language)
-    {
-        String path = "pvp_in_the_spire/localization/" + language.toString().toLowerCase() + "/";
-
-        //载入卡牌相关的语言包
-        BaseMod.loadCustomStringsFile(CardStrings.class, path + "CardStrings.json");
-        //载入buff相关的语言包
-        BaseMod.loadCustomStringsFile(PowerStrings.class, path + "PowerStrings.json");
-        //遗物相关的语言包
-        BaseMod.loadCustomStringsFile(RelicStrings.class, path + "RelicStrings.json");
-        //用户界面相关的语言包
-        BaseMod.loadCustomStringsFile(UIStrings.class, path + "UIStrings.json");
-
-        //注册事件
-        Communication.registerEvent(new AddMonsterEvent());
-        Communication.registerEvent(new MonsterIntentChangeEvent());
-        Communication.registerEvent(new MonsterDamageEvent());
-        Communication.registerEvent(new DamageOnMonsterEvent());
-        Communication.registerEvent(new VFXEffectEvent());
-        Communication.registerEvent(new ChatMessageEvent(null));
-        Communication.registerEvent(new RegisterPlayerEvent());
-        Communication.registerEvent(new AssignTeamEvent());
-        Communication.registerEvent(new ExecuteAssignTeamEvent(-1));
-        Communication.registerEvent(new ConfigReadyEvent(false));
-        Communication.registerEvent(new BattleInfoEvent());
-        Communication.registerEvent(new EndTurnEvent());
-        Communication.registerEvent(new ChannelOrbEvent(null));
-        Communication.registerEvent(new EvokeOrbEvent());
-        Communication.registerEvent(new IncreaseOrbSlotEvent(0));
-        Communication.registerEvent(new ChangeStanceEvent(null));
-        Communication.registerEvent(new JumpTurnEvent());
-        Communication.registerEvent(new HealEvent(0));
-        Communication.registerEvent(new PlayerTurnBegin());
-        Communication.registerEvent(new CardInfoEvent(null,0));
-        Communication.registerEvent(new UseCardEvent(0));
-        Communication.registerEvent(new DeadEvent());
-        Communication.registerEvent(new TransformCardEvent(null,0,0,null));
-        Communication.registerEvent(new EndOfRoundEvent());
-        Communication.registerEvent(new UpdateHandCardEvent(null));
-        Communication.registerEvent(new DrawCardUpdateEvent(null));
-        Communication.registerEvent(new ChangeTeamEvent(0));
-        Communication.registerEvent(new UpdateCharacterEvent(null));
-        Communication.registerEvent(new UpdateEnergyEvent(0));
-        Communication.registerEvent(new RemoveCardEvent(0,0));
-        Communication.registerEvent(new MelterEvent(null));
-        Communication.registerEvent(new PlayerRelicEvent());
-        Communication.registerEvent(new PlayerPotionEvent());
-        Communication.registerEvent(new DelayRequestEvent(0,0));
-        Communication.registerEvent(new DelayResponseEvent(0,0));
-        Communication.registerEvent(new PlayerSeatEvent(null,0));
-        Communication.registerEvent(new EnterBattleEvent());
-        Communication.registerEvent(new BeginTurnEvent(0));
-        Communication.registerEvent(new BeginTurnResponseEvent());
-        Communication.registerEvent(new KillEvent(0));
-        Communication.registerEvent(new RemovePowerEvent(0,0));
-        Communication.registerEvent(new SetPowerAmountEvent(0,0,0));
-        Communication.registerEvent(new ApplyComPowerEvent(null));
-        Communication.registerEvent(new LoseGoldEvent(0,0,0));
-        Communication.registerEvent(new ToggleTriggerEvent(0,false));
-
-        FontLibrary.getBaseFont();
-        FontLibrary.getFontWithSize(24);
-        FontLibrary.getFontWithSize(40);
-        FontLibrary.getFontWithSize(34);
-
-        //初始化随机怪物的事件
-        RandMonsterHelper.initMonsterList();
-
-        EffectManager effectManager = GlobalManager.effectManager;
-        //注册通用特效
-        effectManager.registerNewTransporter(new XYTransporter());
-        effectManager.registerNewTransporter(new EmptyTransporter());
-
-        //注册输入框禁用按钮
-        KeyHelper.initKeys();
-    }
-
-
-    private void loadLocKeywords(Settings.GameLanguage language)
-    {
-//        String path = "localization/" + language.toString().toLowerCase() + "/";
-//        Gson gson = new Gson();
-//        //String json = Gdx.files.internal(assetPath(path + "KeywordStrings.json")).readString(String.valueOf(StandardCharsets.UTF_8));
-//        Keyword[] keywords = gson.fromJson(json, Keyword[].class);
-//
-//        logger.info("========================= 开始加载关键字 =========================");
-//        if (keywords != null) {
-//            for (Keyword keyword : keywords) {
-//                BaseMod.addKeyword("warlord_emblem", keyword.PROPER_NAME, keyword.NAMES, keyword.DESCRIPTION);
-//            }
-//        }
-    }
 
     @Override
     public void receiveEditKeywords()
     {
+        Gson gson = new Gson();
+        String json = Gdx.files.internal(localizationPath(defaultLanguage, "Keywords.json")).readString(String.valueOf(StandardCharsets.UTF_8));
+        KeywordInfo[] keywords = gson.fromJson(json, KeywordInfo[].class);
+        for (KeywordInfo keyword : keywords) {
+            keyword.prep();
+            registerKeyword(keyword);
+        }
 
-        Settings.GameLanguage language = languageSupport();
+        if (!defaultLanguage.equals(getLangString())) {
+            try
+            {
+                json = Gdx.files.internal(localizationPath(getLangString(), "Keywords.json")).readString(String.valueOf(StandardCharsets.UTF_8));
+                keywords = gson.fromJson(json, KeywordInfo[].class);
+                for (KeywordInfo keyword : keywords) {
+                    keyword.prep();
+                    registerKeyword(keyword);
+                }
+            }
+            catch (Exception e)
+            {
+                logger.warn(modID + " does not support " + getLangString() + " keywords.");
+            }
+        }
+    }
 
-        // Load english first to avoid crashing if translation doesn't exist for something
-        loadLocKeywords(Settings.GameLanguage.ENG);
-        if(!language.equals(Settings.GameLanguage.ENG)) {
-            loadLocKeywords(language);
+    private void registerKeyword(KeywordInfo info) {
+        BaseMod.addKeyword(modID.toLowerCase(), info.PROPER_NAME, info.NAMES, info.DESCRIPTION);
+        if (!info.ID.isEmpty())
+        {
+            keywords.put(info.ID, info);
         }
     }
 
@@ -344,5 +292,87 @@ public class PvPInTheSpireMod implements
         else {
             throw new RuntimeException("Failed to determine mod info/ID based on initializer.");
         }
+    }
+
+
+    public static void initializePVP() {
+        //注册事件
+        Communication.registerEvent(new AddMonsterEvent());
+        Communication.registerEvent(new MonsterIntentChangeEvent());
+        Communication.registerEvent(new MonsterDamageEvent());
+        Communication.registerEvent(new DamageOnMonsterEvent());
+        Communication.registerEvent(new VFXEffectEvent());
+        Communication.registerEvent(new ChatMessageEvent(null));
+        Communication.registerEvent(new RegisterPlayerEvent());
+        Communication.registerEvent(new AssignTeamEvent());
+        Communication.registerEvent(new ExecuteAssignTeamEvent(-1));
+        Communication.registerEvent(new ConfigReadyEvent(false));
+        Communication.registerEvent(new BattleInfoEvent());
+        Communication.registerEvent(new EndTurnEvent());
+        Communication.registerEvent(new ChannelOrbEvent(null));
+        Communication.registerEvent(new EvokeOrbEvent());
+        Communication.registerEvent(new IncreaseOrbSlotEvent(0));
+        Communication.registerEvent(new ChangeStanceEvent(null));
+        Communication.registerEvent(new JumpTurnEvent());
+        Communication.registerEvent(new HealEvent(0));
+        Communication.registerEvent(new PlayerTurnBegin());
+        Communication.registerEvent(new CardInfoEvent(null,0));
+        Communication.registerEvent(new UseCardEvent(0));
+        Communication.registerEvent(new DeadEvent());
+        Communication.registerEvent(new TransformCardEvent(null,0,0,null));
+        Communication.registerEvent(new EndOfRoundEvent());
+        Communication.registerEvent(new UpdateHandCardEvent(null));
+        Communication.registerEvent(new DrawCardUpdateEvent(null));
+        Communication.registerEvent(new ChangeTeamEvent(0));
+        Communication.registerEvent(new UpdateCharacterEvent(null));
+        Communication.registerEvent(new UpdateEnergyEvent(0));
+        Communication.registerEvent(new RemoveCardEvent(0,0));
+        Communication.registerEvent(new MelterEvent(null));
+        Communication.registerEvent(new PlayerRelicEvent());
+        Communication.registerEvent(new PlayerPotionEvent());
+        Communication.registerEvent(new DelayRequestEvent(0,0));
+        Communication.registerEvent(new DelayResponseEvent(0,0));
+        Communication.registerEvent(new PlayerSeatEvent(null,0));
+        Communication.registerEvent(new EnterBattleEvent());
+        Communication.registerEvent(new BeginTurnEvent(0));
+        Communication.registerEvent(new BeginTurnResponseEvent());
+        Communication.registerEvent(new KillEvent(0));
+        Communication.registerEvent(new RemovePowerEvent(0,0));
+        Communication.registerEvent(new SetPowerAmountEvent(0,0,0));
+        Communication.registerEvent(new ApplyComPowerEvent(null));
+        Communication.registerEvent(new LoseGoldEvent(0,0,0));
+        Communication.registerEvent(new ToggleTriggerEvent(0,false));
+
+        FontLibrary.getBaseFont();
+        FontLibrary.getFontWithSize(24);
+        FontLibrary.getFontWithSize(40);
+        FontLibrary.getFontWithSize(34);
+
+        //初始化随机怪物的事件
+        RandMonsterHelper.initMonsterList();
+
+        EffectManager effectManager = GlobalManager.effectManager;
+        //注册通用特效
+        effectManager.registerNewTransporter(new XYTransporter());
+        effectManager.registerNewTransporter(new EmptyTransporter());
+
+        //注册输入框禁用按钮
+        KeyHelper.initKeys();
+    }
+
+    //TODO: Can this commented code be removed? - Luc
+    private void loadLocKeywords(Settings.GameLanguage language)
+    {
+//        String path = "localization/" + language.toString().toLowerCase() + "/";
+//        Gson gson = new Gson();
+//        //String json = Gdx.files.internal(assetPath(path + "KeywordStrings.json")).readString(String.valueOf(StandardCharsets.UTF_8));
+//        Keyword[] keywords = gson.fromJson(json, Keyword[].class);
+//
+//        logger.info("========================= 开始加载关键字 =========================");
+//        if (keywords != null) {
+//            for (Keyword keyword : keywords) {
+//                BaseMod.addKeyword("warlord_emblem", keyword.PROPER_NAME, keyword.NAMES, keyword.DESCRIPTION);
+//            }
+//        }
     }
 }
