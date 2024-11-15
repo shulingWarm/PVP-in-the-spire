@@ -15,12 +15,12 @@
     "NAME": "呪詛",
     "DESCRIPTION": "次の !M! ターンの間、相手が *アタック 以外のカードをプレイするたび、 *めまい を1枚相手の捨て札に加える。 NL 廃棄"
   },
-  "burnTransform": {
+  "${modID}:BurnTransform": {
     "NAME": "火炎波",
     "DESCRIPTION":"このターン、 状態異常 を 廃棄 したとき、それらを相手の捨て札に送る。",
     "UPGRADE_DESCRIPTION":"このターン、 状態異常 を 廃棄 したとき、それらを相手の捨て札に送る。 NL *めまい を2枚手札に加える。"
   },
-  "computeTransform": {
+  "${modID}:ComputeTransform": {
     "NAME": "計略波",
     "DESCRIPTION": "状態異常 、 呪い 、もしくは未強化のスターター・コモンカードを捨てたとき、それらを相手の捨て札に送る。"
   },
@@ -33,7 +33,7 @@
     "NAME": "運命波",
     "DESCRIPTION": "占術 によって 状態異常 を捨てたとき、それらを相手の捨て札に送る。"
   },
-  "doubleSword": {
+  "${modID}:DoubleSword": {
     "NAME": "ダブルソード",
     "DESCRIPTION": "!D! ダメージ与える。 NL  *負傷 を !M! 枚両者の手札に加える。"
   },

@@ -19,12 +19,12 @@
     "NAME": "猛男",
     "DESCRIPTION":"每当对方打出1张技能牌，你获得 !M! 点 力量。"
   },
-  "burnTransform": {
+  "${modID}:BurnTransform": {
     "NAME": "Burn Transform",
     "DESCRIPTION":"In this turn, the Exhausted status card will be transferred to ememy's discard pile.",
     "UPGRADE_DESCRIPTION":"In this turn, the Exhausted status card will be transferred to ememy's discard pile."
   },
-  "computeTransform": {
+  "${modID}:ComputeTransform": {
     "NAME": "Compute Transform",
     "DESCRIPTION": "The discarded status card and unupgraded common cards will be transferred to enemy's discard pile."
   },
@@ -37,7 +37,7 @@
     "NAME": "Fate Transform",
     "DESCRIPTION": "The discarded cards by Scry will be transferred to enemy's discard pile."
   },
-  "doubleSword": {
+  "${modID}:DoubleSword": {
     "NAME": "Double Sword",
     "DESCRIPTION": "Add !M! *Wounds in your and enemy's hand. NL Deal !D! damage."
   },

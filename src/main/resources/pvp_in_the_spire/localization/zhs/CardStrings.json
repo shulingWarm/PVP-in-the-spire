@@ -19,12 +19,12 @@
     "NAME": "猛男",
     "DESCRIPTION":"每当对方打出1张技能牌，你获得 !M! 点 力量。"
   },
-  "burnTransform": {
+  "${modID}:BurnTransform": {
     "NAME": "燃烧转移",
     "DESCRIPTION":"在本回合内，被消耗的 状态牌 会转移到随机一名敌方的弃牌堆中。",
     "UPGRADE_DESCRIPTION":"在本回合内，被消耗的 状态牌 会转移到随机一名敌方的弃牌堆中。"
   },
-  "computeTransform": {
+  "${modID}:ComputeTransform": {
     "NAME": "计算转移",
     "DESCRIPTION": "被丢弃的 状态牌 和未升级的白卡会转移到随机一名敌方的弃牌堆中。"
   },
@@ -37,7 +37,7 @@
     "NAME": "命运转移",
     "DESCRIPTION": "你通过 预见 弃置的状态牌会转移到随机一名敌方的弃牌堆中。"
   },
-  "doubleSword": {
+  "${modID}:DoubleSword": {
     "NAME": "双刃剑",
     "DESCRIPTION": "在自己和对方的的手牌中同时加入 !M! 张 *伤口 NL 造成 !D! 点伤害"
   },
