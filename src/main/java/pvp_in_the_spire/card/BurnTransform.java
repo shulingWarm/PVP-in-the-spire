@@ -25,11 +25,12 @@ public class BurnTransform extends BaseCard {
     );
 
     private static final int STACK_AMOUNT = 1;
-    private static final int UPG_COST_AMOUNT = 0;
+    private static final boolean RETAIN = false;
+    private static final boolean UPG_RETAIN = true;
 
     public BurnTransform() {
         super(ID,info);
-        setCostUpgrade(UPG_COST_AMOUNT);
+        setSelfRetain(RETAIN, UPG_RETAIN);
     }
 
     @Override

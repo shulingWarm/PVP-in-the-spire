@@ -21,11 +21,12 @@
   },
   "${modID}:BurnTransform": {
     "NAME": "Burn Transform",
-    "DESCRIPTION":"Whenever you exhaust a status card this turn, transfer it to the enemy’s discard pile."
+    "DESCRIPTION":"Whenever you Exhaust a Status card this turn, transfer it to the enemy’s discard pile.",
+    "UPGRADE_DESCRIPTION": "Whenever you Exhaust a Status card this turn, transfer it to the enemy’s discard pile. NL Retain."
   },
   "${modID}:ComputeTransform": {
     "NAME": "Compute Transform",
-    "DESCRIPTION": "Whenever you discard a status card, a curse card or an unupgraded common card, transfer it to the enemy’s discard pile."
+    "DESCRIPTION": "Whenever you discard a Status-, Curse- or an unupgraded common card, transfer it to the enemy’s discard pile."
   },
   "virusTransform": {
     "NAME": "Virus Transform",

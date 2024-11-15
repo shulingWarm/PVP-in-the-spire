@@ -26,13 +26,13 @@
   "burnTransformPower": {
   "NAME": "Burn Transform",
   "DESCRIPTIONS": [
-    "Transfers all Exhausted status cards to the enemy’s discard pile."
+    "Transfers all Exhausted Status cards to the enemy’s discard pile."
   ]
 },
   "computeTransformPower": {
   "NAME": "Compute Transform",
   "DESCRIPTIONS": [
-    "Transfers all discarded status cards, curse cards and unupgraded common cards to the enemy’s discard pile."
+    "Transfers all discarded Status-, Curse- and unupgraded common cards to the enemy’s discard pile."
   ]
 },
   "virusTransformPower": {
