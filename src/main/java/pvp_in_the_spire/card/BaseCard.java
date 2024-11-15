@@ -21,7 +21,7 @@ import java.util.Map;
 import static pvp_in_the_spire.util.GeneralUtils.removePrefix;
 import static pvp_in_the_spire.util.TextureLoader.getCardTextureString;
 
-//Suppress warnings that are not important; Some warnings may go away with more implementations
+//Suppress warnings that are not important; These warnings may go away with more implementations
 @SuppressWarnings({"unused", "SameParameterValue", "ConstantConditions"})
 public abstract class BaseCard extends CustomCard {
 

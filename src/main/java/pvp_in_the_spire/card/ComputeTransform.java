@@ -1,5 +1,6 @@
 package pvp_in_the_spire.card;
 
+import pvp_in_the_spire.powers.BurnTransformPower;
 import pvp_in_the_spire.powers.ComputeTransformPower;
 import basemod.abstracts.CustomCard;
 import com.megacrit.cardcrawl.actions.common.ApplyPowerAction;
@@ -8,44 +9,29 @@ import com.megacrit.cardcrawl.characters.AbstractPlayer;
 import com.megacrit.cardcrawl.core.CardCrawlGame;
 import com.megacrit.cardcrawl.localization.CardStrings;
 import com.megacrit.cardcrawl.monsters.AbstractMonster;
+import pvp_in_the_spire.util.CardStats;
 
 //计算转移，把被弃置的牌转移给对面
-public class ComputeTransform extends CustomCard {
+public class ComputeTransform extends BaseCard {
+    public static final String ID = makeID(ComputeTransform.class.getSimpleName());
+    private static final CardStats info = new CardStats(
+            CardColor.GREEN,
+            CardType.POWER,
+            CardRarity.UNCOMMON,
+            CardTarget.SELF,
+            1 //Card cost. -1 is X cost, -2 is no cost for unplayable cards
+    );
 
-    public static final String ID = "computeTransform";
-    private static final CardStrings cardStrings = CardCrawlGame.languagePack.getCardStrings(ID);
-    public static final String NAME = cardStrings.NAME;
-    //临时用斩破命运的图片来代替，所有的图片最后统一处理
-    public static final String IMG = "images/cards/power/computeTransform.png";
-    private static final int COST = 1;
-    public static final String DESCRIPTION = cardStrings.DESCRIPTION;
-    public static final CardType TYPE = CardType.POWER;
-    private static final CardColor COLOR = CardColor.GREEN;
-    private static final CardRarity RARITY = CardRarity.UNCOMMON;
-    private static final CardTarget TARGET = CardTarget.SELF;
+    private static final int STACK_AMOUNT = 1;
+    private static final int UPG_COST_AMOUNT = 0;
 
-    public ComputeTransform()
-    {
-        super(ID, NAME, IMG, COST, DESCRIPTION, TYPE, COLOR, RARITY, TARGET);
-        this.baseMagicNumber = 1;
-        this.magicNumber = this.baseMagicNumber;
+    public ComputeTransform() {
+        super(ID,info);
+        setCostUpgrade(UPG_COST_AMOUNT);
     }
 
-    //升级时减一费
-    public void upgrade() {
-        if (!this.upgraded) {
-            this.upgradeName();
-            this.upgradeBaseCost(0);
-        }
-    }
-
+    @Override
     public void use(AbstractPlayer p, AbstractMonster m) {
-        this.addToBot(new ApplyPowerAction(p, p,
-        new ComputeTransformPower(p), 1));
+        addToBot(new ApplyPowerAction(p, p, new ComputeTransformPower(p), STACK_AMOUNT));
     }
-
-    public AbstractCard makeCopy() {
-        return new ComputeTransform();
-    }
-
 }
