@@ -21,12 +21,11 @@
   },
   "${modID}:BurnTransform": {
     "NAME": "Burn Transform",
-    "DESCRIPTION":"In this turn, the Exhausted status card will be transferred to ememy's discard pile.",
-    "UPGRADE_DESCRIPTION":"In this turn, the Exhausted status card will be transferred to ememy's discard pile."
+    "DESCRIPTION":"Whenever you exhaust a status card this turn, transfer it to the enemy’s discard pile."
   },
   "${modID}:ComputeTransform": {
     "NAME": "Compute Transform",
-    "DESCRIPTION": "The discarded status card and unupgraded common cards will be transferred to enemy's discard pile."
+    "DESCRIPTION": "Whenever you discard a status card, a curse card or an unupgraded common card, transfer it to the enemy’s discard pile."
   },
   "virusTransform": {
     "NAME": "Virus Transform",
@@ -39,7 +38,8 @@
   },
   "${modID}:DoubleSword": {
     "NAME": "Double Sword",
-    "DESCRIPTION": "Add !M! *Wounds in your and enemy's hand. NL Deal !D! damage."
+    "DESCRIPTION": "Deal !D! damage. Add !M! *Wound to your hand and to your enemy’s hand.",
+    "UPGRADE_DESCRIPTION":"Deal !D! damage. Add !M! *Wounds to your hand and to your enemy’s hand."
   },
   "PsychicSnooping": {
     "NAME": "Remove cards",
