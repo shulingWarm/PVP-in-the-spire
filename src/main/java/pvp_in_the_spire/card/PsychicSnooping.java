@@ -18,7 +18,7 @@ public class PsychicSnooping extends CustomCard {
     public static final CardStrings upgradedStrings = CardCrawlGame.languagePack.getCardStrings("StealCard");
     public static final String NAME = cardStrings.NAME;
     //临时用邪咒的图片
-    public static final String IMG = "images/cards/skill/PsychicSnooping.png";
+    public static final String IMG = "pvp_in_the_spire/images/cards/skill/PsychicSnooping.png";
     //升级后的图片
     public static final String UPGRADE_IMG = "images/cards/skill/StealCard.png";
     private static final int COST = 1;
