@@ -1,5 +1,6 @@
 package pvp_in_the_spire.patches;
 
+import pvp_in_the_spire.ui.CardFilter.CardFilterScreen;
 import pvp_in_the_spire.ui.Lobby.LobbyScreen;
 import pvp_in_the_spire.GlobalManager;
 import pvp_in_the_spire.helpers.FieldHelper;
@@ -33,6 +34,9 @@ public class MainMenuPatch {
             MenuButton lobbyButton = new MenuButton(Enums.GAME_LOBBY,buttonList.size());
             //把它添加到按钮列表中
             buttonList.add(lobbyButton);
+            //在这里随便开辟一个card filter的页面
+            CardFilterScreen.instance = new CardFilterScreen();
+            //Initialize Card Filter page
         }
     }
 

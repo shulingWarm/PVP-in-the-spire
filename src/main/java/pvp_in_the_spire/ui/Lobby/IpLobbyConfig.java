@@ -1,5 +1,8 @@
 package pvp_in_the_spire.ui.Lobby;
 
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import pvp_in_the_spire.ui.AbstractPage;
+import pvp_in_the_spire.ui.CardFilter.CardFilterScreen;
 import pvp_in_the_spire.ui.ConfigPageModules.MultiplayerConfigPage;
 import pvp_in_the_spire.ui.DelayBox;
 import pvp_in_the_spire.AutomaticSocketServer;
@@ -14,12 +17,16 @@ import pvp_in_the_spire.patches.connection.MeunScreenFadeout;
 //但由于开发之前没有设计好，这里就只能让它去继承之前的lobby config了
 public class IpLobbyConfig extends MultiplayerConfigPage {
 
+    public AbstractPage testPage;
+
     public IpLobbyConfig(boolean isOwner)
     {
         super(isOwner);
         this.open();
         //网络的状态直接就是已经连接上的那种
         this.networkStage = 1;
+        this.testPage = CardFilterScreen.instance;
+        this.testPage.open();
     }
 
     //获取名字的时候就获得一个固定的名字

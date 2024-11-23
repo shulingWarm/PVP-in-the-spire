@@ -2,6 +2,7 @@ package pvp_in_the_spire.ui.ConfigPageModules;
 
 import pvp_in_the_spire.ui.*;
 import pvp_in_the_spire.ui.Button.WithUpdate.BaseUpdateButton;
+import pvp_in_the_spire.ui.CardFilter.CardFilterScreen;
 import pvp_in_the_spire.ui.Chat.ChatFoldPage;
 import pvp_in_the_spire.ui.Events.*;
 import pvp_in_the_spire.ui.configOptions.*;
@@ -43,7 +44,8 @@ public class MultiplayerConfigPage extends AbstractPage
         ClickCallback,
         MemberChangeEvent,
         PlayerJoinInterface,
-        ToggleInterface
+        ToggleInterface,
+        ClosePageEvent
 {
 
     public static final UIStrings uiStrings =
@@ -72,8 +74,13 @@ public class MultiplayerConfigPage extends AbstractPage
 
     //返回按钮
     public BaseUpdateButton backButton;
+    //禁卡页面的按钮
+    public BaseUpdateButton banCardButton;
     //关闭页面时的回调函数
     public ClosePageEvent closePageEvent = null;
+
+    //子页面
+    public AbstractPage subPage = null;
 
     //所有需要被添加的config列表
     public ArrayList<AbstractConfigOption> optionList = new ArrayList<>();
@@ -291,6 +298,12 @@ this,this.toggleOptionList.size());
         optionList.clear();
         //能用的option宽度
         float optionWidth = configPanel.width*0.8f;
+        //添加用于显示禁卡页面的按钮
+        this.banCardButton = new BaseUpdateButton(0,0,
+                optionWidth/2,Settings.HEIGHT*0.06f,"禁卡按钮",
+                FontLibrary.getBaseFont(),ImageMaster.PROFILE_SLOT,this);
+        //把这个按钮添加进配置页面
+        this.configPanel.addNewPage(banCardButton);
         registerConfigOption(new TailNumSelect(optionWidth));
         registerConfigOption(new InvincibleRate(optionWidth));
         registerConfigOption(new AddConstConfig(optionWidth));
@@ -341,6 +354,11 @@ this,this.toggleOptionList.size());
             AutomaticSocketServer.globalServer = null;
             //调用关闭页面
             this.closePageEvent.closePageEvent(this);
+        }
+        else if(button == this.banCardButton)
+        {
+            CardFilterScreen.instance.setCloseCallback(this);
+            this.subPage = CardFilterScreen.instance;
         }
     }
 
@@ -457,13 +475,19 @@ this,this.toggleOptionList.size());
 
     @Override
     public void update() {
-        //调用渲染列表的更新
-        configPanel.update();
-        //更新网络信息
-        this.networkUpdate();
-        //更新返回按钮
-        this.backButton.update();
-        this.characterPanel.update();
+        if(this.subPage == null)
+        {
+            //调用渲染列表的更新
+            configPanel.update();
+            //更新网络信息
+            this.networkUpdate();
+            //更新返回按钮
+            this.backButton.update();
+            this.characterPanel.update();
+        }
+        else {
+            this.subPage.update();
+        }
         //更新聊天框
         ChatFoldPage.getInstance().update();
     }
@@ -478,6 +502,10 @@ this,this.toggleOptionList.size());
         configPanel.render(sb);
         this.backButton.render(sb);
         this.characterPanel.render(sb);
+        if(this.subPage != null)
+        {
+            this.subPage.render(sb);
+        }
         //渲染聊天框
         ChatFoldPage.getInstance().render(sb);
     }
@@ -509,5 +537,12 @@ this,this.toggleOptionList.size());
             Communication.sendEvent(new ToggleTriggerEvent(id,stage));
             toggleOptionList.get(id).second.triggerToggleButton(toggle,id,stage);
         }
+    }
+
+    @Override
+    public void closePageEvent(AbstractPage page) {
+        //判断是否为子页面请求关闭
+        if(page == this.subPage)
+            this.subPage = null;
     }
 }
