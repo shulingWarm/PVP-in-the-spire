@@ -475,12 +475,12 @@ this,this.toggleOptionList.size());
 
     @Override
     public void update() {
+        //更新网络信息
+        this.networkUpdate();
         if(this.subPage == null)
         {
             //调用渲染列表的更新
             configPanel.update();
-            //更新网络信息
-            this.networkUpdate();
             //更新返回按钮
             this.backButton.update();
             this.characterPanel.update();

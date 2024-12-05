@@ -23,10 +23,14 @@ import com.megacrit.cardcrawl.screens.mainMenu.*;
 import com.megacrit.cardcrawl.unlock.UnlockTracker;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import pvp_in_the_spire.events.BanCardStageChangeEvent;
+import pvp_in_the_spire.patches.CardShowPatch.CardShowChange;
+import pvp_in_the_spire.pvp_api.Communication;
 import pvp_in_the_spire.ui.AbstractPage;
 import pvp_in_the_spire.ui.Events.ClosePageEvent;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 
 public class CardFilterScreen extends AbstractPage
@@ -63,6 +67,9 @@ public class CardFilterScreen extends AbstractPage
     private int selectionIndex;
     private AbstractCard controllerCard;
     private Color highlightBoxColor;
+    public HashMap<String, AbstractCard> cardMap;
+
+    public CardFilter cardFilter;
 
     //关闭页面时的回调函数
     public ClosePageEvent closeCallback = null;
@@ -95,6 +102,17 @@ public class CardFilterScreen extends AbstractPage
         this.sortHeader = new CardLibSortHeader((CardGroup)null);
         this.scrollBar = new ScrollBar(this);
         this.initialize();
+        //初始化卡牌过滤器
+        this.cardFilter = new CardFilter();
+    }
+
+    //把所有的卡牌记录到哈希表里面
+    public void recordCardsInHash(ArrayList<AbstractCard> cards)
+    {
+        for(AbstractCard eachCard : cards)
+        {
+            this.cardMap.put(eachCard.cardID,eachCard);
+        }
     }
 
     public void initialize() {
@@ -105,6 +123,13 @@ public class CardFilterScreen extends AbstractPage
         this.purpleCards.group = CardLibrary.getCardList(CardLibrary.LibraryType.PURPLE);
         this.colorlessCards.group = CardLibrary.getCardList(CardLibrary.LibraryType.COLORLESS);
         this.curseCards.group = CardLibrary.getCardList(CardLibrary.LibraryType.CURSE);
+        this.cardMap = new HashMap<>();
+        recordCardsInHash(redCards.group);
+        recordCardsInHash(greenCards.group);
+        recordCardsInHash(blueCards.group);
+        recordCardsInHash(purpleCards.group);
+        recordCardsInHash(colorlessCards.group);
+        recordCardsInHash(curseCards.group);
         this.visibleCards = this.redCards;
         this.sortHeader.setGroup(this.visibleCards);
         this.calculateScrollBounds();
@@ -173,16 +198,33 @@ public class CardFilterScreen extends AbstractPage
 
     }
 
-    public void update() {
-        this.updateControllerInput();
-        if (Settings.isControllerMode && this.controllerCard != null && !CardCrawlGame.isPopupOpen) {
-            if ((float) Gdx.input.getY() > (float)Settings.HEIGHT * 0.75F) {
-                this.currentDiffY += Settings.SCROLL_SPEED;
-            } else if ((float)Gdx.input.getY() < (float)Settings.HEIGHT * 0.25F) {
-                this.currentDiffY -= Settings.SCROLL_SPEED;
-            }
-        }
+    public void banCard(AbstractCard card)
+    {
+        CardShowChange.changeCardAlpha(card,0.5f);
+        this.cardFilter.banCard(card.cardID);
+    }
 
+    public void restoreCard(AbstractCard card)
+    {
+        CardShowChange.changeCardAlpha(card,1);
+        this.cardFilter.restoreCard(card.cardID);
+    }
+
+    //更改卡牌的禁用状态
+    public void changeCardBanStage(String cardId,boolean banStage)
+    {
+        //寻找目标卡牌
+        if(this.cardMap.containsKey(cardId))
+        {
+            AbstractCard tempCard = this.cardMap.get(cardId);
+            if(banStage)
+                banCard(tempCard);
+            else
+                restoreCard(tempCard);
+        }
+    }
+
+    public void update() {
         this.colorBar.update(this.visibleCards.getBottomCard().current_y + 230.0F * Settings.yScale);
         this.sortHeader.update();
         if (this.hoveredCard != null) {
@@ -192,12 +234,19 @@ public class CardFilterScreen extends AbstractPage
             }
 
             if (InputHelper.justReleasedClickLeft && this.clickStartedCard != null && this.hoveredCard != null || this.hoveredCard != null && CInputActionSet.select.isJustPressed()) {
-                if (Settings.isControllerMode) {
-                    this.clickStartedCard = this.hoveredCard;
-                }
-
                 InputHelper.justReleasedClickLeft = false;
-                CardCrawlGame.cardPopup.open(this.clickStartedCard, this.visibleCards);
+                //判断目标卡牌是否已经被禁用
+                if(this.cardFilter.isCardAvailable(this.clickStartedCard.cardID))
+                {
+                    banCard(this.clickStartedCard);
+                    Communication.sendEvent(new BanCardStageChangeEvent(this.clickStartedCard.cardID,true));
+                }
+                else
+                {
+                    restoreCard(this.clickStartedCard);
+                    Communication.sendEvent(new BanCardStageChangeEvent(this.clickStartedCard.cardID,false));
+                }
+                // CardCrawlGame.cardPopup.open(this.clickStartedCard, this.visibleCards);
                 this.clickStartedCard = null;
             }
         } else {
@@ -221,131 +270,6 @@ public class CardFilterScreen extends AbstractPage
             }
         }
 
-    }
-
-    private void updateControllerInput() {
-        if (Settings.isControllerMode) {
-            this.selectionIndex = 0;
-            boolean anyHovered = false;
-            this.type = CardFilterScreen.CardLibSelectionType.NONE;
-            if (this.colorBar.viewUpgradeHb.hovered) {
-                anyHovered = true;
-                this.type = CardFilterScreen.CardLibSelectionType.FILTERS;
-                this.selectionIndex = 4;
-                this.controllerCard = null;
-            } else if (this.sortHeader.updateControllerInput() != null) {
-                anyHovered = true;
-                this.controllerCard = null;
-                this.type = CardFilterScreen.CardLibSelectionType.FILTERS;
-                this.selectionIndex = this.sortHeader.getHoveredIndex();
-            } else {
-                for(AbstractCard c : this.visibleCards.group) {
-                    if (c.hb.hovered) {
-                        anyHovered = true;
-                        this.type = CardFilterScreen.CardLibSelectionType.CARDS;
-                        break;
-                    }
-
-                    ++this.selectionIndex;
-                }
-            }
-
-            if (!anyHovered) {
-                CInputHelper.setCursor(((AbstractCard)this.visibleCards.group.get(0)).hb);
-            } else {
-                switch (this.type) {
-                    case CARDS:
-                        if ((CInputActionSet.up.isJustPressed() || CInputActionSet.altUp.isJustPressed()) && this.visibleCards.size() > CARDS_PER_LINE) {
-                            if (this.selectionIndex < CARDS_PER_LINE) {
-                                CInputHelper.setCursor(this.sortHeader.buttons[0].hb);
-                                this.controllerCard = null;
-                                return;
-                            }
-
-                            this.selectionIndex -= 5;
-                            CInputHelper.setCursor(((AbstractCard)this.visibleCards.group.get(this.selectionIndex)).hb);
-                            this.controllerCard = (AbstractCard)this.visibleCards.group.get(this.selectionIndex);
-                        } else if ((CInputActionSet.down.isJustPressed() || CInputActionSet.altDown.isJustPressed()) && this.visibleCards.size() > CARDS_PER_LINE) {
-                            if (this.selectionIndex < this.visibleCards.size() - CARDS_PER_LINE) {
-                                this.selectionIndex += CARDS_PER_LINE;
-                            } else {
-                                this.selectionIndex %= CARDS_PER_LINE;
-                            }
-
-                            CInputHelper.setCursor(((AbstractCard)this.visibleCards.group.get(this.selectionIndex)).hb);
-                            this.controllerCard = (AbstractCard)this.visibleCards.group.get(this.selectionIndex);
-                        } else if (!CInputActionSet.left.isJustPressed() && !CInputActionSet.altLeft.isJustPressed()) {
-                            if (CInputActionSet.right.isJustPressed() || CInputActionSet.altRight.isJustPressed()) {
-                                if (this.selectionIndex % CARDS_PER_LINE < CARDS_PER_LINE - 1) {
-                                    ++this.selectionIndex;
-                                    if (this.selectionIndex > this.visibleCards.size() - 1) {
-                                        this.selectionIndex -= this.visibleCards.size() % CARDS_PER_LINE;
-                                    }
-                                } else {
-                                    this.selectionIndex -= CARDS_PER_LINE - 1;
-                                    if (this.selectionIndex < 0) {
-                                        this.selectionIndex = 0;
-                                    }
-                                }
-
-                                CInputHelper.setCursor(((AbstractCard)this.visibleCards.group.get(this.selectionIndex)).hb);
-                                this.controllerCard = (AbstractCard)this.visibleCards.group.get(this.selectionIndex);
-                            }
-                        } else {
-                            if (this.selectionIndex % CARDS_PER_LINE > 0) {
-                                --this.selectionIndex;
-                            } else {
-                                this.selectionIndex += CARDS_PER_LINE - 1;
-                                if (this.selectionIndex > this.visibleCards.size() - 1) {
-                                    this.selectionIndex = this.visibleCards.size() - 1;
-                                }
-                            }
-
-                            CInputHelper.setCursor(((AbstractCard)this.visibleCards.group.get(this.selectionIndex)).hb);
-                            this.controllerCard = (AbstractCard)this.visibleCards.group.get(this.selectionIndex);
-                        }
-                        break;
-                    case FILTERS:
-                        if (!CInputActionSet.down.isJustPressed() && !CInputActionSet.altDown.isJustPressed()) {
-                            if (!CInputActionSet.right.isJustPressed() && !CInputActionSet.altRight.isJustPressed()) {
-                                if (CInputActionSet.left.isJustPressed() || CInputActionSet.altLeft.isJustPressed()) {
-                                    --this.selectionIndex;
-                                    if (this.selectionIndex == -1) {
-                                        CInputHelper.setCursor(this.colorBar.viewUpgradeHb);
-                                    } else {
-                                        if (this.selectionIndex > this.sortHeader.buttons.length - 1) {
-                                            this.selectionIndex = this.sortHeader.buttons.length - 1;
-                                        }
-
-                                        CInputHelper.setCursor(this.sortHeader.buttons[this.selectionIndex].hb);
-                                    }
-                                }
-                            } else {
-                                ++this.selectionIndex;
-                                if (this.selectionIndex == this.sortHeader.buttons.length) {
-                                    CInputHelper.setCursor(this.colorBar.viewUpgradeHb);
-                                } else {
-                                    if (this.selectionIndex > this.sortHeader.buttons.length) {
-                                        this.selectionIndex = 0;
-                                    }
-
-                                    CInputHelper.setCursor(this.sortHeader.buttons[this.selectionIndex].hb);
-                                }
-                            }
-                        } else {
-                            CInputHelper.setCursor(((AbstractCard)this.visibleCards.group.get(0)).hb);
-                        }
-                    case NONE:
-                }
-
-                if (this.type == CardFilterScreen.CardLibSelectionType.FILTERS) {
-                    this.sortHeader.selectionIndex = this.selectionIndex;
-                } else {
-                    this.sortHeader.selectionIndex = -1;
-                }
-
-            }
-        }
     }
 
     private void updateCards() {

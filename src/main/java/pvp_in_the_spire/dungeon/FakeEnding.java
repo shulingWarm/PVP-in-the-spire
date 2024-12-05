@@ -1,5 +1,6 @@
 package pvp_in_the_spire.dungeon;
 
+import pvp_in_the_spire.SocketServer;
 import pvp_in_the_spire.game_event.ModifiedCurseTome;
 import pvp_in_the_spire.game_event.ModifiedShiningLight;
 import pvp_in_the_spire.game_event.ModifiedSkull;
@@ -22,6 +23,8 @@ import com.megacrit.cardcrawl.rooms.*;
 import com.megacrit.cardcrawl.saveAndContinue.SaveFile;
 import com.megacrit.cardcrawl.saveAndContinue.SaveFile.SaveType;
 import com.megacrit.cardcrawl.scenes.TheEndingScene;
+import pvp_in_the_spire.ui.CardFilter.CardFilter;
+import pvp_in_the_spire.ui.CardFilter.CardFilterScreen;
 
 import java.util.ArrayList;
 
@@ -404,6 +407,24 @@ public class FakeEnding extends AbstractDungeon {
         }
 
         eventBackgroundImg = ImageMaster.loadImage("images/ui/event/panel.png");
+    }
+
+    @Override
+    public void initializeCardPools() {
+        if(!(AbstractDungeon.commonCardPool.isEmpty() || SocketServer.battleNum == 0))
+            return;
+        super.initializeCardPools();
+        CardFilter filter = CardFilterScreen.instance.cardFilter;
+        AbstractDungeon.commonCardPool.group=filter.filterCard(AbstractDungeon.commonCardPool.group);
+        AbstractDungeon.uncommonCardPool.group=filter.filterCard(AbstractDungeon.uncommonCardPool.group);
+        AbstractDungeon.rareCardPool.group=filter.filterCard(AbstractDungeon.rareCardPool.group);
+        AbstractDungeon.colorlessCardPool.group=filter.filterCard(AbstractDungeon.colorlessCardPool.group);
+        AbstractDungeon.curseCardPool.group=filter.filterCard(AbstractDungeon.curseCardPool.group);
+        AbstractDungeon.srcCommonCardPool.group=filter.filterCard(AbstractDungeon.srcCommonCardPool.group);
+        AbstractDungeon.srcUncommonCardPool.group=filter.filterCard(AbstractDungeon.srcUncommonCardPool.group);
+        AbstractDungeon.srcRareCardPool.group=filter.filterCard(AbstractDungeon.srcRareCardPool.group);
+        AbstractDungeon.srcColorlessCardPool.group=filter.filterCard(AbstractDungeon.srcColorlessCardPool.group);
+        AbstractDungeon.srcCurseCardPool.group=filter.filterCard(AbstractDungeon.srcCurseCardPool.group);
     }
 
     static {
