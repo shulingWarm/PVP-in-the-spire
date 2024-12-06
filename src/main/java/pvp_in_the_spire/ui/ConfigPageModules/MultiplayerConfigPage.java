@@ -300,7 +300,7 @@ this,this.toggleOptionList.size());
         float optionWidth = configPanel.width*0.8f;
         //添加用于显示禁卡页面的按钮
         this.banCardButton = new BaseUpdateButton(0,0,
-                optionWidth/2,Settings.HEIGHT*0.06f,"禁卡按钮",
+                optionWidth/2,Settings.HEIGHT*0.06f,uiStrings.TEXT[12],
                 FontLibrary.getBaseFont(),ImageMaster.PROFILE_SLOT,this);
         //把这个按钮添加进配置页面
         this.configPanel.addNewPage(banCardButton);
@@ -358,6 +358,7 @@ this,this.toggleOptionList.size());
         else if(button == this.banCardButton)
         {
             CardFilterScreen.instance.setCloseCallback(this);
+            CardFilterScreen.instance.button.show(uiStrings.TEXT[0]);
             this.subPage = CardFilterScreen.instance;
         }
     }

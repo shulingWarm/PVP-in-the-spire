@@ -180,7 +180,6 @@ public class CardFilterScreen extends AbstractPage
 
         this.setLockStatus();
         this.sortOnOpen();
-        this.button.show("TEXT[0]");
         this.currentDiffY = this.scrollLowerBound;
         SingleCardViewPopup.isViewingUpgrade = false;
     }

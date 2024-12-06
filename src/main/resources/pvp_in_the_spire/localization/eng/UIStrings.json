@@ -145,7 +145,8 @@
       "Gain one more energy",
       "Get one more Lizard Tail",
       "Loser reward",
-      "Select 1 rare card from 3"
+      "Select 1 rare card from 3",
+      "Ban card configuration"
     ]
   },
   "WaitPage": {
