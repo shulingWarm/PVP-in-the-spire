@@ -522,6 +522,7 @@ this,this.toggleOptionList.size());
             AutomaticSocketServer server = AutomaticSocketServer.getServer();
             sendMyConfig(server.streamHandle);
             server.send();
+            CardFilterScreen.instance.cardFilter.sendBanCardStage();
         }
     }
 

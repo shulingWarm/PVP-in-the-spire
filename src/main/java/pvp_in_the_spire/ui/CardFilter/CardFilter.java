@@ -1,6 +1,8 @@
 package pvp_in_the_spire.ui.CardFilter;
 
 import com.megacrit.cardcrawl.cards.AbstractCard;
+import pvp_in_the_spire.events.BanCardStream;
+import pvp_in_the_spire.pvp_api.Communication;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -36,6 +38,25 @@ public class CardFilter {
             }
         }
         return retCards;
+    }
+
+    //发送所有的卡牌禁用信息
+    public void sendBanCardStage()
+    {
+        ArrayList<String> banCardNames = new ArrayList<>();
+        for(String eachCard : bannedCards)
+        {
+            banCardNames.add(eachCard);
+            if(banCardNames.size()>=10)
+            {
+                Communication.sendEvent(new BanCardStream(banCardNames));
+                banCardNames = new ArrayList<>();
+            }
+        }
+        if(!banCardNames.isEmpty())
+        {
+            Communication.sendEvent(new BanCardStream(banCardNames));
+        }
     }
 
 }
