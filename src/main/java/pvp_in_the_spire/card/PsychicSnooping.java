@@ -20,7 +20,7 @@ public class PsychicSnooping extends CustomCard {
     //临时用邪咒的图片
     public static final String IMG = "pvp_in_the_spire/images/cards/skill/PsychicSnooping.png";
     //升级后的图片
-    public static final String UPGRADE_IMG = "images/cards/skill/StealCard.png";
+    public static final String UPGRADE_IMG = "pvp_in_the_spire/images/cards/skill/StealCard.png";
     private static final int COST = 1;
     public static final String DESCRIPTION = cardStrings.DESCRIPTION;
     public static final AbstractCard.CardType TYPE = AbstractCard.CardType.SKILL;
@@ -60,6 +60,7 @@ public class PsychicSnooping extends CustomCard {
             //更改描述
             this.upgradeName();
             this.rawDescription = upgradedStrings.UPGRADE_DESCRIPTION;
+            this.initializeDescription();
         }
     }
 
