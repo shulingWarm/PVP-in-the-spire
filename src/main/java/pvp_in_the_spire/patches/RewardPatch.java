@@ -42,10 +42,13 @@ public class RewardPatch {
                 {
                     __instance.rewards.add(new RewardItem());
                 }
-                //如果玩家有白兽雕像，就再获得三瓶药水
-                __instance.rewards.add(new RewardItem(AbstractDungeon.returnRandomPotion()));
-                __instance.rewards.add(new RewardItem(AbstractDungeon.returnRandomPotion()));
-                __instance.rewards.add(new RewardItem(AbstractDungeon.returnRandomPotion()));
+                if(AbstractDungeon.player.hasRelic("White Beast Statue"))
+                {
+                    //如果玩家有白兽雕像，就再获得三瓶药水
+                    __instance.rewards.add(new RewardItem(AbstractDungeon.returnRandomPotion()));
+                    __instance.rewards.add(new RewardItem(AbstractDungeon.returnRandomPotion()));
+                    __instance.rewards.add(new RewardItem(AbstractDungeon.returnRandomPotion()));
+                }
                 AbstractDungeon.overlayMenu.proceedButton.show();
                 __instance.hasTakenAll = false;
                 //指定reward的渲染位置

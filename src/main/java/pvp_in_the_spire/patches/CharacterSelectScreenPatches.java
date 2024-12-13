@@ -1,6 +1,8 @@
 package pvp_in_the_spire.patches;
 
 import com.megacrit.cardcrawl.cards.blue.Strike_Blue;
+import pvp_in_the_spire.actions.PsychicSnoopingAction;
+import pvp_in_the_spire.card.PsychicSnooping;
 import pvp_in_the_spire.dungeon.FakeEnding;
 import pvp_in_the_spire.events.BattleInfoEvent;
 import pvp_in_the_spire.events.EndTurnEvent;
