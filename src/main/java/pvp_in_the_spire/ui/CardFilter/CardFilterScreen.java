@@ -31,6 +31,7 @@ import pvp_in_the_spire.ui.Events.ClosePageEvent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 
 public class CardFilterScreen extends AbstractPage
@@ -207,6 +208,22 @@ public class CardFilterScreen extends AbstractPage
     {
         CardShowChange.changeCardAlpha(card,1);
         this.cardFilter.restoreCard(card.cardID);
+    }
+
+    //重置卡牌禁用的状态
+    public void resetBanCardStage()
+    {
+        HashSet<String> bannedCards = this.cardFilter.bannedCards;
+        for(String eachCard : bannedCards)
+        {
+            if(this.cardMap.containsKey(eachCard))
+            {
+                CardShowChange.changeCardAlpha(
+                    this.cardMap.get(eachCard),1
+                );
+            }
+        }
+        bannedCards.clear();
     }
 
     //更改卡牌的禁用状态

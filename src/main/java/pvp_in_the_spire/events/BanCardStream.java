@@ -12,11 +12,13 @@ import java.util.ArrayList;
 public class BanCardStream extends BaseEvent {
 
     public ArrayList<String> cardNames;
+    public boolean resetFlag;
 
-    public BanCardStream(ArrayList<String> cardNames)
+    public BanCardStream(ArrayList<String> cardNames,boolean resetFlag)
     {
         this.eventId = "BanCardStream";
         this.cardNames = cardNames;
+        this.resetFlag = resetFlag;
     }
 
     @Override
@@ -24,6 +26,7 @@ public class BanCardStream extends BaseEvent {
         try
         {
             streamHandle.writeInt(this.cardNames.size());
+            streamHandle.writeBoolean(this.resetFlag);
             for(String eachCard : this.cardNames)
             {
                 streamHandle.writeUTF(eachCard);
@@ -40,6 +43,10 @@ public class BanCardStream extends BaseEvent {
         try
         {
             int cardNum = streamHandle.readInt();
+            boolean tempResetFlag = streamHandle.readBoolean();
+            //把目前所有的卡牌信息记录清空
+            if(tempResetFlag)
+                CardFilterScreen.instance.resetBanCardStage();
             for(int i=0;i<cardNum;++i)
             {
                 String tempCard = streamHandle.readUTF();

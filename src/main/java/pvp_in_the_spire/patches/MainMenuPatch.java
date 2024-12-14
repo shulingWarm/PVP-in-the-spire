@@ -35,7 +35,8 @@ public class MainMenuPatch {
             //把它添加到按钮列表中
             buttonList.add(lobbyButton);
             //在这里随便开辟一个card filter的页面
-            CardFilterScreen.instance = new CardFilterScreen();
+            if(CardFilterScreen.instance == null)
+                CardFilterScreen.instance = new CardFilterScreen();
             //Initialize Card Filter page
         }
     }

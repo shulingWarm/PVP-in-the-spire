@@ -44,18 +44,20 @@ public class CardFilter {
     public void sendBanCardStage()
     {
         ArrayList<String> banCardNames = new ArrayList<>();
+        boolean resetFlag = true;
         for(String eachCard : bannedCards)
         {
             banCardNames.add(eachCard);
             if(banCardNames.size()>=10)
             {
-                Communication.sendEvent(new BanCardStream(banCardNames));
+                Communication.sendEvent(new BanCardStream(banCardNames,resetFlag));
                 banCardNames = new ArrayList<>();
+                resetFlag = false;
             }
         }
-        if(!banCardNames.isEmpty())
+        if(!banCardNames.isEmpty() || resetFlag)
         {
-            Communication.sendEvent(new BanCardStream(banCardNames));
+            Communication.sendEvent(new BanCardStream(banCardNames,resetFlag));
         }
     }
 
