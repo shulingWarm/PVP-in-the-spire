@@ -350,6 +350,7 @@ public class PvPInTheSpireMod implements
         Communication.registerEvent(new ToggleTriggerEvent(0,false));
         Communication.registerEvent(new BanCardStageChangeEvent(null,false));
         Communication.registerEvent(new BanCardStream(null,false));
+        Communication.registerEvent(new ChangeOrbEvokeEvent(0,0));
 
         FontLibrary.getBaseFont();
         FontLibrary.getFontWithSize(24);

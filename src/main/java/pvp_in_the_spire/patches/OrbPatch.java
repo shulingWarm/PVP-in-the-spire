@@ -1,6 +1,10 @@
 package pvp_in_the_spire.patches;
 
+import com.evacipated.cardcrawl.modthespire.lib.SpirePostfixPatch;
+import com.megacrit.cardcrawl.orbs.Dark;
+import pvp_in_the_spire.events.ChangeOrbEvokeEvent;
 import pvp_in_the_spire.events.EvokeOrbEvent;
+import pvp_in_the_spire.orbs.OrbMapping;
 import pvp_in_the_spire.pvp_api.Communication;
 import pvp_in_the_spire.SocketServer;
 import pvp_in_the_spire.actions.FightProtocol;
@@ -45,5 +49,23 @@ public class OrbPatch {
             Communication.sendEvent(new EvokeOrbEvent());
         }
     }
+
+    //黑球的数值改变时产生的事件
+    @SpirePatch(clz = Dark.class, method = "onEndOfTurn")
+    public static class DarkEvokeChangePatch
+    {
+        @SpirePostfixPatch
+        public static void fix(Dark __instance)
+        {
+            //判断这个黑球是否有对应的orb id
+            int idOrb = OrbMapping.getPlayerOrbNum(__instance);
+            if(idOrb >= 0)
+            {
+                Communication.sendEvent(new ChangeOrbEvokeEvent(idOrb,
+                    __instance.evokeAmount));
+            }
+        }
+    }
+
 
 }
