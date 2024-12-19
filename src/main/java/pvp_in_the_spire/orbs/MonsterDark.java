@@ -150,10 +150,6 @@ public class MonsterDark extends MonsterOrb{
     public void updateDescription() {
         this.applyFocus();
         this.description = DESC[0] + this.passiveAmount + DESC[1] + this.evokeAmount + DESC[2];
-        AutomaticSocketServer server = AutomaticSocketServer.getServer();
-        //发送新的球的描述
-        orbDescriptionEncode(this,server.streamHandle);
-        server.send();
     }
 
     public void onEvoke() {
@@ -169,9 +165,6 @@ public class MonsterDark extends MonsterOrb{
         AbstractDungeon.actionManager.addToBottom(new VFXAction(new OrbFlareEffect(this, OrbFlareEffect.OrbFlareColor.DARK), speedTime));
         this.evokeAmount += this.passiveAmount;
         this.updateDescription();
-        AutomaticSocketServer server = AutomaticSocketServer.getServer();
-        sendDarkEndTurn(this,server.streamHandle);
-        server.send();
     }
 
     public void triggerEvokeAnimation() {
