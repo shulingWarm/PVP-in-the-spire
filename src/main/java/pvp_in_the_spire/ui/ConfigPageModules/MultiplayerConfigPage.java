@@ -4,6 +4,7 @@ import pvp_in_the_spire.ui.*;
 import pvp_in_the_spire.ui.Button.WithUpdate.BaseUpdateButton;
 import pvp_in_the_spire.ui.CardFilter.CardFilterScreen;
 import pvp_in_the_spire.ui.Chat.ChatFoldPage;
+import pvp_in_the_spire.ui.ConfigSave.ConfigNameBox;
 import pvp_in_the_spire.ui.Events.*;
 import pvp_in_the_spire.ui.configOptions.*;
 import pvp_in_the_spire.*;
@@ -45,7 +46,8 @@ public class MultiplayerConfigPage extends AbstractPage
         MemberChangeEvent,
         PlayerJoinInterface,
         ToggleInterface,
-        ClosePageEvent
+        ClosePageEvent,
+        ConfigSaveCallback
 {
 
     public static final UIStrings uiStrings =
@@ -76,6 +78,8 @@ public class MultiplayerConfigPage extends AbstractPage
     public BaseUpdateButton backButton;
     //禁卡页面的按钮
     public BaseUpdateButton banCardButton;
+    //用于保存配置的按钮
+    public BaseUpdateButton saveConfigButton;
     //关闭页面时的回调函数
     public ClosePageEvent closePageEvent = null;
 
@@ -302,6 +306,11 @@ this,this.toggleOptionList.size());
         this.banCardButton = new BaseUpdateButton(0,0,
                 optionWidth/2,Settings.HEIGHT*0.06f,uiStrings.TEXT[12],
                 FontLibrary.getBaseFont(),ImageMaster.PROFILE_SLOT,this);
+        this.saveConfigButton = new BaseUpdateButton(0,0,
+                optionWidth/2,Settings.HEIGHT*0.06f,"保存配置",
+                FontLibrary.getBaseFont(),ImageMaster.PROFILE_SLOT,this);
+        //把保存配置的按钮添加到panel里面
+        this.configPanel.addNewPage(this.saveConfigButton);
         //把这个按钮添加进配置页面
         this.configPanel.addNewPage(banCardButton);
         registerConfigOption(new TailNumSelect(optionWidth));
@@ -358,6 +367,10 @@ this,this.toggleOptionList.size());
             CardFilterScreen.instance.setCloseCallback(this);
             CardFilterScreen.instance.button.show(uiStrings.TEXT[0]);
             this.subPage = CardFilterScreen.instance;
+        }
+        else if(button == this.saveConfigButton)
+        {
+            this.subPage = new ConfigNameBox(this,this);
         }
     }
 
@@ -546,5 +559,10 @@ this,this.toggleOptionList.size());
         //判断是否为子页面请求关闭
         if(page == this.subPage)
             this.subPage = null;
+    }
+
+    @Override
+    public void saveConfig(String configName) {
+
     }
 }

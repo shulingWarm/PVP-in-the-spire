@@ -1,6 +1,7 @@
 package pvp_in_the_spire.ui;
 
 import pvp_in_the_spire.ui.Button.BackButton;
+import pvp_in_the_spire.ui.ConfigSave.ConfigNameBox;
 import pvp_in_the_spire.ui.Events.ConnectOkEvent;
 import pvp_in_the_spire.ui.Lobby.IpLobbyConfig;
 import pvp_in_the_spire.screens.Buttons.AsServerButton;
@@ -44,9 +45,6 @@ public class LocalConnectPage extends AbstractPage implements ConnectOkEvent {
 
     //完整的黑色背景
     public PlainBox plainBackground = new PlainBox();
-
-    //用于测试的一些界面，这里仅仅是搞一些debug
-    public AbstractPage testPage;
 
     public LocalConnectPage()
     {

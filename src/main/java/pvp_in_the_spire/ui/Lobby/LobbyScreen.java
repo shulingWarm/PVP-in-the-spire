@@ -4,6 +4,7 @@ import pvp_in_the_spire.ui.*;
 import pvp_in_the_spire.ui.Button.WithUpdate.BaseUpdateButton;
 import pvp_in_the_spire.ui.Button.WithUpdate.LobbyButton;
 import pvp_in_the_spire.ui.ConfigPageModules.MultiplayerConfigPage;
+import pvp_in_the_spire.ui.ConfigSave.ConfigNameBox;
 import pvp_in_the_spire.ui.Events.*;
 import pvp_in_the_spire.helpers.FontLibrary;
 import pvp_in_the_spire.network.Lobby.LobbyManager;
