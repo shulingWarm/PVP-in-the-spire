@@ -1,6 +1,7 @@
 package pvp_in_the_spire.ui.configOptions;
 
 import pvp_in_the_spire.ui.AbstractPage;
+import pvp_in_the_spire.ui.Events.ConfigIOInterface;
 import pvp_in_the_spire.ui.TextLabel;
 import pvp_in_the_spire.ui.ToggleInterface;
 import pvp_in_the_spire.ui.UserToggle;
@@ -8,9 +9,13 @@ import pvp_in_the_spire.helpers.FontLibrary;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.megacrit.cardcrawl.core.Settings;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+
 //这是专门用于显示option的地方
 //这里面包含文本和一个toggle按钮
-public class ToggleOption extends AbstractPage {
+public class ToggleOption extends AbstractPage implements ConfigIOInterface {
 
     //文本框
     public TextLabel label;
@@ -60,5 +65,35 @@ public class ToggleOption extends AbstractPage {
     public void setStage(boolean stage)
     {
         this.userToggle.enabled = stage;
+    }
+
+    @Override
+    public String getConfigName() {
+        return this.label.text;
+    }
+
+    @Override
+    public void saveConfig(DataOutputStream stream) {
+        try
+        {
+            stream.writeBoolean(this.userToggle.enabled);
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void loadConfig(DataInputStream stream) {
+        try
+        {
+            boolean tempStage = stream.readBoolean();
+            this.userToggle.toggle(tempStage);
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
     }
 }

@@ -35,7 +35,10 @@ import com.megacrit.cardcrawl.localization.UIStrings;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 
 //有多个玩家的config页面
@@ -563,6 +566,16 @@ this,this.toggleOptionList.size());
 
     @Override
     public void saveConfig(String configName) {
-
+        try
+        {
+            //新建文件输出流
+            DataOutputStream outputStream = new DataOutputStream(
+                    Files.newOutputStream(Paths.get("test.pvpcfg"))
+            );
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
     }
 }

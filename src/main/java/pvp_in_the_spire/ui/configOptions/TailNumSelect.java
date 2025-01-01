@@ -1,5 +1,6 @@
 package pvp_in_the_spire.ui.configOptions;
 
+import pvp_in_the_spire.ui.Events.ConfigIOInterface;
 import pvp_in_the_spire.ui.TextLabel;
 import pvp_in_the_spire.AutomaticSocketServer;
 import pvp_in_the_spire.GlobalManager;
@@ -14,11 +15,13 @@ import com.megacrit.cardcrawl.screens.options.DropdownMenu;
 import com.megacrit.cardcrawl.screens.options.DropdownMenuListener;
 
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 
 //选择开局给的尾巴个数
-public class TailNumSelect extends AbstractConfigOption implements DropdownMenuListener {
+public class TailNumSelect extends AbstractConfigOption
+        implements DropdownMenuListener, ConfigIOInterface {
 
     public static final UIStrings uiStrings =
             CardCrawlGame.languagePack.getUIString("TailNumSelect");
@@ -115,5 +118,27 @@ public class TailNumSelect extends AbstractConfigOption implements DropdownMenuL
         textLabel.render(sb);
         //最后执行父类的效果
         super.render(sb);
+    }
+
+    @Override
+    public String getConfigName() {
+        return this.getClass().getSimpleName();
+    }
+
+    @Override
+    public void saveConfig(DataOutputStream stream) {
+        try
+        {
+            stream.writeInt(this.dropdownMenu.getSelectedIndex());
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void loadConfig(DataInputStream stream) {
+        this.receiveConfigChange(stream);
     }
 }

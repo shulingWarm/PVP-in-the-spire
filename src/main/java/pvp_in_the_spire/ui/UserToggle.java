@@ -67,6 +67,14 @@ public class UserToggle extends AbstractPage {
         this.toggleInterface.triggerToggleButton(this,this.idToggle,this.enabled);
     }
 
+    public void toggle(boolean newStage)
+    {
+        this.enabled = newStage;
+        //调用按钮触发时的回调
+        this.toggleInterface.triggerToggleButton(this,this.idToggle,this.enabled);
+    }
+
+
     public void render(SpriteBatch sb) {
         if (this.enabled) {
             sb.setColor(Color.LIGHT_GRAY);
