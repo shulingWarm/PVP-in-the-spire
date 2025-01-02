@@ -69,6 +69,9 @@ public class UserToggle extends AbstractPage {
 
     public void toggle(boolean newStage)
     {
+        //如果传入的新的状态和原有内容相同，就直接退出
+        if(this.enabled == newStage)
+            return;
         this.enabled = newStage;
         //调用按钮触发时的回调
         this.toggleInterface.triggerToggleButton(this,this.idToggle,this.enabled);

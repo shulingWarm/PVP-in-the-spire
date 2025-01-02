@@ -76,6 +76,9 @@ public class TailNumSelect extends AbstractConfigOption
         {
             //读取新选择的尾巴数量
             int newTailNum = streamHandle.readInt();
+            //如果新传入的数值和目前一样，就不用更新了
+            if(newTailNum == this.dropdownMenu.getSelectedIndex())
+                return;
             //更新尾巴的数量
             sendConfigChangeFlag = false;
             dropdownMenu.setSelectedIndex(newTailNum);
@@ -139,6 +142,20 @@ public class TailNumSelect extends AbstractConfigOption
 
     @Override
     public void loadConfig(DataInputStream stream) {
-        this.receiveConfigChange(stream);
+        try
+        {
+            //读取配置个数
+            int newSelectIndex = stream.readInt();
+            //如果新传入的数值和目前一样，就不用更新了
+            if(newSelectIndex == this.dropdownMenu.getSelectedIndex())
+                return;
+            dropdownMenu.setSelectedIndex(newSelectIndex);
+            //高亮这个东西
+            this.highlight();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
     }
 }

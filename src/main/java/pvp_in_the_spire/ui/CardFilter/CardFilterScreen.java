@@ -28,14 +28,19 @@ import pvp_in_the_spire.patches.CardShowPatch.CardShowChange;
 import pvp_in_the_spire.pvp_api.Communication;
 import pvp_in_the_spire.ui.AbstractPage;
 import pvp_in_the_spire.ui.Events.ClosePageEvent;
+import pvp_in_the_spire.ui.Events.ConfigIOInterface;
+import pvp_in_the_spire.ui.Events.ConfigSaveCallback;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 
 public class CardFilterScreen extends AbstractPage
-    implements TabBarListener, ScrollBarListener {
+    implements TabBarListener, ScrollBarListener, ConfigIOInterface {
 
     public static CardFilterScreen instance;
 
@@ -450,6 +455,81 @@ public class CardFilterScreen extends AbstractPage
     static {
         drawStartY = (float)Settings.HEIGHT * 0.66F;
         CARDS_PER_LINE = (int)((float)Settings.WIDTH / (AbstractCard.IMG_WIDTH * 0.75F + Settings.CARD_VIEW_PAD_X * 3.0F));
+    }
+
+    @Override
+    public String getConfigName() {
+        return "CardFilter";
+    }
+
+    @Override
+    public void saveConfig(DataOutputStream stream) {
+        //所有的禁卡集合
+        HashSet<String> banCardSet = this.cardFilter.bannedCards;
+        try
+        {
+            stream.writeInt(banCardSet.size());
+            for(String eachCard : banCardSet)
+            {
+                stream.writeUTF(eachCard);
+            }
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    //置换卡牌禁用集
+    public void exchangeBanCardSet(HashSet<String> newBanCardSet)
+    {
+        //获取原始的禁卡方案
+        HashSet<String> oriBanCardSet = this.cardFilter.bannedCards;
+        ArrayList<String> needRestoreCards = new ArrayList<>();
+        //寻找哪些卡需要被重新释放
+        for(String eachCard : oriBanCardSet)
+        {
+            if(!newBanCardSet.contains(eachCard))
+                needRestoreCards.add(eachCard);
+        }
+        //把需要恢复的牌重新恢复一下
+        for(String eachCard : needRestoreCards)
+        {
+            //判断卡组里面是否有这个卡
+            if(this.cardMap.containsKey(eachCard))
+            {
+                this.restoreCard(this.cardMap.get(eachCard));
+            }
+        }
+        //把需要新添加的卡牌重新添加一下
+        for(String eachCard : newBanCardSet)
+        {
+            if(!oriBanCardSet.contains(eachCard) && this.cardMap.containsKey(eachCard))
+            {
+                this.banCard(this.cardMap.get(eachCard));
+            }
+        }
+        //整体都添加完后再批量发送卡牌禁用状态
+        this.cardFilter.sendBanCardStage();
+    }
+
+    @Override
+    public void loadConfig(DataInputStream stream) {
+        try
+        {
+            HashSet<String> loadingCard = new HashSet<>();
+            int cardAmount = stream.readInt();
+            for(int idCard=0;idCard<cardAmount;++idCard)
+            {
+                String tempCard = stream.readUTF();
+                loadingCard.add(tempCard);
+            }
+            exchangeBanCardSet(loadingCard);
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
     }
 
     private static enum CardLibSelectionType {
