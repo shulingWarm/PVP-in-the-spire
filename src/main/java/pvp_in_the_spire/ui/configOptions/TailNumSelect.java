@@ -21,7 +21,7 @@ import java.util.ArrayList;
 
 //选择开局给的尾巴个数
 public class TailNumSelect extends AbstractConfigOption
-        implements DropdownMenuListener, ConfigIOInterface {
+        implements DropdownMenuListener {
 
     public static final UIStrings uiStrings =
             CardCrawlGame.languagePack.getUIString("TailNumSelect");

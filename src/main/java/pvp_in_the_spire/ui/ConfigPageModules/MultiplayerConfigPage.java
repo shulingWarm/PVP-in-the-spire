@@ -61,19 +61,6 @@ public class MultiplayerConfigPage extends AbstractPage
     //配置选项的背景板
     PlainBox panelBackground;
 
-    //x位置的偏移量
-    //这个表示的是两边的角色显示时对应的位置
-    public static final float X_PADDING = 0.15f;
-    public static final float Y_PADDING = 0.5f;
-    //准备按钮显示的x的位置
-    public static final float READY_Y_PADDING = 0.4f;
-    public static final float VERSION_PADDING = 0.35f;
-    public static final float NAME_PADDING = 0.8f;
-    //准备按钮的宽度
-    public static final float READY_BUTTON_WIDTH = Settings.WIDTH * 0.1f;
-    //准备按钮的高度
-    public static final float READY_BUTTON_HEIGHT = Settings.HEIGHT * 0.1f;
-
     //用来渲染角色的控件
     public CharacterPanel characterPanel;
 
@@ -93,6 +80,8 @@ public class MultiplayerConfigPage extends AbstractPage
     public ArrayList<AbstractConfigOption> optionList = new ArrayList<>();
     //所有的toggle option的列表
     public ArrayList<Pair<ToggleOption,ToggleInterface>> toggleOptionList = new ArrayList<>();
+    //所有的config io interface的列表
+    public ArrayList<ConfigIOInterface> configIOList = new ArrayList<>();
 
     //当前是否为发送hello阶段的标志 这里直接就用int来代表了
     //-1 是房间里只有自己时的状态
@@ -279,6 +268,7 @@ this,this.toggleOptionList.size());
         );
         configPanel.addNewPage(option);
         option.setStage(initStage);
+        configIOList.add(option);
     }
 
     //注册新的config选项
@@ -286,6 +276,7 @@ this,this.toggleOptionList.size());
         option.setOptionId(optionList.size());
         optionList.add(option);
         configPanel.addNewPage(option);
+        configIOList.add(option);
     }
 
     //添加文本
@@ -316,6 +307,8 @@ this,this.toggleOptionList.size());
         this.configPanel.addNewPage(this.saveConfigButton);
         //把这个按钮添加进配置页面
         this.configPanel.addNewPage(banCardButton);
+        //把禁卡列表添加到io 接口的列表中
+        this.configIOList.add(CardFilterScreen.instance);
         registerConfigOption(new TailNumSelect(optionWidth));
         registerConfigOption(new InvincibleRate(optionWidth));
         registerConfigOption(new AddConstConfig(optionWidth));
@@ -570,8 +563,15 @@ this,this.toggleOptionList.size());
         {
             //新建文件输出流
             DataOutputStream outputStream = new DataOutputStream(
-                    Files.newOutputStream(Paths.get("test.pvpcfg"))
+                    Files.newOutputStream(Paths.get(configName + ".pvpcfg"))
             );
+            //遍历所有的config io接口
+            for(ConfigIOInterface eachInterface : this.configIOList)
+            {
+                eachInterface.saveConfig(outputStream);
+            }
+            outputStream.flush();
+            outputStream.close();
         }
         catch (IOException e)
         {

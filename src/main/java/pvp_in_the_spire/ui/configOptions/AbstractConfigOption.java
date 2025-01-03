@@ -1,6 +1,7 @@
 package pvp_in_the_spire.ui.configOptions;
 
 import pvp_in_the_spire.ui.AbstractPage;
+import pvp_in_the_spire.ui.Events.ConfigIOInterface;
 import pvp_in_the_spire.ui.PlainBox;
 import pvp_in_the_spire.actions.ConfigProtocol;
 import pvp_in_the_spire.helpers.FontLibrary;
@@ -16,7 +17,8 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 //自定义配置时的页面
-public class AbstractConfigOption extends AbstractPage{
+public class AbstractConfigOption extends AbstractPage
+implements ConfigIOInterface {
 
     //一个纯色平板
     public PlainBox plainBox;
@@ -145,5 +147,20 @@ public class AbstractConfigOption extends AbstractPage{
     @Override
     public void render(SpriteBatch sb) {
         renderHighlight(sb);
+    }
+
+    @Override
+    public String getConfigName() {
+        return "";
+    }
+
+    @Override
+    public void saveConfig(DataOutputStream stream) {
+
+    }
+
+    @Override
+    public void loadConfig(DataInputStream stream) {
+
     }
 }
