@@ -1,5 +1,6 @@
 package pvp_in_the_spire.ui.ConfigSave;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.megacrit.cardcrawl.core.Settings;
 import com.megacrit.cardcrawl.helpers.ImageMaster;
@@ -10,6 +11,7 @@ import pvp_in_the_spire.ui.Events.ClickCallback;
 import pvp_in_the_spire.ui.Events.ClosePageEvent;
 import pvp_in_the_spire.ui.Events.ConfigSaveCallback;
 import pvp_in_the_spire.ui.InputBox;
+import pvp_in_the_spire.ui.PlainBox;
 import pvp_in_the_spire.ui.TextLabel;
 
 //保存配置时，用于指定配置方案的名字
@@ -23,6 +25,8 @@ public class ConfigNameBox extends AbstractPage implements ClickCallback {
     public ConfigSaveCallback configSaveCallback;
     //退出页面的回调函数
     public ClosePageEvent closePageEvent;
+    //用于显示界面的背景框
+    public PlainBox background;
 
     //按钮的半径
     public static final float BUTTON_RAID = Settings.WIDTH * 0.05f;
@@ -45,6 +49,12 @@ public class ConfigNameBox extends AbstractPage implements ClickCallback {
         this.title = new TextLabel(Settings.WIDTH*0.4f,Settings.HEIGHT*0.6f,
                 Settings.WIDTH*0.2f,Settings.HEIGHT*0.04f,"配置命名",
                 FontLibrary.getFontWithSize(40));
+        //初始化背景框
+        this.background = new PlainBox(Settings.WIDTH*0.6f,
+                Settings.HEIGHT*0.5f, Color.valueOf("111111EE"));
+        this.background.x = Settings.WIDTH * 0.2f;
+        this.background.y = Settings.HEIGHT* 0.3f;
+        this.background.texture = ImageMaster.WHITE_SQUARE_IMG;
         //初始化确定按钮
         this.confirmButton = new BaseUpdateButton(
                 Settings.WIDTH * 0.5f - BUTTON_OFFSET - BUTTON_RAID,
@@ -73,6 +83,7 @@ public class ConfigNameBox extends AbstractPage implements ClickCallback {
 
     @Override
     public void render(SpriteBatch sb) {
+        this.background.render(sb);
         this.title.render(sb);
         this.nameBox.render(sb);
         this.confirmButton.render(sb);
