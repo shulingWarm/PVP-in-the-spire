@@ -106,6 +106,11 @@ public class ConfigNameBox extends AbstractPage implements ClickCallback {
             if(this.configSaveCallback != null)
             {
                 this.configSaveCallback.saveConfig(this.nameBox.textField);
+                //同时也调用退出操作
+                if(this.closePageEvent != null)
+                {
+                    this.closePageEvent.closePageEvent(this);
+                }
             }
         }
         else if(button == this.cancelButton)
