@@ -55,6 +55,12 @@ public class WarningText {
         return 3.F - (2.F/endScaleTime)*idFrame;
     }
 
+    //设置当前正在显示的字符串内容
+    public void setShownText(String text)
+    {
+        this.shownText = text;
+    }
+
     //获得目前的alpha变化
     float getAlpha()
     {

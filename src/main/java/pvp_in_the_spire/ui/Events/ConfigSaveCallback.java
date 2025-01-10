@@ -5,4 +5,5 @@ public interface ConfigSaveCallback {
 
     public void saveConfig(String configName);
 
+    public void loadConfig(String configName);
 }

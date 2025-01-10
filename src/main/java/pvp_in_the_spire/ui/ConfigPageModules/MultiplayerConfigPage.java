@@ -1,5 +1,6 @@
 package pvp_in_the_spire.ui.ConfigPageModules;
 
+import pvp_in_the_spire.screens.WarningText;
 import pvp_in_the_spire.ui.*;
 import pvp_in_the_spire.ui.Button.WithUpdate.BaseUpdateButton;
 import pvp_in_the_spire.ui.CardFilter.CardFilterScreen;
@@ -72,6 +73,9 @@ public class MultiplayerConfigPage extends AbstractPage
     public BaseUpdateButton saveConfigButton;
     //关闭页面时的回调函数
     public ClosePageEvent closePageEvent = null;
+
+    //警告信息提示词
+    public WarningText warningText;
 
     //子页面
     public AbstractPage subPage = null;
@@ -366,7 +370,9 @@ this,this.toggleOptionList.size());
         }
         else if(button == this.saveConfigButton)
         {
-            this.subPage = new ConfigNameBox(this,this);
+            ConfigNameBox tempNameBox = new ConfigNameBox(this,this);
+            tempNameBox.open();
+            this.subPage = tempNameBox;
         }
     }
 
@@ -439,6 +445,10 @@ this,this.toggleOptionList.size());
                 TextureManager.BACK_BUTTON,
                 this
         );
+        //初始化警告信息的提示词
+        this.warningText = new WarningText("保存配置成功",
+            FontLibrary.getBaseFont(),Settings.WIDTH*0.5f,Settings.HEIGHT*0.3f,
+                Color.GREEN);
         //注册回调信息
         GlobalManager.playerManager.playerJoinInterface = this;
         GlobalManager.playerManager.selfPlayerInfo.setLobbyOwner(isOwner);
@@ -516,6 +526,8 @@ this,this.toggleOptionList.size());
         {
             this.subPage.render(sb);
         }
+        //渲染警告提示信息
+        this.warningText.render(sb);
         //渲染聊天框
         ChatFoldPage.getInstance().render(sb);
     }
@@ -554,7 +566,10 @@ this,this.toggleOptionList.size());
     public void closePageEvent(AbstractPage page) {
         //判断是否为子页面请求关闭
         if(page == this.subPage)
+        {
+            this.subPage.close();
             this.subPage = null;
+        }
     }
 
     @Override
@@ -572,10 +587,18 @@ this,this.toggleOptionList.size());
             }
             outputStream.flush();
             outputStream.close();
+            //写入当前的警告信息
+            this.warningText.setShownText("保存配置成功");
+            this.warningText.idFrame = 0;
         }
         catch (IOException e)
         {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void loadConfig(String configName) {
+
     }
 }
