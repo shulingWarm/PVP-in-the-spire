@@ -2,8 +2,10 @@ package pvp_in_the_spire.ui.ConfigSave;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.megacrit.cardcrawl.core.CardCrawlGame;
 import com.megacrit.cardcrawl.core.Settings;
 import com.megacrit.cardcrawl.helpers.ImageMaster;
+import com.megacrit.cardcrawl.localization.UIStrings;
 import org.lwjgl.Sys;
 import pvp_in_the_spire.helpers.FontLibrary;
 import pvp_in_the_spire.screens.WarningText;
@@ -25,6 +27,9 @@ import java.util.ArrayList;
 
 //保存配置时，用于指定配置方案的名字
 public class ConfigNameBox extends AbstractPage implements ClickCallback{
+
+    public static final UIStrings uiStrings =
+            CardCrawlGame.languagePack.getUIString("ConfigNameBox");
 
     public InputBox nameBox;
     public TextLabel title;
@@ -59,7 +64,7 @@ public class ConfigNameBox extends AbstractPage implements ClickCallback{
             FontLibrary.getBaseFont());
         //新建文本标题
         this.title = new TextLabel(Settings.WIDTH*0.4f,Settings.HEIGHT*0.8f,
-                Settings.WIDTH*0.2f,Settings.HEIGHT*0.04f,"配置命名",
+                Settings.WIDTH*0.2f,Settings.HEIGHT*0.04f,uiStrings.TEXT[0],
                 FontLibrary.getFontWithSize(40));
         //初始化背景框
         this.background = new PlainBox(Settings.WIDTH*0.6f,
@@ -77,7 +82,7 @@ public class ConfigNameBox extends AbstractPage implements ClickCallback{
                 BUTTON_Y,
                 BUTTON_RAID * 2,
                 BUTTON_HEIGHT,
-                "确定",
+                uiStrings.TEXT[1],
                 FontLibrary.getBaseFont(),
                 ImageMaster.PROFILE_SLOT,
                 this
@@ -92,7 +97,7 @@ public class ConfigNameBox extends AbstractPage implements ClickCallback{
                 BUTTON_Y,
                 BUTTON_RAID * 2,
                 BUTTON_HEIGHT,
-                "取消",
+                uiStrings.TEXT[2],
                 FontLibrary.getBaseFont(),
                 ImageMaster.PROFILE_SLOT,
                 this

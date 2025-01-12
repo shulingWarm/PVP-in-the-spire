@@ -305,7 +305,7 @@ this,this.toggleOptionList.size());
                 optionWidth/2,Settings.HEIGHT*0.06f,uiStrings.TEXT[12],
                 FontLibrary.getBaseFont(),ImageMaster.PROFILE_SLOT,this);
         this.saveConfigButton = new BaseUpdateButton(0,0,
-                optionWidth/2,Settings.HEIGHT*0.06f,"保存配置",
+                optionWidth/2,Settings.HEIGHT*0.06f,uiStrings.TEXT[13],
                 FontLibrary.getBaseFont(),ImageMaster.PROFILE_SLOT,this);
         //把保存配置的按钮添加到panel里面
         this.configPanel.addNewPage(this.saveConfigButton);
@@ -446,7 +446,7 @@ this,this.toggleOptionList.size());
                 this
         );
         //初始化警告信息的提示词
-        this.warningText = new WarningText("保存配置成功",
+        this.warningText = new WarningText(uiStrings.TEXT[14],
             FontLibrary.getBaseFont(),Settings.WIDTH*0.5f,Settings.HEIGHT*0.3f,
                 Color.GREEN);
         //注册回调信息
@@ -588,7 +588,7 @@ this,this.toggleOptionList.size());
             outputStream.flush();
             outputStream.close();
             //写入当前的警告信息
-            this.warningText.setShownText("保存配置成功");
+            this.warningText.setShownText(uiStrings.TEXT[14]);
             this.warningText.idFrame = 0;
         }
         catch (IOException e)
@@ -599,6 +599,28 @@ this,this.toggleOptionList.size());
 
     @Override
     public void loadConfig(String configName) {
-
+        try
+        {
+            //新建文本输入流
+            DataInputStream inputStream = new DataInputStream(
+                    Files.newInputStream(Paths.get(configName + ".pvpcfg"))
+            );
+            //遍历所有的config io接口
+            for(ConfigIOInterface eachInterface : this.configIOList)
+            {
+                eachInterface.loadConfig(inputStream);
+            }
+            inputStream.close();
+            this.warningText.setShownText(uiStrings.TEXT[15]);
+            this.warningText.idFrame = 0;
+            if(this.subPage!=null)
+            {
+                this.closePageEvent(this.subPage);
+            }
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
     }
 }
