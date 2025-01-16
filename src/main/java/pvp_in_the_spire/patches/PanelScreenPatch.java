@@ -1,5 +1,6 @@
 package pvp_in_the_spire.patches;
 
+import pvp_in_the_spire.ui.CardDesign.MainDesignPage;
 import pvp_in_the_spire.ui.Lobby.LobbyScreen;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.evacipated.cardcrawl.modthespire.lib.SpirePatch;
@@ -13,6 +14,14 @@ public class PanelScreenPatch {
 
     //用于标识现在是否进入了游戏大厅的阶段
     public static boolean lobbyFlag = false;
+    //卡牌DIY的主界面
+    public static boolean designFlag = false;
+    //把各种界面状态重置
+    public static void resetScreenFlags()
+    {
+        lobbyFlag = false;
+        designFlag = false;
+    }
 
     //截流游戏主界面的渲染逻辑
     @SpirePatch(clz = MenuPanelScreen.class, method = "render")
@@ -26,6 +35,11 @@ public class PanelScreenPatch {
                 //改为调用lobby大厅的渲染
                 LobbyScreen.instance.render(sb);
                 //直接禁止渲染
+                return SpireReturn.Return();
+            }
+            else if(designFlag)
+            {
+                MainDesignPage.getInstance().render(sb);
                 return SpireReturn.Return();
             }
             return SpireReturn.Continue();
@@ -43,6 +57,11 @@ public class PanelScreenPatch {
             {
                 LobbyScreen.instance.update();
                 //直接禁止渲染
+                return SpireReturn.Return();
+            }
+            else if(designFlag)
+            {
+                MainDesignPage.getInstance().update();
                 return SpireReturn.Return();
             }
             return SpireReturn.Continue();

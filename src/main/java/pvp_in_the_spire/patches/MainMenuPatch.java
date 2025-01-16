@@ -30,6 +30,8 @@ public class MainMenuPatch {
         {
             //添加一个游戏大厅的选项
             ArrayList<MenuButton> buttonList = __instance.buttons;
+            //添加一个卡牌DIY的页面
+            buttonList.add(new MenuButton(Enums.CARD_DESIGN,buttonList.size()));
             //游戏大厅对应的按钮
             MenuButton lobbyButton = new MenuButton(Enums.GAME_LOBBY,buttonList.size());
             //把它添加到按钮列表中
@@ -66,6 +68,11 @@ public class MainMenuPatch {
                 FieldHelper.setPrivateFieldValue(__instance,"label",
                         uiStrings.TEXT[1]);
             }
+            else if(__instance.result == Enums.CARD_DESIGN)
+            {
+                FieldHelper.setPrivateFieldValue(__instance,"label",
+                        uiStrings.TEXT[3]);
+            }
         }
     }
 
@@ -89,6 +96,7 @@ public class MainMenuPatch {
         @SpirePostfixPatch
         public static void fix(MenuButton __instance)
         {
+            PanelScreenPatch.resetScreenFlags();
             //判断按钮是不是游戏大厅
             if(__instance.result == Enums.GAME_LOBBY)
             {
@@ -102,8 +110,12 @@ public class MainMenuPatch {
                 LobbyManager.initManager();
                 LobbyScreen.instance = new LobbyScreen();
             }
-            else{
-                PanelScreenPatch.lobbyFlag = false;
+            else if(__instance.result == Enums.CARD_DESIGN)
+            {
+                //执行正常打开游戏窗口的逻辑
+                CardCrawlGame.mainMenuScreen.panelScreen.open(MenuPanelScreen.PanelScreen.PLAY);
+                //指定为游戏设计界面
+                PanelScreenPatch.designFlag = true;
             }
         }
     }
@@ -113,6 +125,9 @@ public class MainMenuPatch {
     {
         @SpireEnum
         public static MenuButton.ClickResult GAME_LOBBY;
+        //卡牌DIY的选项
+        @SpireEnum
+        public static MenuButton.ClickResult CARD_DESIGN;
     }
 
 }
