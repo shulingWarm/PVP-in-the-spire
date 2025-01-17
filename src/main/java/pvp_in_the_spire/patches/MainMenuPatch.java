@@ -31,7 +31,7 @@ public class MainMenuPatch {
             //添加一个游戏大厅的选项
             ArrayList<MenuButton> buttonList = __instance.buttons;
             //添加一个卡牌DIY的页面
-            buttonList.add(new MenuButton(Enums.CARD_DESIGN,buttonList.size()));
+            // buttonList.add(new MenuButton(Enums.CARD_DESIGN,buttonList.size()));
             //游戏大厅对应的按钮
             MenuButton lobbyButton = new MenuButton(Enums.GAME_LOBBY,buttonList.size());
             //把它添加到按钮列表中
