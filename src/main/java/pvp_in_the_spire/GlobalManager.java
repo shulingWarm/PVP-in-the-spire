@@ -1,8 +1,7 @@
 package pvp_in_the_spire;
 
-import pvp_in_the_spire.ui.ConfigPage;
-import pvp_in_the_spire.ui.InputBox;
-import pvp_in_the_spire.ui.TextureManager;
+import com.badlogic.gdx.Gdx;
+import pvp_in_the_spire.ui.*;
 import pvp_in_the_spire.dungeon.FakeEnding;
 import pvp_in_the_spire.effect_transport.EffectManager;
 import pvp_in_the_spire.pvp_api.BaseEvent;
@@ -82,6 +81,8 @@ public class GlobalManager {
     public static boolean landlordEnergyFlag = false;
     //地主多获得尾巴
     public static boolean landlordMoreTail = true;
+    //多层次的操作管理，用于管理多种控件需要订阅不同的操作的情况
+    public static MultiInputProcessor multiInputProcessor = null;
 
     //获取battle info
     public static BattleInfo getBattleInfo()
@@ -145,6 +146,12 @@ public class GlobalManager {
         if(defaultClass == null)
         {
             defaultClass = AbstractPlayer.PlayerClass.IRONCLAD;
+        }
+        //初始化多层次输入管理器
+        if(multiInputProcessor == null)
+        {
+            multiInputProcessor = new MultiInputProcessor();
+            BasePanel.initScrollProcessor();
         }
         //初始化玩家管理器
         if(playerManager == null)

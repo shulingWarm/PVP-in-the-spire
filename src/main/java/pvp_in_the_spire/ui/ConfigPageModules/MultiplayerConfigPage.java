@@ -465,7 +465,7 @@ this,this.toggleOptionList.size());
                 this.characterPanel.leftCharacters,
                 this.characterPanel.rightCharacters
         );
-        InputHelper.initialize();
+        BasePanel.initScrollProcessor();
         //登记config信息的处理
         GlobalManager.messageTriggerInterface = new ConfigProtocol();
         //给本地玩家申请座位，或者说是直接注册座位

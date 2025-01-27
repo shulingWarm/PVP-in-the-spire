@@ -1,5 +1,6 @@
 package pvp_in_the_spire;
 
+import pvp_in_the_spire.ui.BasePanel;
 import pvp_in_the_spire.ui.Chat.ChatFoldPage;
 import pvp_in_the_spire.patches.InputActionPatch;
 import com.megacrit.cardcrawl.core.CardCrawlGame;
@@ -48,7 +49,7 @@ public class GameManager {
         {
             InputActionPatch.allowShortcut = true;
         }
-        InputHelper.initialize();
+        BasePanel.initScrollProcessor();
     }
 
 }

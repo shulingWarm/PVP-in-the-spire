@@ -1,11 +1,13 @@
 package pvp_in_the_spire.ui;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.megacrit.cardcrawl.core.Settings;
 import com.megacrit.cardcrawl.helpers.MathHelper;
 import com.megacrit.cardcrawl.helpers.input.InputHelper;
 import com.megacrit.cardcrawl.screens.mainMenu.ScrollBar;
 import com.megacrit.cardcrawl.screens.mainMenu.ScrollBarListener;
+import pvp_in_the_spire.GlobalManager;
 
 import java.util.ArrayList;
 
@@ -47,6 +49,16 @@ public class BasePanel extends AbstractPage implements ScrollBarListener {
         //设置输入的捕捉信息
         //Gdx.input.setInputProcessor(this);
 
+    }
+
+    //初始化滚动条的处理器
+    public static void initScrollProcessor()
+    {
+        //需要先获取游戏里面原本的滚动条处理器
+        InputHelper.initialize();
+        //然后让这个滚动条处理器只订阅单独的滚动事件
+        GlobalManager.multiInputProcessor.subscribeScroll(Gdx.input.getInputProcessor());
+        Gdx.input.setInputProcessor(GlobalManager.multiInputProcessor);
     }
 
     //初始化滚动条的范围

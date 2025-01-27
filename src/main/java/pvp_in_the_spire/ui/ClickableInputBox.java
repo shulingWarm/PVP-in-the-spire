@@ -34,4 +34,10 @@ public class ClickableInputBox extends InputBox implements ClickCallback {
         super.update();
         this.boxButton.update();
     }
+
+    @Override
+    public void move(float xChange, float yChange) {
+        super.move(xChange, yChange);
+        this.boxButton.move(xChange,yChange);
+    }
 }

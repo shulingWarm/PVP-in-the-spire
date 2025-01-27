@@ -77,6 +77,13 @@ public class InputBoxWithLabel extends AbstractPage {
         this.inputBox.open();
     }
 
+    @Override
+    public void move(float xChange, float yChange) {
+        super.move(xChange,yChange);
+        this.label.move(xChange,yChange);
+        this.inputBox.move(xChange,yChange);
+    }
+
     //渲染过程
     @Override
     public void render(SpriteBatch sb) {

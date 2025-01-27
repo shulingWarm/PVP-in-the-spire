@@ -18,6 +18,7 @@ import com.megacrit.cardcrawl.helpers.steamInput.SteamInputHelper;
 import com.megacrit.cardcrawl.ui.panels.RenamePopup;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import pvp_in_the_spire.ui.Events.InputBoxChange;
 
 //通用的输入框
 //最开始的时候是用重命名存档的方式来弄的
@@ -44,8 +45,8 @@ public class InputBox extends AbstractPage implements InputProcessor {
     //按下回车时的接口
     public EnterInterface enterInterface = null;
 
-    //上一个输入处理器
-    public InputProcessor backendProcessor = null;
+    //输入框内容修改时的回调
+    public InputBoxChange inputBoxChangeInterface = null;
 
     //正常的始终输入框
     //这个构造函数需要指定明确的字体
@@ -80,6 +81,11 @@ public class InputBox extends AbstractPage implements InputProcessor {
     public void appendStr(String str)
     {
         textField = textField + str;
+        //判断是否需要调用输入内容修改的回调
+        if(this.inputBoxChangeInterface != null)
+        {
+            this.inputBoxChangeInterface.onInputBoxChanged(this.textField);
+        }
     }
 
     //判断一个字符是否被允许输入
@@ -105,13 +111,8 @@ public class InputBox extends AbstractPage implements InputProcessor {
             this.waitTimer -= Gdx.graphics.getDeltaTime();
         }
 
-        if (this.shown) {
-            this.faderColor.a = MathHelper.fadeLerpSnap(this.faderColor.a, 0.75F);
-            this.uiColor.a = MathHelper.fadeLerpSnap(this.uiColor.a, 1.0F);
-        } else {
-            this.faderColor.a = MathHelper.fadeLerpSnap(this.faderColor.a, 0.0F);
-            this.uiColor.a = MathHelper.fadeLerpSnap(this.uiColor.a, 0.0F);
-        }
+        this.faderColor.a = MathHelper.fadeLerpSnap(this.faderColor.a, 0.75F);
+        this.uiColor.a = MathHelper.fadeLerpSnap(this.uiColor.a, 1.0F);
 
     }
 
@@ -136,9 +137,7 @@ public class InputBox extends AbstractPage implements InputProcessor {
     }
 
     public void open() {
-        //记录备份的输入处理器
-        backendProcessor = Gdx.input.getInputProcessor();
-        Gdx.input.setInputProcessor(this);
+        GlobalManager.multiInputProcessor.subscribeKeyType(this);
         if (SteamInputHelper.numControllers == 1 && CardCrawlGame.clientUtils != null && CardCrawlGame.clientUtils.isSteamRunningOnSteamDeck()) {
             CardCrawlGame.clientUtils.showFloatingGamepadTextInput(SteamUtils.FloatingGamepadTextInputMode.ModeSingleLine, 0, 0, Settings.WIDTH, (int)((float)Settings.HEIGHT * 0.25F));
         }
@@ -151,12 +150,16 @@ public class InputBox extends AbstractPage implements InputProcessor {
 
     @Override
     public void close() {
-        //恢复之前的输入处理框
-        Gdx.input.setInputProcessor(this.backendProcessor);
         this.shown = false;
         GlobalManager.activateBox = null;
         //启用快捷键
         InputActionPatch.allowShortcut = true;
+    }
+
+    //注册输入框内容修改时的回调函数
+    public void registerInputBoxChange(InputBoxChange inputBoxChangeInterface)
+    {
+        this.inputBoxChangeInterface = inputBoxChangeInterface;
     }
 
     @Override
