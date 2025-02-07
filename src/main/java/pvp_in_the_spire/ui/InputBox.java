@@ -88,6 +88,12 @@ public class InputBox extends AbstractPage implements InputProcessor {
         }
     }
 
+    //设置输入框里面的内容
+    public void setTextField(String text)
+    {
+        this.textField = text;
+    }
+
     //判断一个字符是否被允许输入
     public boolean isCharAllowed(char symbol)
     {

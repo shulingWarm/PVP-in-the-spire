@@ -73,5 +73,7 @@ public class MainDesignPage extends AbstractPage
     public void onCardClicked(AbstractCard card) {
         //打开卡牌配置的界面
         this.subPage = this.cardConfigPage;
+        //初始化卡牌
+        this.cardConfigPage.initPage(card);
     }
 }
