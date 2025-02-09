@@ -111,7 +111,7 @@ public class SteamManager {
     {
         try
         {
-            steamNetworking.sendP2PPacket(id,fromBuffer, SteamNetworking.P2PSend.Reliable,STEAM_CHANNEL);
+            steamNetworking.sendP2PPacket(id,fromBuffer, SteamNetworking.P2PSend.ReliableWithBuffering,STEAM_CHANNEL);
         }
         catch (SteamException e)
         {
