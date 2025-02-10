@@ -3,20 +3,39 @@ package pvp_in_the_spire.ui.CardDesign;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.megacrit.cardcrawl.cards.AbstractCard;
 import com.megacrit.cardcrawl.core.Settings;
+import com.megacrit.cardcrawl.helpers.ImageMaster;
 import pvp_in_the_spire.card.AdaptableCard;
 import pvp_in_the_spire.helpers.FontLibrary;
 import pvp_in_the_spire.ui.AbstractPage;
 import pvp_in_the_spire.ui.BasePanel;
+import pvp_in_the_spire.ui.Button.WithUpdate.BaseUpdateButton;
 import pvp_in_the_spire.ui.CardDesign.CardModifyItem.AttackModify;
+import pvp_in_the_spire.ui.Events.ClickCallback;
 import pvp_in_the_spire.ui.InputBoxWithLabel;
 
 //对单独某一个卡牌的配置界面
-public class CardConfigPage extends AbstractPage {
+public class CardConfigPage extends AbstractPage implements ClickCallback {
 
     //显示主卡牌的界面
     public AdaptableCard mainCard;
     //用于显示配置选项的panel
     public BasePanel optionPanel;
+    //用于保存的按钮，这会覆盖原来的卡牌
+    public BaseUpdateButton saveButton;
+    //用于另存的卡牌
+    public BaseUpdateButton saveOtherButton;
+    //用于关闭当前页面的按钮
+    public BaseUpdateButton cancelButton;
+    //三个用于操作的按钮所在的位置
+    public final float BUTTON_X = Settings.WIDTH*0.14f;
+    //三个按钮的宽度
+    public final float BUTTON_WIDTH = Settings.WIDTH*0.12f;
+    //按钮共用的宽度信息
+    public final float BUTTON_HEIGHT = Settings.HEIGHT*0.06f;
+    //按钮上面的起始位置
+    public final float BUTTON_Y_BEGIN = Settings.HEIGHT*0.55f;
+    //每个按钮在纵向上的间距
+    public final float BUTTON_Y_GAP = Settings.HEIGHT*0.1f;
 
     //初始化卡牌
     public void initPage(AbstractCard mainCard)
@@ -28,9 +47,25 @@ public class CardConfigPage extends AbstractPage {
         this.mainCard = new AdaptableCard(mainCard);
         //更改卡牌显示的位置
         this.mainCard.current_x = Settings.WIDTH*0.2f;
-        this.mainCard.current_y = Settings.HEIGHT*0.6f;
+        this.mainCard.current_y = Settings.HEIGHT*0.75f;
         this.mainCard.target_x = Settings.WIDTH*0.2f;
-        this.mainCard.target_y = Settings.HEIGHT*0.6f;
+        this.mainCard.target_y = Settings.HEIGHT*0.75f;
+        //初始化用于保存的按钮
+        this.saveButton = new BaseUpdateButton(
+            BUTTON_X,BUTTON_Y_BEGIN, BUTTON_WIDTH,BUTTON_HEIGHT,
+            "保存", FontLibrary.getBaseFont(), ImageMaster.PROFILE_SLOT,
+            this
+        );
+        //用于另存为新卡牌的按钮
+        this.saveOtherButton = new BaseUpdateButton(
+            BUTTON_X,BUTTON_Y_BEGIN - BUTTON_Y_GAP,BUTTON_WIDTH, BUTTON_HEIGHT,
+            "另存为新牌", FontLibrary.getBaseFont(), ImageMaster.PROFILE_SLOT, this
+        );
+        //用于关闭页面的按钮
+        this.cancelButton = new BaseUpdateButton(
+                BUTTON_X,BUTTON_Y_BEGIN - 2*BUTTON_Y_GAP,BUTTON_WIDTH, BUTTON_HEIGHT,
+                "关闭", FontLibrary.getBaseFont(), ImageMaster.PROFILE_SLOT, this
+        );
         //初始化panel
         initPanel();
     }
@@ -74,11 +109,22 @@ public class CardConfigPage extends AbstractPage {
     public void render(SpriteBatch sb) {
         optionPanel.render(sb);
         this.mainCard.render(sb);
+        this.saveButton.render(sb);
+        this.saveOtherButton.render(sb);
+        this.cancelButton.render(sb);
     }
 
     @Override
     public void update() {
         optionPanel.update();
         this.mainCard.update();
+        this.saveButton.update();
+        this.saveOtherButton.update();
+        this.cancelButton.update();
+    }
+
+    @Override
+    public void clickEvent(BaseUpdateButton button) {
+        
     }
 }
