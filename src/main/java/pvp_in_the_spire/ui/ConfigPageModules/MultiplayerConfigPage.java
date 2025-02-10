@@ -370,8 +370,14 @@ this,this.toggleOptionList.size());
     //处理房间人员变化的回调
     @Override
     public void onMemberChanged(SteamID personId, SteamMatchmaking.ChatMemberStateChange memberStage) {
+        if (memberStage == SteamMatchmaking.ChatMemberStateChange.Entered) {
+            //在通信内容里面注册这个玩家
+            LobbyChatServer.instance.registerPlayer(personId);
+        } else if (memberStage == SteamMatchmaking.ChatMemberStateChange.Disconnected)
+        // 如果只是断连了，那就不管，靠steamNetwork自己重连
+        {
+        } else
         //如果是有玩家退出了，就移交房主
-        if(memberStage != SteamMatchmaking.ChatMemberStateChange.Entered)
         {
             //回退到刚加入房间的状态
             this.initNetworkStage(LobbyManager.amIOwner(),this.closePageEvent);
@@ -381,10 +387,6 @@ this,this.toggleOptionList.size());
             resetReadyButton();
             //移除该玩家
             GlobalManager.playerManager.onPlayerLeave(personId.getAccountID());
-        }
-        else {
-            //在通信内容里面注册这个玩家
-            LobbyChatServer.instance.registerPlayer(personId);
         }
     }
 
