@@ -2,11 +2,21 @@ package pvp_in_the_spire.card;
 
 import com.megacrit.cardcrawl.cards.AbstractCard;
 import com.megacrit.cardcrawl.characters.AbstractPlayer;
+import com.megacrit.cardcrawl.helpers.CardLibrary;
 import com.megacrit.cardcrawl.monsters.AbstractMonster;
 import pvp_in_the_spire.card.CardAction.AbstractCardAction;
+import pvp_in_the_spire.card.CardDesign.AdaptableCardManager;
+import pvp_in_the_spire.card.CardDesign.CardPackage;
+import pvp_in_the_spire.patches.PanelScreenPatch;
 
+import javax.print.DocFlavor;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
 
 //允许被修改的卡牌
 public class AdaptableCard extends AbstractCard {
@@ -17,11 +27,16 @@ public class AdaptableCard extends AbstractCard {
     //卡牌抽象动作的列表
     public HashMap<String, AbstractCardAction> cardActionMap;
 
+    //当前卡牌链接的卡包
+    public HashSet<String> linkCardPackages;
+
     public AdaptableCard(AbstractCard card) {
         super(card.cardID, card.name, card.assetUrl, card.cost,
             card.rawDescription, card.type, card.color, card.rarity, card.target);
         //初始化卡牌抽象动作的列表
         this.cardActionMap = new HashMap<>();
+        //初始化链接的卡包
+        this.linkCardPackages = new HashSet<>();
         //记录基础卡牌
         this.baseCard = card;
         //初始化卡牌数值
@@ -56,6 +71,63 @@ public class AdaptableCard extends AbstractCard {
         return this.baseCard.damage == 0;
     }
 
+    //整合所有的action,当调用卡牌另存的时候，需要把卡牌信息整合一下
+    public void summarizeModification()
+    {
+        //修改卡牌的id
+        this.cardID = this.baseCard.cardID + "_mod";
+        //如果没有链接的卡包，就把它弄成默认卡包
+        if(this.linkCardPackages.isEmpty())
+        {
+            AdaptableCardManager.getInstance().registerCardPackageOfCard(
+                this,CardPackage.DEFAULT_PACKAGE_NAME
+            );
+        }
+    }
+
+    //从信息流里面读取卡牌
+    public void loadCard(DataInputStream stream)
+    {
+        //读取卡牌的id
+        try
+        {
+            this.cardID = stream.readUTF();
+
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    //将卡牌信息写入文件流
+    public void saveCard(DataOutputStream stream)
+    {
+        try
+        {
+            //保存卡牌id
+            stream.writeUTF(this.cardID);
+            //记录base卡牌的id
+            stream.writeUTF(this.baseCard.cardID);
+            //记录卡牌的基础伤害值
+            stream.writeInt(this.baseCard.baseDamage);
+            stream.writeInt(this.baseCard.baseBlock);
+            stream.writeInt(this.baseCard.baseMagicNumber);
+            //保存卡牌里面涉及到的action
+            for(AbstractCardAction eachAction : this.cardActionMap.values())
+            {
+                //记录action的id
+                stream.writeUTF(eachAction.getActionId());
+                //写入card action
+                eachAction.saveCardAction(stream);
+            }
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void upgrade() {
 
@@ -66,8 +138,27 @@ public class AdaptableCard extends AbstractCard {
 
     }
 
+    //复制所有的action
+    public void cloneAction(HashMap<String, AbstractCardAction> otherActions)
+    {
+        //遍历所有的action
+        for(Map.Entry<String, AbstractCardAction> eachAction : otherActions.entrySet())
+        {
+            this.cardActionMap.put(eachAction.getKey(),eachAction.getValue().makeCopy());
+        }
+    }
+
+    //适用于adaptable card的copy函数
+    public AdaptableCard adaptableCopy()
+    {
+        AdaptableCard tempCard = new AdaptableCard(this.baseCard);
+        //复制所有的action
+        tempCard.cloneAction(this.cardActionMap);
+        return tempCard;
+    }
+
     @Override
     public AbstractCard makeCopy() {
-        return null;
+        return adaptableCopy();
     }
 }

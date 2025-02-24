@@ -5,6 +5,8 @@ import com.megacrit.cardcrawl.characters.AbstractPlayer;
 import com.megacrit.cardcrawl.monsters.AbstractMonster;
 import pvp_in_the_spire.card.AdaptableCard;
 
+import java.io.DataOutputStream;
+
 //卡牌的执行操作
 //这是专门用于执行的卡牌操作
 public abstract class AbstractCardAction {
@@ -29,7 +31,13 @@ public abstract class AbstractCardAction {
         return false;
     }
 
+    //保存卡牌的action
+    public abstract void saveCardAction(DataOutputStream stream);
+
     public String getActionId() {
         return actionId;
     }
+
+    //复制action
+    public abstract AbstractCardAction makeCopy();
 }

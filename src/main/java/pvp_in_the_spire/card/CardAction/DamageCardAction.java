@@ -9,6 +9,9 @@ import com.megacrit.cardcrawl.monsters.AbstractMonster;
 import org.lwjgl.Sys;
 import pvp_in_the_spire.card.AdaptableCard;
 
+import java.io.DataOutputStream;
+import java.io.IOException;
+
 public class DamageCardAction extends AbstractCardAction{
 
     //伤害的数值
@@ -33,6 +36,24 @@ public class DamageCardAction extends AbstractCardAction{
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void saveCardAction(DataOutputStream stream) {
+        try {
+            stream.writeInt(this.amount);
+            //另外记录伤害的类型
+            stream.writeUTF(this.damageType.name());
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public AbstractCardAction makeCopy() {
+        return new DamageCardAction(this.amount);
     }
 
     @Override

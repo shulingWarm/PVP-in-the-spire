@@ -5,6 +5,7 @@ import com.megacrit.cardcrawl.cards.AbstractCard;
 import com.megacrit.cardcrawl.core.Settings;
 import com.megacrit.cardcrawl.helpers.ImageMaster;
 import pvp_in_the_spire.card.AdaptableCard;
+import pvp_in_the_spire.card.CardDesign.AdaptableCardManager;
 import pvp_in_the_spire.helpers.FontLibrary;
 import pvp_in_the_spire.ui.AbstractPage;
 import pvp_in_the_spire.ui.BasePanel;
@@ -125,6 +126,10 @@ public class CardConfigPage extends AbstractPage implements ClickCallback {
 
     @Override
     public void clickEvent(BaseUpdateButton button) {
-        
+        if(button == this.saveOtherButton)
+        {
+            //另存为新牌的按钮情况
+            AdaptableCardManager.getInstance().addNewCard(this.mainCard);
+        }
     }
 }
