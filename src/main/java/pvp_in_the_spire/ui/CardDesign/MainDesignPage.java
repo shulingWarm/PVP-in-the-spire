@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.megacrit.cardcrawl.cards.AbstractCard;
 import com.megacrit.cardcrawl.core.Settings;
+import pvp_in_the_spire.card.AdaptableCard;
 import pvp_in_the_spire.ui.AbstractPage;
 import pvp_in_the_spire.ui.Events.CardDesignClickCallback;
 import pvp_in_the_spire.ui.PlainBox;
@@ -43,6 +44,8 @@ public class MainDesignPage extends AbstractPage
         this.designCardLibrary = new DesignCardLibrary();
         //初始化卡牌配置的界面
         this.cardConfigPage = new CardConfigPage();
+        //初始化用于存储卡牌的folder
+        AdaptableCard.initCardFolder();
     }
 
     @Override

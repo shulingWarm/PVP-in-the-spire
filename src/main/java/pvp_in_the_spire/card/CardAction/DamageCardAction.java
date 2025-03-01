@@ -9,6 +9,7 @@ import com.megacrit.cardcrawl.monsters.AbstractMonster;
 import org.lwjgl.Sys;
 import pvp_in_the_spire.card.AdaptableCard;
 
+import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
@@ -49,6 +50,25 @@ public class DamageCardAction extends AbstractCardAction{
         {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void loadCardAction(DataInputStream stream) {
+        try {
+            this.amount = stream.readInt();
+            this.damageType = DamageInfo.DamageType.valueOf(
+                stream.readUTF()
+            );
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public AbstractCardAction copyAction() {
+        return new DamageCardAction(this.amount);
     }
 
     @Override

@@ -150,7 +150,7 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <properties>
-                <steam.path>/media/zzh/data/SteamLibrary/steamapps</steam.path>
+                <steam.path>E:/usrApp/steam/steamapps</steam.path>
                 <sts.path>/common/SlayTheSpire/desktop-1.0.jar</sts.path>
             </properties>
         </profile>

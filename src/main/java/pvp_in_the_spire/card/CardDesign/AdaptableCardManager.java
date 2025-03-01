@@ -1,9 +1,13 @@
 package pvp_in_the_spire.card.CardDesign;
 
-import jdk.internal.invoke.ABIDescriptorProxy;
+import com.megacrit.cardcrawl.cards.AbstractCard;
+import com.megacrit.cardcrawl.helpers.CardLibrary;
+import org.lwjgl.Sys;
 import pvp_in_the_spire.card.AdaptableCard;
 
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -38,12 +42,43 @@ public class AdaptableCardManager {
         //判断是否已经读取过这个卡牌
         if(!userCardMap.containsKey(cardName))
         {
-            //新建当前卡牌的数据流
-            
-            //初始化一个空的卡牌
-            AdaptableCard emptyCard = new AdaptableCard();
-            //调用空卡牌的读取过程
+            try
+            {
+                //新建当前卡牌的数据流
+                DataInputStream stream = new DataInputStream(
+                    Files.newInputStream(Paths.get(AdaptableCard.getCardPath(cardName)))
+                );
+                //读取基础卡牌
+                String baseCardName = stream.readUTF();
+                //基础卡牌的对象
+                AbstractCard baseCard = CardLibrary.getCard(baseCardName);
+                //初始化卡牌
+                AdaptableCard adaptableCard = new AdaptableCard(baseCard);
+                //令新的卡牌读取数据流
+                adaptableCard.loadCard(stream);
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+        }
+    }
 
+    //存储adaptable card的流程
+    public void saveAdaptableCard(AdaptableCard card)
+    {
+        //新建这个卡牌的数据流
+        try
+        {
+            DataOutputStream stream = new DataOutputStream(
+                Files.newOutputStream(Paths.get(AdaptableCard.getCardPath(card.cardID)))
+            );
+            //调用卡牌里面执行操作的流程
+            card.saveCard(stream);
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
         }
     }
 
@@ -71,6 +106,8 @@ public class AdaptableCardManager {
             {
                 this.loadAdaptCard(eachCard);
             }
+            //记录到卡牌库中
+            this.packageMap.put(tempPackage.packageName, tempPackage);
             return true;
         }
         catch (IOException e)
@@ -87,8 +124,13 @@ public class AdaptableCardManager {
         //默认卡包的路径
         String defaultCardPath = CardPackage.getDefaultPackagePath();
         //尝试读取默认卡包
-
-        //加载默认卡包
+        if(!this.loadCardPackage(defaultCardPath))
+        {
+            //读取失败的情况下，直接自己构造卡包
+            CardPackage tempPackage = new CardPackage(CardPackage.DEFAULT_PACKAGE_NAME);
+            //把默认卡牌添加到卡牌库中
+            this.packageMap.put(tempPackage.packageName, tempPackage);
+        }
 
     }
 
@@ -101,18 +143,21 @@ public class AdaptableCardManager {
         {
             //给卡包里面的链接卡牌数计数增加
             CardPackage tempPackage = this.packageMap.get(packageName);
-            tempPackage.linkedCards.add(card.cardID);
+            tempPackage.addLinkCard(card.cardID);
         }
     }
 
     //添加新的卡牌，这会发生在另存卡牌的时候
     public void addNewCard(AdaptableCard card)
     {
-        System.out.println("Prepare add new card");
         //整合新卡牌的信息
         card.summarizeModification();
-        //记录到新的卡牌里面
-        userCardMap.put(card.cardID,card.adaptableCopy());
+        //存储卡牌数据流
+        this.saveAdaptableCard(card);
+        //把它添加到映射表里面
+        this.userCardMap.put(card.cardID, card.adaptableCopy());
+        //标记卡牌已经保存过的标志
+        card.cardSavedFlag = true;
     }
 
 }

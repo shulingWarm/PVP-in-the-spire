@@ -4,6 +4,7 @@ import pvp_in_the_spire.card.AdaptableCard;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -30,28 +31,14 @@ public class CardPackage {
     public CardPackage(String packageName)
     {
         this.packageName = packageName;
+        //初始化链接的所有卡牌
+        this.linkedCards = new HashSet<>();
     }
 
     //无名称的卡包
     public CardPackage()
     {
-        this.packageName = "";
-    }
-
-    //初始化卡包的输入输出流
-    public void initOutputStream()
-    {
-        try
-        {
-            this.stream = new DataOutputStream(
-                Files.newOutputStream(Paths.get(this.packageName + ".cardpkg"))
-            );
-        }
-        catch (IOException e)
-        {
-            this.stream = null;
-            e.printStackTrace();
-        }
+        this("");
     }
 
     //从数据流里面读取数据
@@ -77,10 +64,50 @@ public class CardPackage {
         }
     }
 
+    //添加链接的卡牌
+    public void addLinkCard(String cardId)
+    {
+        this.linkedCards.add(cardId);
+        try
+        {
+            //新建卡牌的输出流
+            DataOutputStream stream = new DataOutputStream(
+                    Files.newOutputStream(Paths.get(this.getPackagePath()))
+            );
+            //调用写入卡包数据的过程
+            this.writeData(stream);
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
     //将数据写入数据流
     public void writeData(DataOutputStream stream)
     {
+        //写入卡包的名称
+        try
+        {
+            stream.writeUTF(this.packageName);
+            //写入链接卡牌的个数
+            stream.writeInt(this.linkedCards.size());
+            //遍历写入每个链接卡牌
+            for(String eachCard : this.linkedCards)
+            {
+                stream.writeUTF(eachCard);
+            }
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+    }
 
+    //获得卡包应该保存的路径
+    public String getPackagePath()
+    {
+        return this.packageName + PACKAGE_SUFFIX;
     }
 
     //默认默认卡包的文件名

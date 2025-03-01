@@ -4,6 +4,7 @@ import com.megacrit.cardcrawl.cards.AbstractCard;
 import com.megacrit.cardcrawl.characters.AbstractPlayer;
 import com.megacrit.cardcrawl.helpers.CardLibrary;
 import com.megacrit.cardcrawl.monsters.AbstractMonster;
+import org.lwjgl.Sys;
 import pvp_in_the_spire.card.CardAction.AbstractCardAction;
 import pvp_in_the_spire.card.CardDesign.AdaptableCardManager;
 import pvp_in_the_spire.card.CardDesign.CardPackage;
@@ -12,6 +13,7 @@ import pvp_in_the_spire.patches.PanelScreenPatch;
 import javax.print.DocFlavor;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,6 +32,12 @@ public class AdaptableCard extends AbstractCard {
     //当前卡牌链接的卡包
     public HashSet<String> linkCardPackages;
 
+    //卡牌是否已经保存过的标志
+    public boolean cardSavedFlag = false;
+
+    //存储卡牌的文件夹的名字
+    public static final String CARD_FOLDER_NAME = "PlayerCards";
+
     public AdaptableCard(AbstractCard card) {
         super(card.cardID, card.name, card.assetUrl, card.cost,
             card.rawDescription, card.type, card.color, card.rarity, card.target);
@@ -43,6 +51,28 @@ public class AdaptableCard extends AbstractCard {
         this.baseMagicNumber = card.baseMagicNumber;
         this.baseDamage = card.baseDamage;
         this.baseBlock = card.baseBlock;
+    }
+
+    //初始化folder
+    public static void initCardFolder()
+    {
+        //当前目录下的folder文件
+        File folderFile = new File(CARD_FOLDER_NAME);
+        //判断这是不是个文件夹
+        if(!folderFile.exists())
+        {
+            //新建文件夹
+            if(!folderFile.mkdirs())
+            {
+                System.out.println("Create folder failed");
+            }
+        }
+    }
+
+    //根据卡牌名称获得路径
+    public static String getCardPath(String cardName)
+    {
+        return CARD_FOLDER_NAME + "/" + cardName + ".pvpcard";
     }
 
     //向卡牌操作里面添加Action
@@ -92,7 +122,31 @@ public class AdaptableCard extends AbstractCard {
         try
         {
             this.cardID = stream.readUTF();
-
+            System.out.println(cardID);
+            //读取卡牌的基础伤害值
+            this.baseDamage = stream.readInt();
+            System.out.println(this.baseDamage);
+            //读取基础格挡值
+            this.baseBlock = stream.readInt();
+            System.out.println(this.baseBlock);
+            this.baseMagicNumber = stream.readInt();
+            System.out.println(this.baseMagicNumber);
+            //读取action的个数
+            int actionNum = stream.readInt();
+            System.out.printf("action num: %d\n",actionNum);
+            //读取每个action的个数
+            for(int idAction=0;idAction<actionNum;++idAction)
+            {
+                //读取action的id
+                String actionId = stream.readUTF();
+                //获取对应的action
+                AbstractCardAction tempAction = AbstractCardAction.getCardAction(actionId);
+                if(tempAction != null)
+                {
+                    //从stream中读取action的数据
+                    tempAction.loadCardAction(stream);
+                }
+            }
         }
         catch (IOException e)
         {
@@ -105,14 +159,16 @@ public class AdaptableCard extends AbstractCard {
     {
         try
         {
-            //保存卡牌id
-            stream.writeUTF(this.cardID);
             //记录base卡牌的id
             stream.writeUTF(this.baseCard.cardID);
+            //保存卡牌id
+            stream.writeUTF(this.cardID);
             //记录卡牌的基础伤害值
             stream.writeInt(this.baseCard.baseDamage);
             stream.writeInt(this.baseCard.baseBlock);
             stream.writeInt(this.baseCard.baseMagicNumber);
+            //记录卡牌里面的action个数
+            stream.writeInt(this.cardActionMap.size());
             //保存卡牌里面涉及到的action
             for(AbstractCardAction eachAction : this.cardActionMap.values())
             {

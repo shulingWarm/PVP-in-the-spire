@@ -1,5 +1,6 @@
 package pvp_in_the_spire.ui.CardDesign;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.megacrit.cardcrawl.cards.AbstractCard;
 import com.megacrit.cardcrawl.core.Settings;
@@ -7,6 +8,7 @@ import com.megacrit.cardcrawl.helpers.ImageMaster;
 import pvp_in_the_spire.card.AdaptableCard;
 import pvp_in_the_spire.card.CardDesign.AdaptableCardManager;
 import pvp_in_the_spire.helpers.FontLibrary;
+import pvp_in_the_spire.screens.WarningText;
 import pvp_in_the_spire.ui.AbstractPage;
 import pvp_in_the_spire.ui.BasePanel;
 import pvp_in_the_spire.ui.Button.WithUpdate.BaseUpdateButton;
@@ -27,6 +29,8 @@ public class CardConfigPage extends AbstractPage implements ClickCallback {
     public BaseUpdateButton saveOtherButton;
     //用于关闭当前页面的按钮
     public BaseUpdateButton cancelButton;
+    //另存为相关的tip
+    public WarningText warningText;
     //三个用于操作的按钮所在的位置
     public final float BUTTON_X = Settings.WIDTH*0.14f;
     //三个按钮的宽度
@@ -66,6 +70,14 @@ public class CardConfigPage extends AbstractPage implements ClickCallback {
         this.cancelButton = new BaseUpdateButton(
                 BUTTON_X,BUTTON_Y_BEGIN - 2*BUTTON_Y_GAP,BUTTON_WIDTH, BUTTON_HEIGHT,
                 "关闭", FontLibrary.getBaseFont(), ImageMaster.PROFILE_SLOT, this
+        );
+        //初始化警告信息
+        this.warningText = new WarningText(
+                "另存为成功",
+                FontLibrary.getFontWithSize(33),
+                Settings.WIDTH * 0.5f,
+                Settings.HEIGHT * 0.4f,
+                Color.YELLOW
         );
         //初始化panel
         initPanel();
@@ -113,6 +125,7 @@ public class CardConfigPage extends AbstractPage implements ClickCallback {
         this.saveButton.render(sb);
         this.saveOtherButton.render(sb);
         this.cancelButton.render(sb);
+        this.warningText.render(sb);
     }
 
     @Override
@@ -130,6 +143,8 @@ public class CardConfigPage extends AbstractPage implements ClickCallback {
         {
             //另存为新牌的按钮情况
             AdaptableCardManager.getInstance().addNewCard(this.mainCard);
+            //显示另存成功的操作
+            this.warningText.idFrame = 0;
         }
     }
 }
