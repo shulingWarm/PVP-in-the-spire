@@ -17,8 +17,11 @@ public class BaseUpdateButton extends AbstractPage {
     public Hitbox hb;
     public com.badlogic.gdx.graphics.Color activeColor;
     public com.badlogic.gdx.graphics.Color inactiveColor;
+    public Color grayColor;
     public boolean pressed;
     public String text;
+    //是否允许按下的标志
+    public boolean enableFlag = true;
     //渲染用的字体
     BitmapFont font;
     //点击事件的回调函数
@@ -34,6 +37,7 @@ public class BaseUpdateButton extends AbstractPage {
         this.callback = callback;
         this.activeColor = com.badlogic.gdx.graphics.Color.WHITE;
         this.inactiveColor = new com.badlogic.gdx.graphics.Color(0.6F, 0.6F, 0.6F, 1.0F);
+        this.grayColor = new Color(0.1f,0.1f,0.1f,1.0f);
         this.pressed = false;
         this.font = font;
         this.width = width;
@@ -44,6 +48,11 @@ public class BaseUpdateButton extends AbstractPage {
         this.hb = new Hitbox(x, y, width, height);
         //记录要显示的文本内容
         this.text = text;
+    }
+
+    public void setEnableFlag(boolean enableFlag)
+    {
+        this.enableFlag = enableFlag;
     }
 
     //按钮的点击事件
@@ -68,9 +77,15 @@ public class BaseUpdateButton extends AbstractPage {
             this.pressed = true;
             InputHelper.justClickedLeft = false;
             //调用按钮点击事件
-            this.clickEvent();
+            if(this.enableFlag)
+                this.clickEvent();
         }
+    }
 
+    //获得被disable时灰度状态下的color
+    public Color getGrayColor()
+    {
+        return this.grayColor;
     }
 
     //获取一般的渲染color
@@ -80,7 +95,11 @@ public class BaseUpdateButton extends AbstractPage {
     }
 
     public void render(SpriteBatch sb) {
-        if (this.hb.hovered) {
+        //如果是disable的状态，就按照灰度形式来渲染
+        if(!this.enableFlag)
+        {
+            sb.setColor(this.getGrayColor());
+        }else if (this.hb.hovered) {
             sb.setColor(this.activeColor);
         } else {
             sb.setColor(this.getInactiveColor());

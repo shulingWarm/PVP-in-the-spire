@@ -77,6 +77,6 @@ public class MainDesignPage extends AbstractPage
         //打开卡牌配置的界面
         this.subPage = this.cardConfigPage;
         //初始化卡牌
-        this.cardConfigPage.initPage(card);
+        this.cardConfigPage.registerCard(card);
     }
 }

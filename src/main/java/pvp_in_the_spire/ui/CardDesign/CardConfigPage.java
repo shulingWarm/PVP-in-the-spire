@@ -13,8 +13,13 @@ import pvp_in_the_spire.ui.AbstractPage;
 import pvp_in_the_spire.ui.BasePanel;
 import pvp_in_the_spire.ui.Button.WithUpdate.BaseUpdateButton;
 import pvp_in_the_spire.ui.CardDesign.CardModifyItem.AttackModify;
+import pvp_in_the_spire.ui.Events.CardModifyEvent;
+import pvp_in_the_spire.ui.Events.CardModifyItem;
 import pvp_in_the_spire.ui.Events.ClickCallback;
+import pvp_in_the_spire.ui.Events.InputBoxChange;
 import pvp_in_the_spire.ui.InputBoxWithLabel;
+
+import java.util.ArrayList;
 
 //对单独某一个卡牌的配置界面
 public class CardConfigPage extends AbstractPage implements ClickCallback {
@@ -23,6 +28,8 @@ public class CardConfigPage extends AbstractPage implements ClickCallback {
     public AdaptableCard mainCard;
     //用于显示配置选项的panel
     public BasePanel optionPanel;
+    //所有的数据修改项目
+    public ArrayList<CardModifyItem> modifyItemList;
     //用于保存的按钮，这会覆盖原来的卡牌
     public BaseUpdateButton saveButton;
     //用于另存的卡牌
@@ -42,29 +49,63 @@ public class CardConfigPage extends AbstractPage implements ClickCallback {
     //每个按钮在纵向上的间距
     public final float BUTTON_Y_GAP = Settings.HEIGHT*0.1f;
 
-    //初始化卡牌
-    public void initPage(AbstractCard mainCard)
+    //设置main card的位置
+    public void assignMainCardLocation()
+    {
+        this.mainCard.current_x = Settings.WIDTH*0.2f;
+        this.mainCard.current_y = Settings.HEIGHT*0.75f;
+        this.mainCard.target_x = Settings.WIDTH*0.2f;
+        this.mainCard.target_y = Settings.HEIGHT*0.75f;
+    }
+
+    //初始化卡牌的过程
+    public void registerCard(AbstractCard baseCard)
+    {
+        //设置main card
+        this.mainCard = new AdaptableCard(baseCard);
+        //设置main card的位置
+        this.assignMainCardLocation();
+        //禁止使用保存按钮
+        this.saveButton.setEnableFlag(false);
+        //给每个修改项注册卡牌
+        for(CardModifyItem eachItem : this.modifyItemList){
+            eachItem.registerCard(this.mainCard);
+        }
+    }
+
+    //注册修改卡牌的item
+    public void registerModifyItem(CardModifyEvent modifyEvent,
+       String itemName)
+    {
+        CardDesignInputBox tempBox = new CardDesignInputBox(
+                Settings.WIDTH*0.2f,Settings.HEIGHT*0.5f,
+                Settings.WIDTH*0.3f, Settings.HEIGHT*0.025f,
+                itemName,FontLibrary.getFontWithSize(32),
+                modifyEvent
+        );
+        tempBox.height*=3;
+        this.optionPanel.addNewPage(tempBox);
+        //在整体的内容里面也记录
+        this.modifyItemList.add(tempBox);
+    }
+
+    //初始化卡牌UI
+    public void initConfigUI()
     {
         //初始化panel
         this.optionPanel = new BasePanel(Settings.WIDTH*0.3f,
                 Settings.HEIGHT*0.2f,Settings.WIDTH*0.5f,
                 Settings.HEIGHT*0.75f);
-        this.mainCard = new AdaptableCard(mainCard);
-        //更改卡牌显示的位置
-        this.mainCard.current_x = Settings.WIDTH*0.2f;
-        this.mainCard.current_y = Settings.HEIGHT*0.75f;
-        this.mainCard.target_x = Settings.WIDTH*0.2f;
-        this.mainCard.target_y = Settings.HEIGHT*0.75f;
         //初始化用于保存的按钮
         this.saveButton = new BaseUpdateButton(
-            BUTTON_X,BUTTON_Y_BEGIN, BUTTON_WIDTH,BUTTON_HEIGHT,
-            "保存", FontLibrary.getBaseFont(), ImageMaster.PROFILE_SLOT,
-            this
+                BUTTON_X,BUTTON_Y_BEGIN, BUTTON_WIDTH,BUTTON_HEIGHT,
+                "保存", FontLibrary.getBaseFont(), ImageMaster.PROFILE_SLOT,
+                this
         );
         //用于另存为新卡牌的按钮
         this.saveOtherButton = new BaseUpdateButton(
-            BUTTON_X,BUTTON_Y_BEGIN - BUTTON_Y_GAP,BUTTON_WIDTH, BUTTON_HEIGHT,
-            "另存为新牌", FontLibrary.getBaseFont(), ImageMaster.PROFILE_SLOT, this
+                BUTTON_X,BUTTON_Y_BEGIN - BUTTON_Y_GAP,BUTTON_WIDTH, BUTTON_HEIGHT,
+                "另存为新牌", FontLibrary.getBaseFont(), ImageMaster.PROFILE_SLOT, this
         );
         //用于关闭页面的按钮
         this.cancelButton = new BaseUpdateButton(
@@ -79,43 +120,14 @@ public class CardConfigPage extends AbstractPage implements ClickCallback {
                 Settings.HEIGHT * 0.4f,
                 Color.YELLOW
         );
-        //初始化panel
-        initPanel();
+        registerModifyItem(new AttackModify(), "伤害");
     }
 
     public CardConfigPage()
     {
-
-    }
-
-    //初始化panel 其实就是初始化各种选项
-    public void initPanel()
-    {
-        //添加伤害类的修改框
-        CardDesignInputBox tempBox = new CardDesignInputBox(
-            Settings.WIDTH*0.2f,Settings.HEIGHT*0.5f,
-            Settings.WIDTH*0.3f, Settings.HEIGHT*0.025f,
-            "伤害",FontLibrary.getFontWithSize(32),
-            this.mainCard,new AttackModify()
-        );
-        tempBox.height*=3;
-        this.optionPanel.addNewPage(tempBox);
-        //随便在里面添加两个input box,这个仅仅是测试显示效果
-        for(int i=0;i<3;++i)
-        {
-            //临时的input box
-            InputBoxWithLabel tempInputBox = new InputBoxWithLabel(
-                    Settings.WIDTH * 0.2f,
-                    Settings.HEIGHT * 0.5f,
-                    Settings.WIDTH * 0.3f,
-                    Settings.HEIGHT * 0.025f,
-                    "测试输入框",
-                    FontLibrary.getFontWithSize(33),
-                    true
-            );
-            tempInputBox.height = tempInputBox.height*3f;
-            this.optionPanel.addNewPage(tempInputBox);
-        }
+        //初始化卡牌项目的列表
+        this.modifyItemList = new ArrayList<>();
+        initConfigUI();
     }
 
     @Override

@@ -15,6 +15,8 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -104,8 +106,18 @@ public class AdaptableCard extends AbstractCard {
     //整合所有的action,当调用卡牌另存的时候，需要把卡牌信息整合一下
     public void summarizeModification()
     {
+        //最终决定的card id
+        String newCardId = this.baseCard.cardID + "_mod";
+        //目前的id后缀
+        int suffixId = 0;
+        //目前确定的id后缀
+        while (Files.exists(Paths.get(getCardPath(newCardId)))) {
+            //判断卡牌是否存在
+            ++suffixId;
+            newCardId = this.baseCard.cardID + "_mod" + suffixId;
+        }
         //修改卡牌的id
-        this.cardID = this.baseCard.cardID + "_mod";
+        this.cardID = newCardId;
         //如果没有链接的卡包，就把它弄成默认卡包
         if(this.linkCardPackages.isEmpty())
         {
