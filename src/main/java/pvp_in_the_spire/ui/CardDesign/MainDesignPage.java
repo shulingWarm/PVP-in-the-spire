@@ -7,13 +7,14 @@ import com.megacrit.cardcrawl.core.Settings;
 import pvp_in_the_spire.card.AdaptableCard;
 import pvp_in_the_spire.ui.AbstractPage;
 import pvp_in_the_spire.ui.Events.CardDesignClickCallback;
+import pvp_in_the_spire.ui.Events.ClosePageEvent;
 import pvp_in_the_spire.ui.PlainBox;
 
 import java.util.Set;
 
 //用于设计卡牌的主界面
 public class MainDesignPage extends AbstractPage
-    implements CardDesignClickCallback {
+    implements CardDesignClickCallback, ClosePageEvent {
 
     public static MainDesignPage instance;
     //背景框
@@ -43,7 +44,7 @@ public class MainDesignPage extends AbstractPage
         //初始化卡牌库显示
         this.designCardLibrary = new DesignCardLibrary();
         //初始化卡牌配置的界面
-        this.cardConfigPage = new CardConfigPage();
+        this.cardConfigPage = new CardConfigPage(this);
         //初始化用于存储卡牌的folder
         AdaptableCard.initCardFolder();
     }
@@ -78,5 +79,10 @@ public class MainDesignPage extends AbstractPage
         this.subPage = this.cardConfigPage;
         //初始化卡牌
         this.cardConfigPage.registerCard(card);
+    }
+
+    @Override
+    public void closePageEvent(AbstractPage page) {
+        this.subPage = null;
     }
 }

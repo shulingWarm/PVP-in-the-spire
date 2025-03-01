@@ -13,10 +13,7 @@ import pvp_in_the_spire.ui.AbstractPage;
 import pvp_in_the_spire.ui.BasePanel;
 import pvp_in_the_spire.ui.Button.WithUpdate.BaseUpdateButton;
 import pvp_in_the_spire.ui.CardDesign.CardModifyItem.AttackModify;
-import pvp_in_the_spire.ui.Events.CardModifyEvent;
-import pvp_in_the_spire.ui.Events.CardModifyItem;
-import pvp_in_the_spire.ui.Events.ClickCallback;
-import pvp_in_the_spire.ui.Events.InputBoxChange;
+import pvp_in_the_spire.ui.Events.*;
 import pvp_in_the_spire.ui.InputBoxWithLabel;
 
 import java.util.ArrayList;
@@ -36,8 +33,13 @@ public class CardConfigPage extends AbstractPage implements ClickCallback {
     public BaseUpdateButton saveOtherButton;
     //用于关闭当前页面的按钮
     public BaseUpdateButton cancelButton;
+    //当前页面的关闭接口
+    public ClosePageEvent closePageEvent;
     //另存为相关的tip
     public WarningText warningText;
+    //另存为成功的按钮
+    public static final String SAVE_OTHER_TIP = "另存为成功";
+    public static final String SAVE_TIP = "保存成功";
     //三个用于操作的按钮所在的位置
     public final float BUTTON_X = Settings.WIDTH*0.14f;
     //三个按钮的宽度
@@ -114,7 +116,7 @@ public class CardConfigPage extends AbstractPage implements ClickCallback {
         );
         //初始化警告信息
         this.warningText = new WarningText(
-                "另存为成功",
+                SAVE_OTHER_TIP,
                 FontLibrary.getFontWithSize(33),
                 Settings.WIDTH * 0.5f,
                 Settings.HEIGHT * 0.4f,
@@ -123,8 +125,9 @@ public class CardConfigPage extends AbstractPage implements ClickCallback {
         registerModifyItem(new AttackModify(), "伤害");
     }
 
-    public CardConfigPage()
+    public CardConfigPage(ClosePageEvent closePageEvent)
     {
+        this.closePageEvent = closePageEvent;
         //初始化卡牌项目的列表
         this.modifyItemList = new ArrayList<>();
         initConfigUI();
@@ -156,7 +159,20 @@ public class CardConfigPage extends AbstractPage implements ClickCallback {
             //另存为新牌的按钮情况
             AdaptableCardManager.getInstance().addNewCard(this.mainCard);
             //显示另存成功的操作
+            this.warningText.setShownText(SAVE_OTHER_TIP);
             this.warningText.idFrame = 0;
+            //改成允许保存卡牌
+            this.saveButton.setEnableFlag(true);
+        }
+        else if(button == this.saveButton)
+        {
+            this.warningText.setShownText(SAVE_TIP);
+            this.warningText.idFrame = 0;
+            AdaptableCardManager.getInstance().saveAdaptableCard(this.mainCard);
+        }
+        else if(button == this.cancelButton)
+        {
+            this.closePageEvent.closePageEvent(this);
         }
     }
 }
