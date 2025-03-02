@@ -38,11 +38,12 @@ public class PvpColorTabBar {
     //随机颜色生成器
     public ColorRng colorRng = new ColorRng();
     public Hitbox viewUpgradeHb;
-    public PvpColorTabBar.CurrentTab curTab;
+    //当前的tab id
+    public int currIdTab = 0;
     private PvpTabBarListener delegate;
 
     public PvpColorTabBar(PvpTabBarListener delegate) {
-        this.curTab = PvpColorTabBar.CurrentTab.RED;
+        this.currIdTab = 0;
         float w = 200.0F * Settings.scale;
         float h = 50.0F * Settings.scale;
         this.redHb = new Hitbox(w, h);
@@ -85,6 +86,22 @@ public class PvpColorTabBar {
             tabName, this.colorRng.getRandColor(), ImageMaster.COLOR_TAB_COLORLESS));
     }
 
+    //根据id获得枚举
+    PvpColorTabBar.CurrentTab getTabEnumFromId(int idTab)
+    {
+        if(idTab == 0)
+            return CurrentTab.RED;
+        else if(idTab == 1)
+            return CurrentTab.GREEN;
+        else if(idTab == 2)
+            return CurrentTab.BLUE;
+        else if(idTab == 3)
+            return  CurrentTab.PURPLE;
+        else if(idTab == 4)
+            return CurrentTab.COLORLESS;
+        return CurrentTab.CURSE;
+    }
+
     public void update(float y) {
         float x = 470.0F * Settings.xScale;
         this.redHb.move(x, y + 50.0F * Settings.scale);
@@ -108,23 +125,20 @@ public class PvpColorTabBar {
         }
 
         if (InputHelper.justClickedLeft) {
-            PvpColorTabBar.CurrentTab oldTab = this.curTab;
-            if (this.redHb.hovered) {
-                this.curTab = PvpColorTabBar.CurrentTab.RED;
-            } else if (this.greenHb.hovered) {
-                this.curTab = PvpColorTabBar.CurrentTab.GREEN;
-            } else if (this.blueHb.hovered) {
-                this.curTab = PvpColorTabBar.CurrentTab.BLUE;
-            } else if (this.purpleHb.hovered) {
-                this.curTab = PvpColorTabBar.CurrentTab.PURPLE;
-            } else if (this.colorlessHb.hovered) {
-                this.curTab = PvpColorTabBar.CurrentTab.COLORLESS;
-            } else if (this.curseHb.hovered) {
-                this.curTab = PvpColorTabBar.CurrentTab.CURSE;
+            int oldId = this.currIdTab;
+            //遍历每个tab，检查是否有效
+            for(int idTab=0;idTab<6;++idTab)
+            {
+                //判断当前的hit box是否被点击
+                if(this.tabBarItems[idTab].refHitBox.hovered)
+                {
+                    this.currIdTab = idTab;
+                    break;
+                }
             }
 
-            if (oldTab != this.curTab) {
-                this.delegate.changeColorTabBar(this.curTab);
+            if (oldId != this.currIdTab) {
+                this.delegate.changeColorTabBar(this.getTabEnumFromId(this.currIdTab));
             }
         }
 
@@ -145,18 +159,18 @@ public class PvpColorTabBar {
     }
 
     public Color getBarColor() {
-        switch (this.curTab) {
-            case RED:
+        switch (this.currIdTab) {
+            case 0:
                 return new Color(0.5F, 0.1F, 0.1F, 1.0F);
-            case GREEN:
+            case 1:
                 return new Color(0.25F, 0.55F, 0.0F, 1.0F);
-            case BLUE:
+            case 2:
                 return new Color(0.01F, 0.34F, 0.52F, 1.0F);
-            case PURPLE:
+            case 3:
                 return new Color(0.37F, 0.22F, 0.49F, 1.0F);
-            case COLORLESS:
+            case 4:
                 return new Color(0.4F, 0.4F, 0.4F, 1.0F);
-            case CURSE:
+            case 5:
                 return new Color(0.18F, 0.18F, 0.16F, 1.0F);
             default:
                 return Color.WHITE;
@@ -165,52 +179,21 @@ public class PvpColorTabBar {
 
     public void render(SpriteBatch sb, float y) {
         sb.setColor(Color.GRAY);
-        if (this.curTab != PvpColorTabBar.CurrentTab.CURSE) {
-            this.renderTab(sb, ImageMaster.COLOR_TAB_CURSE, this.curseHb.cX, y, CardLibraryScreen.TEXT[5], true);
-        }
-
-        if (this.curTab != PvpColorTabBar.CurrentTab.COLORLESS) {
-            this.renderTab(sb, ImageMaster.COLOR_TAB_COLORLESS, this.colorlessHb.cX, y, CardLibraryScreen.TEXT[4], true);
-        }
-
-        if (this.curTab != PvpColorTabBar.CurrentTab.BLUE) {
-            this.renderTab(sb, ImageMaster.COLOR_TAB_BLUE, this.blueHb.cX, y, CardLibraryScreen.TEXT[3], true);
-        }
-
-        if (this.curTab != PvpColorTabBar.CurrentTab.PURPLE) {
-            this.renderTab(sb, ImageMaster.COLOR_TAB_PURPLE, this.purpleHb.cX, y, CardLibraryScreen.TEXT[8], true);
-        }
-
-        if (this.curTab != PvpColorTabBar.CurrentTab.GREEN) {
-            this.renderTab(sb, ImageMaster.COLOR_TAB_GREEN, this.greenHb.cX, y, CardLibraryScreen.TEXT[2], true);
-        }
-
-        if (this.curTab != PvpColorTabBar.CurrentTab.RED) {
-            this.renderTab(sb, ImageMaster.COLOR_TAB_RED, this.redHb.cX, y, CardLibraryScreen.TEXT[1], true);
+        //渲染没有被选中的tab
+        for(int idTab=0;idTab<6;++idTab)
+        {
+            if(idTab != currIdTab)
+            {
+                //调用tab内容的渲染过程
+                this.tabBarItems[idTab].render(sb, y, true);
+            }
         }
 
         sb.setColor(this.getBarColor());
         sb.draw(ImageMaster.COLOR_TAB_BAR, (float)Settings.WIDTH / 2.0F - 667.0F, y - 51.0F, 667.0F, 51.0F, 1334.0F, 102.0F, Settings.xScale, Settings.scale, 0.0F, 0, 0, 1334, 102, false, false);
         sb.setColor(Color.WHITE);
-        switch (this.curTab) {
-            case RED:
-                this.renderTab(sb, ImageMaster.COLOR_TAB_RED, this.redHb.cX, y, CardLibraryScreen.TEXT[1], false);
-                break;
-            case GREEN:
-                this.renderTab(sb, ImageMaster.COLOR_TAB_GREEN, this.greenHb.cX, y, CardLibraryScreen.TEXT[2], false);
-                break;
-            case BLUE:
-                this.renderTab(sb, ImageMaster.COLOR_TAB_BLUE, this.blueHb.cX, y, CardLibraryScreen.TEXT[3], false);
-                break;
-            case PURPLE:
-                this.renderTab(sb, ImageMaster.COLOR_TAB_PURPLE, this.purpleHb.cX, y, CardLibraryScreen.TEXT[8], false);
-                break;
-            case COLORLESS:
-                this.renderTab(sb, ImageMaster.COLOR_TAB_COLORLESS, this.colorlessHb.cX, y, CardLibraryScreen.TEXT[4], false);
-                break;
-            case CURSE:
-                this.renderTab(sb, ImageMaster.COLOR_TAB_CURSE, this.curseHb.cX, y, CardLibraryScreen.TEXT[5], false);
-        }
+        //调用当前选中的tab的渲染过程
+        this.tabBarItems[this.currIdTab].render(sb, y, false);
 
         this.renderViewUpgrade(sb, y);
         this.redHb.render(sb);
