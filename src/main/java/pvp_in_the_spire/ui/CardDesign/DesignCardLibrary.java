@@ -27,6 +27,7 @@ import pvp_in_the_spire.ui.AbstractPage;
 import pvp_in_the_spire.ui.CardFilter.CardFilter;
 import pvp_in_the_spire.ui.Events.CardDesignClickCallback;
 import pvp_in_the_spire.ui.Events.ClosePageEvent;
+import pvp_in_the_spire.ui.Events.PvpTabBarListener;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
@@ -38,7 +39,7 @@ import java.util.Iterator;
 
 //用于实现卡牌设计功能的卡牌库
 public class DesignCardLibrary extends AbstractPage
-        implements TabBarListener, ScrollBarListener {
+        implements ScrollBarListener, PvpTabBarListener {
 
     private static final Logger logger = LogManager.getLogger(DesignCardLibrary.class.getName());
     private static float drawStartX;
@@ -53,7 +54,7 @@ public class DesignCardLibrary extends AbstractPage
     private float scrollUpperBound;
     private AbstractCard hoveredCard;
     private AbstractCard clickStartedCard;
-    private ColorTabBar colorBar;
+    private PvpColorTabBar colorBar;
     public MenuCancelButton button;
     private CardGroup redCards;
     private CardGroup greenCards;
@@ -99,7 +100,7 @@ public class DesignCardLibrary extends AbstractPage
         drawStartX += AbstractCard.IMG_WIDTH * 0.75F / 2.0F;
         padX = AbstractCard.IMG_WIDTH * 0.75F + Settings.CARD_VIEW_PAD_X;
         padY = AbstractCard.IMG_HEIGHT * 0.75F + Settings.CARD_VIEW_PAD_Y;
-        this.colorBar = new ColorTabBar(this);
+        this.colorBar = new PvpColorTabBar(this);
         this.sortHeader = new CardLibSortHeader((CardGroup)null);
         this.scrollBar = new ScrollBar(this);
         this.initialize();
@@ -332,7 +333,28 @@ public class DesignCardLibrary extends AbstractPage
         group.renderTip(sb);
     }
 
-    public void didChangeTab(ColorTabBar tabBar, ColorTabBar.CurrentTab newSelection) {
+    public void scrolledUsingBar(float newPercent) {
+        this.currentDiffY = MathHelper.valueFromPercentBetween(this.scrollLowerBound, this.scrollUpperBound, newPercent);
+        this.updateBarPosition();
+    }
+
+    private void updateBarPosition() {
+        float percent = MathHelper.percentFromValueBetween(this.scrollLowerBound, this.scrollUpperBound, this.currentDiffY);
+        this.scrollBar.parentScrolledToPercent(percent);
+    }
+
+    static {
+        drawStartY = (float)Settings.HEIGHT * 0.66F;
+        CARDS_PER_LINE = (int)((float)Settings.WIDTH / (AbstractCard.IMG_WIDTH * 0.75F + Settings.CARD_VIEW_PAD_X * 3.0F));
+    }
+
+    @Override
+    public void changeShowCardPackage(String packageName) {
+
+    }
+
+    @Override
+    public void changeColorTabBar(PvpColorTabBar.CurrentTab newSelection) {
         CardGroup oldSelection = this.visibleCards;
         switch (newSelection) {
             case RED:
@@ -365,22 +387,6 @@ public class DesignCardLibrary extends AbstractPage
             c.drawScale = MathUtils.random(0.6F, 0.65F);
             c.targetDrawScale = 0.75F;
         }
-
-    }
-
-    public void scrolledUsingBar(float newPercent) {
-        this.currentDiffY = MathHelper.valueFromPercentBetween(this.scrollLowerBound, this.scrollUpperBound, newPercent);
-        this.updateBarPosition();
-    }
-
-    private void updateBarPosition() {
-        float percent = MathHelper.percentFromValueBetween(this.scrollLowerBound, this.scrollUpperBound, this.currentDiffY);
-        this.scrollBar.parentScrolledToPercent(percent);
-    }
-
-    static {
-        drawStartY = (float)Settings.HEIGHT * 0.66F;
-        CARDS_PER_LINE = (int)((float)Settings.WIDTH / (AbstractCard.IMG_WIDTH * 0.75F + Settings.CARD_VIEW_PAD_X * 3.0F));
     }
 
     private static enum CardLibSelectionType {
