@@ -13,18 +13,16 @@ import com.megacrit.cardcrawl.helpers.input.InputHelper;
 import com.megacrit.cardcrawl.screens.SingleCardViewPopup;
 import com.megacrit.cardcrawl.screens.compendium.CardLibraryScreen;
 import com.megacrit.cardcrawl.screens.mainMenu.TabBarListener;
+import pvp_in_the_spire.helpers.FontLibrary;
+import pvp_in_the_spire.ui.Button.WithUpdate.BaseUpdateButton;
+import pvp_in_the_spire.ui.Events.ClickCallback;
 import pvp_in_the_spire.ui.Events.PvpTabBarListener;
 
 import java.util.ArrayList;
 
-public class PvpColorTabBar {
+public class PvpColorTabBar implements ClickCallback {
 
     private static final float TAB_SPACING;
-    private static final int BAR_W = 1334;
-    private static final int BAR_H = 102;
-    private static final int TAB_W = 274;
-    private static final int TAB_H = 68;
-    private static final int TICKBOX_W = 48;
     public Hitbox redHb;
     public Hitbox greenHb;
     public Hitbox blueHb;
@@ -38,9 +36,19 @@ public class PvpColorTabBar {
     //随机颜色生成器
     public ColorRng colorRng = new ColorRng();
     public Hitbox viewUpgradeHb;
+    //左右翻页的按钮
+    public BaseUpdateButton leftButton;
+    public BaseUpdateButton rightButton;
     //当前的tab id
     public int currIdTab = 0;
     private PvpTabBarListener delegate;
+    //左右按钮的起始位置
+    public static final float LEFT_BUTTON_X = 0.13f * Settings.WIDTH;
+    public static final float RIGHT_BUTTON_X = 0.82f * Settings.WIDTH;
+    //翻页按钮的宽度
+    public static final float BUTTON_WIDTH = 0.05f * Settings.WIDTH;
+    //按钮显示的Y位置
+    public static final float BUTTON_Y = 0.83f * Settings.HEIGHT;
 
     public PvpColorTabBar(PvpTabBarListener delegate) {
         this.currIdTab = 0;
@@ -76,6 +84,18 @@ public class PvpColorTabBar {
         }
         this.delegate = delegate;
         this.viewUpgradeHb = new Hitbox(360.0F * Settings.scale, 48.0F * Settings.scale);
+        //初始化左右按钮
+        this.leftButton = new BaseUpdateButton(
+                LEFT_BUTTON_X,BUTTON_Y,
+                BUTTON_WIDTH,BUTTON_WIDTH,
+                "", FontLibrary.getBaseFont(), ImageMaster.CF_LEFT_ARROW,this
+        );
+        this.rightButton = new BaseUpdateButton(
+                RIGHT_BUTTON_X,
+                leftButton.y,
+                leftButton.width, leftButton.height, leftButton.text,
+                FontLibrary.getBaseFont(),ImageMaster.CF_RIGHT_ARROW,this
+        );
     }
 
     //添加新的选项卡
@@ -155,6 +175,8 @@ public class PvpColorTabBar {
             CardCrawlGame.sound.playA("UI_CLICK_1", -0.2F);
             SingleCardViewPopup.isViewingUpgrade = !SingleCardViewPopup.isViewingUpgrade;
         }
+        leftButton.update();
+        rightButton.update();
 
     }
 
@@ -203,6 +225,9 @@ public class PvpColorTabBar {
         this.colorlessHb.render(sb);
         this.curseHb.render(sb);
         this.viewUpgradeHb.render(sb);
+        //左右翻页按钮的渲染
+        this.leftButton.render(sb);
+        this.rightButton.render(sb);
     }
 
     private void renderTab(SpriteBatch sb, Texture img, float x, float y, String label, boolean selected) {
@@ -229,6 +254,11 @@ public class PvpColorTabBar {
 
     static {
         TAB_SPACING = 198.0F * Settings.xScale;
+    }
+
+    @Override
+    public void clickEvent(BaseUpdateButton button) {
+
     }
 
     public static enum CurrentTab {
