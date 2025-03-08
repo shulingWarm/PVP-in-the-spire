@@ -104,6 +104,8 @@ public class DesignCardLibrary extends AbstractPage
         this.sortHeader = new CardLibSortHeader((CardGroup)null);
         this.scrollBar = new ScrollBar(this);
         this.initialize();
+        //添加默认卡包的color bar ，只是测试
+        this.colorBar.registerTab("默认卡包");
     }
 
     public void initialize() {

@@ -25,6 +25,8 @@ public class AdaptableCardManager {
     public HashMap<String, AdaptableCard> userCardMap;
     //卡包的map
     public HashMap<String, CardPackage> packageMap;
+    //用来记录所有卡包的路径
+    public final String PACKAGE_INFO_PATH = "PackageInfo.bin";
 
     //获得manager的实体
     public static AdaptableCardManager getInstance()
@@ -82,6 +84,30 @@ public class AdaptableCardManager {
         }
     }
 
+    //注册新的卡包
+    public void registerNewPackage(CardPackage cardPackage)
+    {
+        this.packageMap.put(cardPackage.packageName, cardPackage);
+        //开辟文件流存储所有卡包
+        try
+        {
+            DataOutputStream outputStream = new DataOutputStream(
+                Files.newOutputStream(Paths.get(PACKAGE_INFO_PATH))
+            );
+            //写入package的个数
+            outputStream.writeInt(this.packageMap.size());
+            //遍历写入每个package的名字
+            for(String eachPackage : this.packageMap.keySet())
+            {
+                outputStream.writeUTF(eachPackage);
+            }
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
     //读取默认卡包
     public boolean loadCardPackage(String packagePath)
     {
@@ -106,7 +132,6 @@ public class AdaptableCardManager {
             {
                 this.loadAdaptCard(eachCard);
             }
-            //记录到卡牌库中
             this.packageMap.put(tempPackage.packageName, tempPackage);
             return true;
         }
@@ -117,21 +142,44 @@ public class AdaptableCardManager {
         return false;
     }
 
+    //加载所有的卡包
+    public void loadAllPackage()
+    {
+        try
+        {
+            DataInputStream stream = new DataInputStream(
+                Files.newInputStream(Paths.get(PACKAGE_INFO_PATH))
+            );
+            //读取卡包的个数
+            int packageNum = stream.readInt();
+            for(int i=0;i<packageNum;++i)
+            {
+                //读取卡包的名字
+                String tempPackage = stream.readUTF();
+                //读取卡包
+                loadCardPackage(tempPackage);
+            }
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
     public AdaptableCardManager()
     {
         this.userCardMap = new HashMap<>();
         this.packageMap = new HashMap<>();
-        //默认卡包的路径
-        String defaultCardPath = CardPackage.getDefaultPackagePath();
-        //尝试读取默认卡包
-        if(!this.loadCardPackage(defaultCardPath))
+        //读取所有卡包
+        this.loadAllPackage();
+        //如果没有卡包就构造一个默认卡包
+        if(this.packageMap.isEmpty())
         {
             //读取失败的情况下，直接自己构造卡包
             CardPackage tempPackage = new CardPackage(CardPackage.DEFAULT_PACKAGE_NAME);
             //把默认卡牌添加到卡牌库中
-            this.packageMap.put(tempPackage.packageName, tempPackage);
+            this.registerNewPackage(tempPackage);
         }
-
     }
 
     //给卡牌注册卡包

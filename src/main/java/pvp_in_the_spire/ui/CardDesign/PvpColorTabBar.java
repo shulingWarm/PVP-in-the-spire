@@ -39,8 +39,14 @@ public class PvpColorTabBar implements ClickCallback {
     //左右翻页的按钮
     public BaseUpdateButton leftButton;
     public BaseUpdateButton rightButton;
+    //每一页里面tab的个数
+    public static final int PAGE_TAB_NUM = 6;
     //当前的tab id
     public int currIdTab = 0;
+    //选项卡的总页数
+    public int tabPageNum = 1;
+    //当前的页数
+    public int currIdPage = 0;
     private PvpTabBarListener delegate;
     //左右按钮的起始位置
     public static final float LEFT_BUTTON_X = 0.13f * Settings.WIDTH;
@@ -70,7 +76,7 @@ public class PvpColorTabBar implements ClickCallback {
         tabList.add(new TabNameItem(CardLibraryScreen.TEXT[4], Color.WHITE, ImageMaster.COLOR_TAB_COLORLESS));
         tabList.add(new TabNameItem(CardLibraryScreen.TEXT[5], Color.WHITE, ImageMaster.COLOR_TAB_CURSE));
         //初始化6个位置的tab bar
-        this.tabBarItems = new TabBarItem[6];
+        this.tabBarItems = new TabBarItem[PAGE_TAB_NUM];
         tabBarItems[0] = new TabBarItem(this.redHb);
         tabBarItems[1] = new TabBarItem(this.greenHb);
         tabBarItems[2] = new TabBarItem(this.blueHb);
@@ -78,7 +84,7 @@ public class PvpColorTabBar implements ClickCallback {
         tabBarItems[4] = new TabBarItem(this.colorlessHb);
         tabBarItems[5] = new TabBarItem(this.curseHb);
         //注册当前第一页情况下的每个位置的tab信息
-        for(int idTab=0;idTab<6;++idTab)
+        for(int idTab=0;idTab<PAGE_TAB_NUM;++idTab)
         {
             tabBarItems[idTab].registerTabItem(tabList.get(idTab));
         }
@@ -96,6 +102,15 @@ public class PvpColorTabBar implements ClickCallback {
                 leftButton.width, leftButton.height, leftButton.text,
                 FontLibrary.getBaseFont(),ImageMaster.CF_RIGHT_ARROW,this
         );
+        //翻页按钮默认不可点击，因为默认只有一页
+        this.updatePageChangeButton();
+    }
+
+    //根据page id更新按钮的可点击状态
+    public void updatePageChangeButton()
+    {
+        this.leftButton.setEnableFlag(this.currIdPage > 0);
+        this.rightButton.setEnableFlag(this.currIdTab + 1 < this.tabPageNum);
     }
 
     //添加新的选项卡
@@ -104,6 +119,10 @@ public class PvpColorTabBar implements ClickCallback {
         //添加注册卡包的内容
         this.tabList.add(new TabNameItem(
             tabName, this.colorRng.getRandColor(), ImageMaster.COLOR_TAB_COLORLESS));
+        //更改总的page个数
+        this.tabPageNum = (this.tabList.size() + PAGE_TAB_NUM - 1) / PAGE_TAB_NUM;
+        //更新按钮的可点击状态
+        this.updatePageChangeButton();
     }
 
     //根据id获得枚举
@@ -230,16 +249,6 @@ public class PvpColorTabBar implements ClickCallback {
         this.rightButton.render(sb);
     }
 
-    private void renderTab(SpriteBatch sb, Texture img, float x, float y, String label, boolean selected) {
-        sb.draw(img, x - 137.0F, y - 34.0F + 53.0F * Settings.scale, 137.0F, 34.0F, 274.0F, 68.0F, Settings.xScale, Settings.scale, 0.0F, 0, 0, 274, 68, false, false);
-        Color c = Settings.GOLD_COLOR;
-        if (selected) {
-            c = Color.GRAY;
-        }
-
-        FontHelper.renderFontCentered(sb, FontHelper.buttonLabelFont, label, x, y + 50.0F * Settings.scale, c, 0.9F);
-    }
-
     private void renderViewUpgrade(SpriteBatch sb, float y) {
         Color c = Settings.CREAM_COLOR;
         if (this.viewUpgradeHb.hovered) {
@@ -252,13 +261,51 @@ public class PvpColorTabBar implements ClickCallback {
         sb.draw(img, 1532.0F * Settings.xScale - FontHelper.getSmartWidth(FontHelper.topPanelInfoFont, CardLibraryScreen.TEXT[7], 9999.0F, 0.0F) - 24.0F, y - 24.0F, 24.0F, 24.0F, 48.0F, 48.0F, Settings.scale, Settings.scale, 0.0F, 0, 0, 48, 48, false, false);
     }
 
+    //加载某一个page的tab信息
+    public void loadIdPage(int idPage)
+    {
+        if(idPage < 0 || idPage >= this.tabPageNum)
+            return;
+        this.currIdPage = idPage;
+        //tab id也弄成0
+        this.currIdTab = 0;
+        this.delegate.changeColorTabBar(this.getTabEnumFromId(this.currIdTab));
+        //当前页的起始id
+        int beginId = idPage*PAGE_TAB_NUM;
+        //结束位置的id
+        int endId = (idPage+1)*PAGE_TAB_NUM;
+        if(endId > this.tabList.size())
+            endId = this.tabList.size();
+        //遍历每个page内容
+        for(int id=beginId;id<endId;++id)
+        {
+            this.tabBarItems[id-beginId].registerTabItem(this.tabList.get(id));
+        }
+        //剩下的内容记记录成空指针
+        int nullId = (idPage+1)*PAGE_TAB_NUM;
+        for(int id=endId;id<nullId;++id)
+        {
+            this.tabBarItems[id-beginId].registerTabItem(null);
+        }
+        //更新按钮的可点击状态
+        this.updatePageChangeButton();
+    }
+
     static {
         TAB_SPACING = 198.0F * Settings.xScale;
     }
 
     @Override
     public void clickEvent(BaseUpdateButton button) {
-
+        //判断是不是左边翻页
+        if(button == this.leftButton)
+        {
+            this.loadIdPage(this.currIdPage - 1);
+        }
+        else if(button == this.rightButton)
+        {
+            this.loadIdPage(this.currIdPage + 1);
+        }
     }
 
     public static enum CurrentTab {
