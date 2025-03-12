@@ -58,6 +58,8 @@ public class AdaptableCardManager {
                 AdaptableCard adaptableCard = new AdaptableCard(baseCard);
                 //令新的卡牌读取数据流
                 adaptableCard.loadCard(stream);
+                //把它添加到card map里面
+                userCardMap.put(cardName, adaptableCard);
             }
             catch (IOException e)
             {
@@ -112,7 +114,7 @@ public class AdaptableCardManager {
     public boolean loadCardPackage(String packagePath)
     {
         //把字符串转换成path
-        Path filePath = Paths.get(packagePath);
+        Path filePath = Paths.get(CardPackage.makePackagePath(packagePath));
         if(!Files.exists(filePath))
         {
             return false;
@@ -193,6 +195,26 @@ public class AdaptableCardManager {
             CardPackage tempPackage = this.packageMap.get(packageName);
             tempPackage.addLinkCard(card.cardID);
         }
+    }
+
+    //获得指定的卡包
+    public CardPackage getCardPackage(String packageName)
+    {
+        if(this.packageMap.containsKey(packageName))
+        {
+            return this.packageMap.get(packageName);
+        }
+        return null;
+    }
+
+    //获得已经保存过的玩家自定义卡牌
+    public AdaptableCard getCard(String cardId)
+    {
+        if(this.userCardMap.containsKey(cardId))
+        {
+            return this.userCardMap.get(cardId);
+        }
+        return null;
     }
 
     //添加新的卡牌，这会发生在另存卡牌的时候

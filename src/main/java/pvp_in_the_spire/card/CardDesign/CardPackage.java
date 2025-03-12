@@ -50,6 +50,7 @@ public class CardPackage {
             this.packageName = stream.readUTF();
             //读取链接卡牌的个数
             int tempCardNum = stream.readInt();
+            System.out.printf("Package card num: %d\n", tempCardNum);
             //读取卡包里面涉及到的所有卡牌
             for(int idCard=0;idCard<tempCardNum;++idCard)
             {
@@ -108,6 +109,11 @@ public class CardPackage {
     public String getPackagePath()
     {
         return this.packageName + PACKAGE_SUFFIX;
+    }
+
+    public static String makePackagePath(String packageName)
+    {
+        return packageName + PACKAGE_SUFFIX;
     }
 
     //默认默认卡包的文件名

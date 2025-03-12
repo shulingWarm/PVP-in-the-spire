@@ -20,6 +20,9 @@ import com.megacrit.cardcrawl.screens.mainMenu.*;
 import com.megacrit.cardcrawl.unlock.UnlockTracker;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import pvp_in_the_spire.card.AdaptableCard;
+import pvp_in_the_spire.card.CardDesign.AdaptableCardManager;
+import pvp_in_the_spire.card.CardDesign.CardPackage;
 import pvp_in_the_spire.events.BanCardStageChangeEvent;
 import pvp_in_the_spire.patches.CardShowPatch.CardShowChange;
 import pvp_in_the_spire.pvp_api.Communication;
@@ -62,6 +65,8 @@ public class DesignCardLibrary extends AbstractPage
     private CardGroup purpleCards;
     private CardGroup colorlessCards;
     private CardGroup curseCards;
+    //每个卡包对应的card group
+    public HashMap<String, CardGroup> packageCardGroup;
     private CardLibSortHeader sortHeader;
     private CardGroup visibleCards;
     private ScrollBar scrollBar;
@@ -103,9 +108,24 @@ public class DesignCardLibrary extends AbstractPage
         this.colorBar = new PvpColorTabBar(this);
         this.sortHeader = new CardLibSortHeader((CardGroup)null);
         this.scrollBar = new ScrollBar(this);
+        //构造每个卡包对应的card group
+        this.packageCardGroup = new HashMap<>();
         this.initialize();
-        //添加默认卡包的color bar ，只是测试
-        this.colorBar.registerTab("默认卡包");
+        //加载所有的color bar
+        this.loadAllColorBar();
+    }
+
+    //加载所有的color bar
+    //这里主要指的是玩家自定义的卡包
+    public void loadAllColorBar()
+    {
+        AdaptableCardManager cardManager = AdaptableCardManager.getInstance();
+        for(CardPackage eachPackage : cardManager.packageMap.values())
+        {
+            //只有当卡包里面有卡牌的时候才加载
+            if(!eachPackage.linkedCards.isEmpty())
+                this.colorBar.registerTab(eachPackage.packageName);
+        }
     }
 
     public void initialize() {
@@ -350,9 +370,62 @@ public class DesignCardLibrary extends AbstractPage
         CARDS_PER_LINE = (int)((float)Settings.WIDTH / (AbstractCard.IMG_WIDTH * 0.75F + Settings.CARD_VIEW_PAD_X * 3.0F));
     }
 
+    //加载卡包对应的card group
+    public void loadPackageCardGroup(String packageName)
+    {
+        AdaptableCardManager cardManager = AdaptableCardManager.getInstance();
+        //判断是否存在这个卡包
+        CardPackage tempPackage = cardManager.getCardPackage(packageName);
+        //获取对应的卡包
+        if(tempPackage != null)
+        {
+            //构造新的card group
+            CardGroup tempGroup = new CardGroup(CardGroup.CardGroupType.UNSPECIFIED);
+            //把卡包里面的卡牌内容添加进card library
+            for(String eachCard : tempPackage.linkedCards)
+            {
+                //从manager里面获取目标卡牌
+                AdaptableCard tempCard = cardManager.getCard(eachCard);
+                if(tempCard != null)
+                {
+                    tempGroup.addToTop(tempCard.adaptableCopy());
+                }
+                else
+                {
+                    System.out.printf("Cannot find card %s\n", eachCard);
+                }
+            }
+            //把临时的group添加到卡包group内容中
+            this.packageCardGroup.put(packageName, tempGroup);
+        }
+        else {
+            System.out.println("Load package group not exist");
+        }
+    }
+
+    //显示指定卡包内容的操作
     @Override
     public void changeShowCardPackage(String packageName) {
+        //判断是否已经存在这个卡包对应的card group
+        if(!this.packageCardGroup.containsKey(packageName))
+        {
+            //加载卡包
+            this.loadPackageCardGroup(packageName);
+        }
+        CardGroup oldSelection = this.visibleCards;
+        //修改当前的visible card
+        this.visibleCards = this.packageCardGroup.get(packageName);
+        if (oldSelection != this.visibleCards) {
+            this.sortHeader.setGroup(this.visibleCards);
+            this.calculateScrollBounds();
+        }
 
+        this.sortHeader.justSorted = true;
+
+        for(AbstractCard c : this.visibleCards.group) {
+            c.drawScale = MathUtils.random(0.6F, 0.65F);
+            c.targetDrawScale = 0.75F;
+        }
     }
 
     @Override

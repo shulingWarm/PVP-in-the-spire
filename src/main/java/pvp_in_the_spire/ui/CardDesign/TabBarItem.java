@@ -20,6 +20,14 @@ public class TabBarItem {
     //注册tab name item
     public void registerTabItem(TabNameItem tabNameItem)
     {
+        if(tabNameItem == null)
+        {
+            System.out.println("Register null tab item");
+        }
+        else
+        {
+            System.out.printf("Register tab name: %s\n", tabNameItem.tabName);
+        }
         this.tabContent = tabNameItem;
     }
 
@@ -31,6 +39,14 @@ public class TabBarItem {
         {
             this.tabContent.render(sb,this.refHitBox.cX, y, selected);
         }
+    }
+
+    //获得tab里面的package名称
+    public String getTabName()
+    {
+        if(this.tabContent != null)
+            return this.tabContent.tabName;
+        return null;
     }
 
 }

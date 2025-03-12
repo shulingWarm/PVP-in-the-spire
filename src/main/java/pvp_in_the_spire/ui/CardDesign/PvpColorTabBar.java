@@ -141,6 +141,20 @@ public class PvpColorTabBar implements ClickCallback {
         return CurrentTab.CURSE;
     }
 
+    //执行tab id的切换
+    public void recallTabIdChange()
+    {
+        //如果是第零页的话，就是正常的recall逻辑
+        if(this.currIdPage == 0)
+        {
+            this.delegate.changeColorTabBar(this.getTabEnumFromId(this.currIdTab));
+        }
+        else
+        {
+            this.delegate.changeShowCardPackage(this.tabBarItems[this.currIdTab].getTabName());
+        }
+    }
+
     public void update(float y) {
         float x = 470.0F * Settings.xScale;
         this.redHb.move(x, y + 50.0F * Settings.scale);
@@ -177,7 +191,7 @@ public class PvpColorTabBar implements ClickCallback {
             }
 
             if (oldId != this.currIdTab) {
-                this.delegate.changeColorTabBar(this.getTabEnumFromId(this.currIdTab));
+                this.recallTabIdChange();
             }
         }
 
@@ -269,7 +283,6 @@ public class PvpColorTabBar implements ClickCallback {
         this.currIdPage = idPage;
         //tab id也弄成0
         this.currIdTab = 0;
-        this.delegate.changeColorTabBar(this.getTabEnumFromId(this.currIdTab));
         //当前页的起始id
         int beginId = idPage*PAGE_TAB_NUM;
         //结束位置的id
@@ -289,6 +302,7 @@ public class PvpColorTabBar implements ClickCallback {
         }
         //更新按钮的可点击状态
         this.updatePageChangeButton();
+        recallTabIdChange();
     }
 
     static {
