@@ -67,11 +67,6 @@ public class DamageCardAction extends AbstractCardAction{
     }
 
     @Override
-    public AbstractCardAction copyAction() {
-        return new DamageCardAction(this.amount);
-    }
-
-    @Override
     public AbstractCardAction makeCopy() {
         return new DamageCardAction(this.amount);
     }

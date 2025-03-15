@@ -137,12 +137,13 @@ public class AdaptableCard extends AbstractCard {
             System.out.println(cardID);
             //读取卡牌的基础伤害值
             this.baseDamage = stream.readInt();
-            System.out.println(this.baseDamage);
+            this.damage = this.baseDamage;
+            System.out.printf("Base damage: %d\n", this.baseDamage);
             //读取基础格挡值
             this.baseBlock = stream.readInt();
-            System.out.println(this.baseBlock);
+            this.block = this.baseBlock;
             this.baseMagicNumber = stream.readInt();
-            System.out.println(this.baseMagicNumber);
+            this.magicNumber = this.baseMagicNumber;
             //读取action的个数
             int actionNum = stream.readInt();
             System.out.printf("action num: %d\n",actionNum);
@@ -157,6 +158,8 @@ public class AdaptableCard extends AbstractCard {
                 {
                     //从stream中读取action的数据
                     tempAction.loadCardAction(stream);
+                    //把action记录到内容里
+                    this.addActionToCard(tempAction);
                 }
             }
         }
@@ -176,9 +179,9 @@ public class AdaptableCard extends AbstractCard {
             //保存卡牌id
             stream.writeUTF(this.cardID);
             //记录卡牌的基础伤害值
-            stream.writeInt(this.baseCard.baseDamage);
-            stream.writeInt(this.baseCard.baseBlock);
-            stream.writeInt(this.baseCard.baseMagicNumber);
+            stream.writeInt(this.baseDamage);
+            stream.writeInt(this.baseBlock);
+            stream.writeInt(this.baseMagicNumber);
             //记录卡牌里面的action个数
             stream.writeInt(this.cardActionMap.size());
             //保存卡牌里面涉及到的action
@@ -222,6 +225,12 @@ public class AdaptableCard extends AbstractCard {
         AdaptableCard tempCard = new AdaptableCard(this.baseCard);
         //复制所有的action
         tempCard.cloneAction(this.cardActionMap);
+        tempCard.baseDamage = this.baseDamage;
+        tempCard.damage = this.damage;
+        tempCard.baseBlock = this.baseBlock;
+        tempCard.block = this.block;
+        tempCard.baseMagicNumber = this.baseMagicNumber;
+        tempCard.magicNumber = this.magicNumber;
         return tempCard;
     }
 

@@ -59,9 +59,6 @@ public abstract class AbstractCardAction {
     //读取card action
     public abstract void loadCardAction(DataInputStream stream);
 
-    //复制action
-    public abstract AbstractCardAction copyAction();
-
     public String getActionId() {
         return actionId;
     }
