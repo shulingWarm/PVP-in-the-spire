@@ -14,6 +14,7 @@ import pvp_in_the_spire.ui.BasePanel;
 import pvp_in_the_spire.ui.Button.WithUpdate.BaseUpdateButton;
 import pvp_in_the_spire.ui.CardDesign.CardModifyItem.AttackModify;
 import pvp_in_the_spire.ui.CardDesign.CardModifyItem.BlockModify;
+import pvp_in_the_spire.ui.CardDesign.CardModifyItem.MagicModify;
 import pvp_in_the_spire.ui.Events.*;
 import pvp_in_the_spire.ui.InputBoxWithLabel;
 
@@ -125,6 +126,7 @@ public class CardConfigPage extends AbstractPage implements ClickCallback {
         );
         registerModifyItem(new AttackModify(), "伤害");
         registerModifyItem(new BlockModify(), "格挡");
+        registerModifyItem(new MagicModify(), "MagicNumber");
     }
 
     public CardConfigPage(ClosePageEvent closePageEvent)

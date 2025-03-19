@@ -1,38 +1,32 @@
 package pvp_in_the_spire.card.CardAction;
 
-import com.megacrit.cardcrawl.actions.common.GainBlockAction;
 import com.megacrit.cardcrawl.cards.AbstractCard;
 import com.megacrit.cardcrawl.characters.AbstractPlayer;
-import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
 import com.megacrit.cardcrawl.monsters.AbstractMonster;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-//获得卡牌格挡的action
-public class BlockCardAction extends AbstractCardAction {
+public class MagicCardAction extends AbstractCardAction{
 
-    //具体的格挡值
-    public int blockAmount;
+    public int magicNumber;
 
-    public BlockCardAction(int blockAmount) {
-        super("BlockCardAction");
-        this.blockAmount = blockAmount;
+    public MagicCardAction(int magicNumber)
+    {
+        super("MagicCardAction");
+        this.magicNumber = magicNumber;
     }
 
     @Override
     public void doCardAction(AbstractPlayer p, AbstractMonster m) {
-        AbstractDungeon.actionManager.addToBottom(
-            new GainBlockAction(p, this.blockAmount)
-        );
+        //不做任何action
     }
 
     @Override
     public void saveCardAction(DataOutputStream stream) {
-        //记录格挡值
         try {
-            stream.writeInt(this.blockAmount);
+            stream.writeInt(this.magicNumber);
         }
         catch (IOException e)
         {
@@ -44,7 +38,7 @@ public class BlockCardAction extends AbstractCardAction {
     public void loadCardAction(DataInputStream stream) {
         try
         {
-            this.blockAmount = stream.readInt();
+            this.magicNumber = stream.readInt();
         }
         catch (IOException e)
         {
@@ -54,17 +48,16 @@ public class BlockCardAction extends AbstractCardAction {
 
     @Override
     public void adjustRepeatAction(AbstractCardAction action) {
-        BlockCardAction tempAction = (BlockCardAction) action;
-        this.blockAmount = tempAction.blockAmount;
+        MagicCardAction tempAction = (MagicCardAction) action;
+        this.magicNumber = tempAction.magicNumber;
     }
 
     @Override
     public boolean tryDirectApply(AbstractCard card) {
-        //判断卡牌里面是不是本来就有格挡
-        if(card.baseBlock > 0)
+        if(card.baseMagicNumber > 0)
         {
-            card.baseBlock = this.blockAmount;
-            card.block = this.blockAmount;
+            card.magicNumber = this.magicNumber;
+            card.baseMagicNumber = this.magicNumber;
             return true;
         }
         return false;
@@ -72,6 +65,6 @@ public class BlockCardAction extends AbstractCardAction {
 
     @Override
     public AbstractCardAction makeCopy() {
-        return new BlockCardAction(this.blockAmount);
+        return new MagicCardAction(this.magicNumber);
     }
 }
