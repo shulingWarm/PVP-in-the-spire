@@ -3,8 +3,12 @@ package pvp_in_the_spire.ui.CardDesign;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.megacrit.cardcrawl.cards.AbstractCard;
+import com.megacrit.cardcrawl.characters.AbstractPlayer;
+import com.megacrit.cardcrawl.core.CardCrawlGame;
 import com.megacrit.cardcrawl.core.Settings;
 import com.megacrit.cardcrawl.helpers.ImageMaster;
+import com.megacrit.cardcrawl.powers.MetallicizePower;
+import com.megacrit.cardcrawl.powers.StrengthPower;
 import pvp_in_the_spire.card.AdaptableCard;
 import pvp_in_the_spire.card.CardDesign.AdaptableCardManager;
 import pvp_in_the_spire.helpers.FontLibrary;
@@ -52,6 +56,19 @@ public class CardConfigPage extends AbstractPage implements ClickCallback {
     public final float BUTTON_Y_BEGIN = Settings.HEIGHT*0.55f;
     //每个按钮在纵向上的间距
     public final float BUTTON_Y_GAP = Settings.HEIGHT*0.1f;
+
+    //用于临时构造角色的静态变量
+    public static AbstractPlayer playerForTest = null;
+
+    //获得用于构造的player
+    public static AbstractPlayer getPlayerForTest()
+    {
+        if(playerForTest == null)
+        {
+            playerForTest = CardCrawlGame.characterManager.getCharacter(AbstractPlayer.PlayerClass.DEFECT);
+        }
+        return playerForTest;
+    }
 
     //设置main card的位置
     public void assignMainCardLocation()
@@ -127,6 +144,9 @@ public class CardConfigPage extends AbstractPage implements ClickCallback {
         registerModifyItem(new AttackModify(), "伤害");
         registerModifyItem(new BlockModify(), "格挡");
         registerModifyItem(new MagicModify(), "MagicNumber");
+        //随便添加两个icon看一下
+        this.optionPanel.addNewPage(new PowerItem(new StrengthPower(getPlayerForTest(), 12), this.optionPanel.width));
+        this.optionPanel.addNewPage(new PowerItem(new MetallicizePower(getPlayerForTest(), 12), this.optionPanel.width));
     }
 
     public CardConfigPage(ClosePageEvent closePageEvent)
