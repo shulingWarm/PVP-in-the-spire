@@ -2,6 +2,7 @@ package pvp_in_the_spire.patches;
 
 import com.megacrit.cardcrawl.cards.blue.Strike_Blue;
 import pvp_in_the_spire.actions.PsychicSnoopingAction;
+import pvp_in_the_spire.card.BurnTransform;
 import pvp_in_the_spire.card.PsychicSnooping;
 import pvp_in_the_spire.dungeon.FakeEnding;
 import pvp_in_the_spire.events.BattleInfoEvent;
@@ -683,9 +684,9 @@ public class CharacterSelectScreenPatches
 //                }
             }
             //添加一个灭除之刃
-//            AbstractCard tempCard = new Strike_Blue();
-//            tempCard.damage = 100;
-//            tempCard.baseDamage = 100;
+//            AbstractCard tempCard = new BurnTransform();
+//            //tempCard.damage = 100;
+//            //tempCard.baseDamage = 100;
 //            tempCard.upgrade();
 //            AbstractDungeon.actionManager.addToBottom(
 //                new MakeTempCardInHandAction(tempCard,1)

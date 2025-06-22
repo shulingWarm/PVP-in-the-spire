@@ -5,7 +5,7 @@
     <name>PvP In The Spire</name>
     <!-- Version number of the mod, which will appear in the mod launcher.
     Change this value if you want to update the version number! -->
-    <version>0.6.2</version>
+    <version>0.6.9</version>
     <!-- Description of the mod, which will appear in the mod launcher. TODO: add a new description in english. -->
     <description>杀戮尖塔联机对战</description>
 
@@ -150,7 +150,7 @@
                 <activeByDefault>true</activeByDefault>
             </activation>
             <properties>
-                <steam.path>/media/zzh/data/SteamLibrary/steamapps</steam.path>
+                <steam.path>E:/usrApp/steam/steamapps</steam.path>
                 <sts.path>/common/SlayTheSpire/desktop-1.0.jar</sts.path>
             </properties>
         </profile>

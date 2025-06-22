@@ -39,7 +39,7 @@
   },
   "${modID}:DoubleSword": {
     "NAME": "双刃剑",
-    "DESCRIPTION": "在自己和对方的的手牌中同时加入 !M! 张 *伤口 NL 造成 !D! 点伤害"
+    "DESCRIPTION": "在自己和对方的手牌中同时加入 !M! 张 *伤口 NL 造成 !D! 点伤害"
   },
   "painSword": {
     "NAME": "疼痛之刃",

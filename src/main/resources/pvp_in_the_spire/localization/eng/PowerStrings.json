@@ -26,7 +26,8 @@
   "burnTransformPower": {
   "NAME": "Burn Transform",
   "DESCRIPTIONS": [
-    "Transfers all Exhausted Status cards to the enemy’s discard pile."
+    "Transfer all Status cards that being exhausted to the enemy’s discard pile for #b",
+    "rounds."
   ]
 },
   "computeTransformPower": {
